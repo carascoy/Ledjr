@@ -1,0 +1,88 @@
+<configuration>
+
+    <!-- ================================================================
+         CONSOLE APPENDER
+         Human-readable output for local dev / watching logs live.
+         Pattern breakdown:
+           %d{HH:mm:ss.SSS} = timestamp
+           [%thread]        = which thread logged this (matters once you have concurrent requests)
+           %-5level         = log level, padded to 5 chars for alignment
+           %logger{36}      = logger name (usually your class), truncated to 36 chars
+           %msg%n           = your actual message + newline
+    ================================================================= -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{MM/dd/yy h:mma} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ================================================================
+         ROLLING FILE APPENDER (all logs, INFO and above)
+         Writes to a file instead of just the console, and automatically
+         "rotates" — starts a new file each day and deletes old ones —
+         so logs don't grow forever and eat disk space.
+    ================================================================= -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/ledjr.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- new file per day, or when current file hits 10MB, whichever comes first -->
+            <fileNamePattern>logs/ledjr-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <!-- keep 30 days of history -->
+            <maxHistory>30</maxHistory>
+            <!-- don't let total log storage exceed 1GB even within the 30 days -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{MM/dd/yy h:mma} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ================================================================
+         ERROR-ONLY FILE APPENDER
+         Same log data, filtered to just ERROR level, in its own file.
+         Handy so you (or a monitoring tool) can watch ONE small file
+         for "did anything actually break" without wading through INFO noise.
+    ================================================================= -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/ledjr-error.log</file>
+
+        <!-- this filter drops anything below ERROR from reaching this appender -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/ledjr-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{MM/dd/yy h:mma} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ================================================================
+         YOUR PACKAGE: verbose logging for code you're actively writing.
+         DEBUG here means you see fine-grained detail from com.ledjr.*
+         while everything else (frameworks, libraries) stays quieter below.
+    ================================================================= -->
+    <logger name="com.ledjr" level="DEBUG" />
+
+    <!-- ================================================================
+         ROOT LOGGER — the fallback for everything not matched above
+         (Spring, Hibernate, any third-party library, etc).
+         INFO keeps framework noise down. All three appenders attached
+         here means every log line goes to: console, the full file,
+         and (if ERROR) also the error-only file.
+    ================================================================= -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+
+</configuration>
