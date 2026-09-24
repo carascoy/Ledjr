@@ -1,0 +1,48 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor / IDE junk
+*.swp
+*.swo
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+
+# Java
+*.class
+target/
+build/
+.gradle/
+
+# C / C++
+*.o
+*.obj
+*.out
+*.exe
+*.a
+*.so
+*.dll
+
+# Node / JS
+node_modules/
+
+# Secrets / local config
+.env
+.env.local
+*.local
+
+# Logs
+*.log
+
+# Build output (generic)
+dist/
+out/
