@@ -46,3 +46,4 @@ node_modules/
 # Build output (generic)
 dist/
 out/
+dependency-reduced-pom.xml
