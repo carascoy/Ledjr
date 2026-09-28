@@ -7,6 +7,12 @@
     <artifactId>Ledjr</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.0</version>
+    </parent>
+
     <properties>
         <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,65 +20,41 @@
 
     <dependencies>
 
-    <!--Replacement for `System.out.println` debugging, with levels (info/warn/error-->    
+        <!--Spring Data JPA: gives us the auto-configured DataSource + Hibernate. No web starter yet not building endpoints this step-->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.6.3</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-    <!--Postgres SQL JDBC driver for my database -->    
+        <!--Postgres JDBC driver-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.13</version>
+            <scope>runtime</scope>
         </dependency>
 
-    <!--This will be used for loading .env diles automaticlly.-->
+        <!--Flyway: Spring Boot runs these automatically on startup now, no separate Maven plugin needed-->
         <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>3.0.2</version>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <!--Loads backend/.env into Spring's environment for local (non-Docker) runs-->
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>4.0.0</version>
         </dependency>
 
     </dependencies>
-    
-<build>
-    <plugins>
-       <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-shade-plugin</artifactId>
-    <version>3.6.0</version>
-    <executions>
-        <execution>
-            <phase>package</phase>
-            <goals>
-                <goal>shade</goal>
-            </goals>
-            <configuration>
-                <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                        <mainClass>com.Ledjr.Main</mainClass>
-                    </transformer>
-                </transformers>
-                <!-- strip files that cause the module-info / manifest-overlap warnings -->
-                <filters>
-                    <filter>
-                        <artifact>*:*</artifact>
-                        <excludes>
-                            <exclude>module-info.class</exclude>
-                            <exclude>META-INF/MANIFEST.MF</exclude>
-                            <exclude>META-INF/*.SF</exclude>
-                            <exclude>META-INF/*.DSA</exclude>
-                            <exclude>META-INF/*.RSA</exclude>
-                        </excludes>
-                    </filter>
-                </filters>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-    </plugins>
-</build>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
