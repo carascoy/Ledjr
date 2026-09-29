@@ -25,9 +25,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne 
-    @JoinColumn(name="app_user", nullable = false)
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private AppUser user;
 
     @Column(nullable = false)
     private String name;
@@ -36,7 +36,7 @@ public class Category {
     @Column(nullable = false)
     private Kind kind;
 
-    @Column(precision = 10, scale = 2, nullable = false)
+    @Column(precision = 10, scale = 2)
     private BigDecimal budgeted_amount;
 
     public Long getId() {
@@ -47,12 +47,12 @@ public class Category {
         this.id = id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public AppUser getUser() {
+        return user;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUser(AppUser user) {
+        this.user = user;
     }
 
     public String getName() {

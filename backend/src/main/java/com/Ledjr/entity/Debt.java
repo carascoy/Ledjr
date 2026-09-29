@@ -19,9 +19,9 @@ public class Debt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne 
-    @JoinColumn(name="app_user", nullable = false)
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private AppUser user;
 
     @Column(nullable = false)
     private String creditor_name;
@@ -32,14 +32,14 @@ public class Debt {
     @Column(precision = 5, scale = 2)
     private BigDecimal apr;
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal min_payment;
 
-    @Column 
-    private int due_date;
+    @Column
+    private Integer due_date;
 
-    @Column 
-    private int priority_rank;
+    @Column
+    private Integer priority_rank;
 
     public Long getId() {
         return id;
@@ -49,12 +49,12 @@ public class Debt {
         this.id = id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public AppUser getUser() {
+        return user;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUser(AppUser user) {
+        this.user = user;
     }
 
     public String getCreditor_name() {
@@ -89,19 +89,19 @@ public class Debt {
         this.min_payment = min_payment;
     }
 
-    public int getDue_date() {
+    public Integer getDue_date() {
         return due_date;
     }
 
-    public void setDue_date(int due_date) {
+    public void setDue_date(Integer due_date) {
         this.due_date = due_date;
     }
 
-    public int getPriority_rank() {
+    public Integer getPriority_rank() {
         return priority_rank;
     }
 
-    public void setPriority_rank(int priority_rank) {
+    public void setPriority_rank(Integer priority_rank) {
         this.priority_rank = priority_rank;
     }
 

@@ -20,17 +20,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne 
-    @JoinColumn(name="app_user", nullable = false)
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private AppUser user;
 
-    @ManyToOne 
-    @JoinColumn(name="category", nullable = false)
-    private Long category_id;
+    @ManyToOne
+    @JoinColumn(name="category_id", nullable = false)
+    private Category category;
 
-    @ManyToOne 
-    @JoinColumn(name="debt", nullable = true)
-    private Long debt_id;
+    @ManyToOne
+    @JoinColumn(name="debt_id", nullable = true)
+    private Debt debt;
 
     @Column
     private String type;
@@ -52,28 +52,28 @@ public class Transaction {
         this.id = id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public AppUser getUser() {
+        return user;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUser(AppUser user) {
+        this.user = user;
     }
 
-    public Long getCategory_id() {
-        return category_id;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategory_id(Long category_id) {
-        this.category_id = category_id;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public Long getDebt_id() {
-        return debt_id;
+    public Debt getDebt() {
+        return debt;
     }
 
-    public void setDebt_id(Long debt_id) {
-        this.debt_id = debt_id;
+    public void setDebt(Debt debt) {
+        this.debt = debt;
     }
 
     public String getType() {
