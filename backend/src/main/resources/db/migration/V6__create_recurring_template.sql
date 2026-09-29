@@ -4,6 +4,6 @@ CREATE TABLE recurring_template(
     category_id BIGINT NOT NULL REFERENCES category(id),
     name VARCHAR(255) NOT NULL,
     amount NUMERIC(10,2) NOT NULL,
-    frequency VARCHAR(20) NOT NULL CHECK (frequency IN ('bi-weekly', 'weekly', 'daily', 'monthly', 'annually')),
+    frequency VARCHAR(20) NOT NULL CHECK (frequency IN ('biweekly', 'weekly', 'daily', 'monthly', 'annually')),
     next_due_date DATE NOT NULL
 );
