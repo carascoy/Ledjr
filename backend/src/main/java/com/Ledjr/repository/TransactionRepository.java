@@ -27,7 +27,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByDebtId(Long debtId);
 
     /** One user's transactions within a date range — e.g. one calendar month, for the dashboard totals. */
-    List<Transaction> findByUserIdAndTxnDateBetween(Long userId, LocalDate start, LocalDate end);
+    List<Transaction> findByUserIdAndTxn_dateBetween(Long userId, LocalDate start, LocalDate end);
 
     /** One user's transactions that haven't been assigned a category yet. */
     List<Transaction> findByUserIdAndCategoryIsNull(Long userId);

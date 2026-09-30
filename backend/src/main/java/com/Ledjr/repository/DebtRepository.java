@@ -29,6 +29,6 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     List<Debt> findByUserIdOrderByBalanceAsc(Long userId);
 
     /** One user's debts in their own custom "attack" order. */
-    List<Debt> findByUserIdOrderByPriorityRank(Long userId);
+    List<Debt> findByUserIdOrderByPriority_rank(Long userId);
 
 }

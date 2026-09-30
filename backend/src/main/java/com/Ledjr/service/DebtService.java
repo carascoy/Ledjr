@@ -9,7 +9,9 @@ import com.Ledjr.repository.DebtRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service 
 public class DebtService {
 
     private final DebtRepository debtRepository;
@@ -52,7 +54,7 @@ public class DebtService {
 
     /** NOTE: relies on DebtRepository.findByUserIdOrderByPriorityRank, which is currently broken - see mistakes list. */
     public List<Debt> findByUserIdPriorityOrder(Long userId){
-        return debtRepository.findByUserIdOrderByPriorityRank(userId);
+        return debtRepository.findByUserIdOrderByPriority_rank(userId);
     }
 
 }

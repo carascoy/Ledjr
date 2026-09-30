@@ -9,7 +9,9 @@ import com.Ledjr.repository.CategoryRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
