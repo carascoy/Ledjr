@@ -1,0 +1,98 @@
+.auth-page{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    background-color: #ffffff;
+}
+
+.auth-title{
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 48px;
+    margin-bottom: 72;
+}
+
+.auth-card{
+    width: 420px;
+    background: #D9D9D9;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    padding: 35px, 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.toggle-active{
+    font-family: 'IBM Plex Mono', sans-serif;
+    font-weight: 700;
+    font-size: 18;
+    fill: #000000;
+}
+.toggle-inactive{
+    font-family: 'IBM Plex Mono', sans-serif;
+    font-weight: 500;
+    font-size: 18;
+    fill: #999999;
+}
+
+.collapsible{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms ease;
+}
+
+.collapsible.expanded{
+    grid-template-rows: 1fr;
+}
+
+.collapsible-inner{
+    font-family: 'IBM Plex Mono', sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-input{
+    width: 100%;
+    height: 48px;
+    background: #F5F5F5;
+    border: none;
+    border-radius: 12px;
+    padding: 0 16px;
+    font-family: 'IBM Plex Mono', sans-serif;
+    font-size: 16px;
+    color: #000000;
+}
+
+.auth-input::placeholder{
+    color: #999999;
+}
+
+.password-hints {
+   gap: 4px;
+}
+
+.password-hints p{
+    font-size: 13;
+    font-family: 'IBM Plex Mono', sans-serif;
+    color: #999999;
+    margin:  0;
+}
+
+.auth-submit{
+    width: 100%;
+    border: none;
+    border-radius: 24;
+    background: #1C3B2E;
+    font-size: 18;
+    font-weight: 700;
+    color: #ffffff;
+    height: 48px;
+    font-family: 'IBM Plex Mono', sans-serif;
+}
+
