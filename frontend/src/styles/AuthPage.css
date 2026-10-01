@@ -10,33 +10,46 @@
 
 .auth-title{
     font-family: 'IBM Plex Mono', monospace;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 48px;
-    margin-bottom: 72;
+    margin-bottom: 72px;
 }
 
 .auth-card{
     width: 420px;
     background: #D9D9D9;
     border-radius: 16px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-    padding: 35px, 24px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    padding: 35px 24px;
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
+.auth-toggle{
+    display: flex;
+    gap: 30px;
+    margin-bottom: 16px;
+}
+
+.auth-toggle button{
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
 .toggle-active{
-    font-family: 'IBM Plex Mono', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 700;
-    font-size: 18;
-    fill: #000000;
+    font-size: 18px;
+    color: #000000;
 }
 .toggle-inactive{
-    font-family: 'IBM Plex Mono', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 500;
-    font-size: 18;
-    fill: #999999;
+    font-size: 18px;
+    color: #999999;
 }
 
 .collapsible{
@@ -50,7 +63,6 @@
 }
 
 .collapsible-inner{
-    font-family: 'IBM Plex Mono', sans-serif;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -64,8 +76,8 @@
     border: none;
     border-radius: 12px;
     padding: 0 16px;
-    font-family: 'IBM Plex Mono', sans-serif;
-    font-size: 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px;
     color: #000000;
 }
 
@@ -78,8 +90,8 @@
 }
 
 .password-hints p{
-    font-size: 13;
-    font-family: 'IBM Plex Mono', sans-serif;
+    font-size: 13px;
+    font-family: 'IBM Plex Sans', sans-serif;
     color: #999999;
     margin:  0;
 }
@@ -87,12 +99,12 @@
 .auth-submit{
     width: 100%;
     border: none;
-    border-radius: 24;
+    border-radius: 24px;
     background: #1C3B2E;
-    font-size: 18;
+    font-size: 18px;
     font-weight: 700;
     color: #ffffff;
     height: 48px;
-    font-family: 'IBM Plex Mono', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
+    cursor: pointer;
 }
-

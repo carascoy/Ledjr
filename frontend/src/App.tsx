@@ -1,7 +1,8 @@
+import './App.css'
+import AuthPage from './pages/AuthPage'
+
 function App() {
-  return (
-    <div></div>
-  )
+  return <AuthPage />
 }
 
 export default App

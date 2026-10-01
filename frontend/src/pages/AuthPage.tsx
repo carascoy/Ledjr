@@ -30,7 +30,7 @@ function AuthPage(){
                 </div>
 
                 <input className="auth-input" placeholder="Email"/>
-                <input className="auth-input" placeholder="Password"/>
+                <input className="auth-input" type="password" placeholder="Password"/>
 
                  <div className={`collapsible ${isSignUp ? 'expanded' : ''}`}>
                     <div className="collapsible-inner password-hints">
@@ -46,3 +46,5 @@ function AuthPage(){
         </div>
     )
 }
+
+export default AuthPage
