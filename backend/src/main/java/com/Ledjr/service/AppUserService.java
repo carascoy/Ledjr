@@ -20,10 +20,12 @@ public class AppUserService {
         this.userRepository = userRepository;
     }
 
-    public void register(String email, String passwordHash){
+    public void register(String email, String passwordHash, String firstName, String lastName){
         AppUser user = new AppUser();
         user.setEmail(email);
         user.setPasswordHash(passwordHash);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         userRepository.save(user);
         log.info("New User Created-> UserID: {} | Email: {}", user.getId(), user.getEmail());
     }

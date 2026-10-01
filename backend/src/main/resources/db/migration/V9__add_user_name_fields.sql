@@ -1,0 +1,3 @@
+ALTER TABLE app_user
+    ADD COLUMN first_name VARCHAR(100) NOT NULL,
+    ADD COLUMN last_name VARCHAR(100) NOT NULL;
