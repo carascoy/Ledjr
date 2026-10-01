@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import '../styles/AuthPage.css'
+import { useNavigate } from 'react-router-dom' //added this
 
 type Mode = "signin" | "signup";
 
 function AuthPage(){
+     const navigate = useNavigate() //added this
     const [mode, setMode] = useState<Mode>('signin')
 
     const isSignUp = mode === 'signup'
@@ -24,6 +26,7 @@ function AuthPage(){
         })
 
         if (response.ok) {
+            navigate('/dashboard')
             console.log('Account created')
         } else {
             const message = await response.text()
