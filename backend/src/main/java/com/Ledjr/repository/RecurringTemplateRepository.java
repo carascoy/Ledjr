@@ -27,7 +27,7 @@ public interface RecurringTemplateRepository extends JpaRepository<RecurringTemp
     List<RecurringTemplate> findByFrequency(RecurringTemplate.Frequency frequency);
 
     /** All recurring templates due on an exact date, across every user. */
-    List<RecurringTemplate> findByNext_due_date(LocalDate date);
+    List<RecurringTemplate> findByNextDueDate(LocalDate date);
 
     /** Every recurring template a specific user owns. */
     List<RecurringTemplate> findByUserId(Long userId);

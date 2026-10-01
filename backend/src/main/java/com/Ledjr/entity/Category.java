@@ -13,14 +13,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
-@Entity 
+@Entity
 @Table(name="category")
 public class Category {
 
     public enum Kind {
         income, expense, debt
     }
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +37,7 @@ public class Category {
     private Kind kind;
 
     @Column(precision = 10, scale = 2)
-    private BigDecimal budgeted_amount;
+    private BigDecimal budgetedAmount;
 
     public Long getId() {
         return id;
@@ -71,12 +71,12 @@ public class Category {
         this.kind = kind;
     }
 
-    public BigDecimal getBudgeted_amount() {
-        return budgeted_amount;
+    public BigDecimal getBudgetedAmount() {
+        return budgetedAmount;
     }
 
-    public void setBudgeted_amount(BigDecimal budgeted_amount) {
-        this.budgeted_amount = budgeted_amount;
+    public void setBudgetedAmount(BigDecimal budgetedAmount) {
+        this.budgetedAmount = budgetedAmount;
     }
 
 }

@@ -2,14 +2,15 @@ package com.Ledjr.service;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.repository.AppUserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service 
+@Service
 public class AppUserService {
 
     private final AppUserRepository userRepository;
@@ -22,7 +23,7 @@ public class AppUserService {
     public void register(String email, String passwordHash){
         AppUser user = new AppUser();
         user.setEmail(email);
-        user.setPassword_hash(passwordHash);
+        user.setPasswordHash(passwordHash);
         userRepository.save(user);
         log.info("New User Created-> UserID: {} | Email: {}", user.getId(), user.getEmail());
     }

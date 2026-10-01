@@ -3,15 +3,16 @@ package com.Ledjr.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Debt;
 import com.Ledjr.repository.DebtRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service 
+@Service
 public class DebtService {
 
     private final DebtRepository debtRepository;
@@ -24,11 +25,11 @@ public class DebtService {
     public Debt newDebt(AppUser user, String creditorName, BigDecimal balance, BigDecimal apr, BigDecimal minPayment, Integer dueDate){
         Debt debt = new Debt();
         debt.setUser(user);
-        debt.setCreditor_name(creditorName);
+        debt.setCreditorName(creditorName);
         debt.setBalance(balance);
         debt.setApr(apr);
-        debt.setMin_payment(minPayment);
-        debt.setDue_date(dueDate);
+        debt.setMinPayment(minPayment);
+        debt.setDueDate(dueDate);
         debtRepository.save(debt);
         log.info("User id# {} added a new debt to {} with balance {}", user.getId(), creditorName, balance);
         return debt;
@@ -39,7 +40,7 @@ public class DebtService {
     }
 
     public List<Debt> findByCreditorName(String creditorName){
-        return debtRepository.findByCreditor_name(creditorName);
+        return debtRepository.findByCreditorName(creditorName);
     }
 
     /** Avalanche order: highest interest rate first. */
@@ -52,9 +53,8 @@ public class DebtService {
         return debtRepository.findByUserIdOrderByBalanceAsc(userId);
     }
 
-    /** NOTE: relies on DebtRepository.findByUserIdOrderByPriorityRank, which is currently broken - see mistakes list. */
     public List<Debt> findByUserIdPriorityOrder(Long userId){
-        return debtRepository.findByUserIdOrderByPriority_rank(userId);
+        return debtRepository.findByUserIdOrderByPriorityRank(userId);
     }
 
 }

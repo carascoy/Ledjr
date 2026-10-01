@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Category;
 import com.Ledjr.entity.RecurringTemplate;
@@ -11,9 +13,8 @@ import com.Ledjr.repository.RecurringTemplateRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service 
+@Service
 public class RecurringTemplateService {
 
     private final RecurringTemplateRepository recurringTemplateRepository;
@@ -30,7 +31,7 @@ public class RecurringTemplateService {
         template.setName(name);
         template.setAmount(amount);
         template.setFrequency(frequency);
-        template.setNext_due_date(nextDueDate);
+        template.setNextDueDate(nextDueDate);
         recurringTemplateRepository.save(template);
         log.info("User id# {} created a new recurring template '{}' ({} {})", user.getId(), name, amount, frequency);
         return template;
@@ -53,7 +54,7 @@ public class RecurringTemplateService {
     }
 
     public List<RecurringTemplate> findByNextDueDate(LocalDate date){
-        return recurringTemplateRepository.findByNext_due_date(date);
+        return recurringTemplateRepository.findByNextDueDate(date);
     }
 
     /** Feeds the calendar view - everything a user has due in a date range. */

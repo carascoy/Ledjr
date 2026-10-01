@@ -12,10 +12,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
-@Entity 
+@Entity
 @Table(name="transaction")
 public class Transaction {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,10 +38,10 @@ public class Transaction {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal amount;
 
-    @Column 
-    private LocalDate txn_date;
+    @Column
+    private LocalDate txnDate;
 
-    @Column 
+    @Column
     private String description;
 
     public Long getId() {
@@ -92,12 +92,12 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public LocalDate getTxn_date() {
-        return txn_date;
+    public LocalDate getTxnDate() {
+        return txnDate;
     }
 
-    public void setTxn_date(LocalDate txn_date) {
-        this.txn_date = txn_date;
+    public void setTxnDate(LocalDate txnDate) {
+        this.txnDate = txnDate;
     }
 
     public String getDescription() {

@@ -9,22 +9,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
-@Entity 
+@Entity
 @Table(name="app_user")
 public class AppUser {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = false)
-    private String password_hash;
+    private String passwordHash;
 
     @Column(insertable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;
@@ -42,20 +42,20 @@ public class AppUser {
         this.email = email;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime date) {
-        this.created_at = date;
+    public void setCreatedAt(LocalDateTime date) {
+        this.createdAt = date;
     }
 
 }

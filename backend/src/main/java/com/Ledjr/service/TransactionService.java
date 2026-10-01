@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Category;
 import com.Ledjr.entity.Debt;
@@ -12,9 +14,8 @@ import com.Ledjr.repository.TransactionRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service 
+@Service
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -32,7 +33,7 @@ public class TransactionService {
         transaction.setDebt(debt);
         transaction.setType(type);
         transaction.setAmount(amount);
-        transaction.setTxn_date(txnDate);
+        transaction.setTxnDate(txnDate);
         transaction.setDescription(description);
         transactionRepository.save(transaction);
         log.info("User id# {} logged a {} transaction of {} on {}", user.getId(), type, amount, txnDate);
@@ -51,9 +52,8 @@ public class TransactionService {
         return transactionRepository.findByDebtId(debtId);
     }
 
-    /** NOTE: relies on TransactionRepository.findByUserIdAndTxnDateBetween, which is currently broken - see mistakes list. */
     public List<Transaction> findByUserIdBetweenDates(Long userId, LocalDate start, LocalDate end){
-        return transactionRepository.findByUserIdAndTxn_dateBetween(userId, start, end);
+        return transactionRepository.findByUserIdAndTxnDateBetween(userId, start, end);
     }
 
     public List<Transaction> findUncategorized(Long userId){

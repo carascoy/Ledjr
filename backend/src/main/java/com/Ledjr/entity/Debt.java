@@ -11,10 +11,10 @@ import jakarta.persistence.GenerationType;
 
 import java.math.BigDecimal;
 
-@Entity 
+@Entity
 @Table(name="debt")
 public class Debt {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +24,7 @@ public class Debt {
     private AppUser user;
 
     @Column(nullable = false)
-    private String creditor_name;
+    private String creditorName;
 
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal balance;
@@ -33,13 +33,13 @@ public class Debt {
     private BigDecimal apr;
 
     @Column(precision = 10, scale = 2)
-    private BigDecimal min_payment;
+    private BigDecimal minPayment;
 
     @Column
-    private Integer due_date;
+    private Integer dueDate;
 
     @Column
-    private Integer priority_rank;
+    private Integer priorityRank;
 
     public Long getId() {
         return id;
@@ -57,12 +57,12 @@ public class Debt {
         this.user = user;
     }
 
-    public String getCreditor_name() {
-        return creditor_name;
+    public String getCreditorName() {
+        return creditorName;
     }
 
-    public void setCreditor_name(String creditor_name) {
-        this.creditor_name = creditor_name;
+    public void setCreditorName(String creditorName) {
+        this.creditorName = creditorName;
     }
 
     public BigDecimal getBalance() {
@@ -81,28 +81,28 @@ public class Debt {
         this.apr = apr;
     }
 
-    public BigDecimal getMin_payment() {
-        return min_payment;
+    public BigDecimal getMinPayment() {
+        return minPayment;
     }
 
-    public void setMin_payment(BigDecimal min_payment) {
-        this.min_payment = min_payment;
+    public void setMinPayment(BigDecimal minPayment) {
+        this.minPayment = minPayment;
     }
 
-    public Integer getDue_date() {
-        return due_date;
+    public Integer getDueDate() {
+        return dueDate;
     }
 
-    public void setDue_date(Integer due_date) {
-        this.due_date = due_date;
+    public void setDueDate(Integer dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public Integer getPriority_rank() {
-        return priority_rank;
+    public Integer getPriorityRank() {
+        return priorityRank;
     }
 
-    public void setPriority_rank(Integer priority_rank) {
-        this.priority_rank = priority_rank;
+    public void setPriorityRank(Integer priorityRank) {
+        this.priorityRank = priorityRank;
     }
 
 }

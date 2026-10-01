@@ -3,13 +3,14 @@ package com.Ledjr.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Category;
 import com.Ledjr.repository.CategoryRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService {
@@ -21,12 +22,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void newCategory(AppUser user, String name, Category.Kind kind, BigDecimal budgeted_amount){
+    public void newCategory(AppUser user, String name, Category.Kind kind, BigDecimal budgetedAmount){
         Category category = new Category();
         category.setUser(user);
         category.setName(name);
         category.setKind(kind);
-        category.setBudgeted_amount(budgeted_amount);
+        category.setBudgetedAmount(budgetedAmount);
         categoryRepository.save(category);
         log.info("User id# {} created a new category called {}", category.getUser().getId(), category.getName());
     }

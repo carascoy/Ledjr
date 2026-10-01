@@ -17,7 +17,7 @@ import com.Ledjr.entity.Debt;
 public interface DebtRepository extends JpaRepository<Debt, Long> {
 
     /** All debts owed to a specific creditor, across every user. */
-    List<Debt> findByCreditor_name(String creditor_name);
+    List<Debt> findByCreditorName(String creditorName);
 
     /** Every debt a specific user owns. */
     List<Debt> findByUserId(Long userId);
@@ -29,6 +29,6 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     List<Debt> findByUserIdOrderByBalanceAsc(Long userId);
 
     /** One user's debts in their own custom "attack" order. */
-    List<Debt> findByUserIdOrderByPriority_rank(Long userId);
+    List<Debt> findByUserIdOrderByPriorityRank(Long userId);
 
 }

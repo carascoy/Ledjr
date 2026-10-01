@@ -45,8 +45,8 @@ public class RecurringTemplate {
     @Column(nullable = false)
     private Frequency frequency;
 
-    @Column(name = "next_due_date", nullable = false)
-    private LocalDate next_due_date;
+    @Column(nullable = false)
+    private LocalDate nextDueDate;
 
     public Long getId() {
         return id;
@@ -96,11 +96,11 @@ public class RecurringTemplate {
         this.frequency = frequency;
     }
 
-    public LocalDate getNext_due_date() {
-        return next_due_date;
+    public LocalDate getNextDueDate() {
+        return nextDueDate;
     }
 
-    public void setNext_due_date(LocalDate next_due_date) {
-        this.next_due_date = next_due_date;
+    public void setNextDueDate(LocalDate nextDueDate) {
+        this.nextDueDate = nextDueDate;
     }
 }
