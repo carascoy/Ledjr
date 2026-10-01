@@ -7,11 +7,35 @@ function AuthPage(){
     const [mode, setMode] = useState<Mode>('signin')
 
     const isSignUp = mode === 'signup'
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault()
+
+        if (!isSignUp) return // sign-in isn't built on the backend yet
+
+        const response = await fetch('http://localhost:8080/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, firstName, lastName }),
+        })
+
+        if (response.ok) {
+            console.log('Account created')
+        } else {
+            const message = await response.text()
+            console.log('Signup failed:', message)
+        }
+
+    }
 
     return (
         <div className="auth-page">
             <h1 className="auth-title">Ledjr</h1>
-            <div className="auth-card">
+            <form className="auth-card" onSubmit={handleSubmit}>
 
                 <div className="auth-toggle">
                     <button type ="button" className={mode === 'signin' ? 'toggle-active' : 'toggle-inactive'} onClick={() => setMode("signin")}>
@@ -24,13 +48,13 @@ function AuthPage(){
 
                 <div className={`collapsible ${isSignUp ? 'expanded' : ''}`}>
                     <div className="collapsible-inner">
-                        <input className="auth-input" placeholder="First Name" />
-                        <input className="auth-input" placeholder="Last Name" />
+                        <input className="auth-input" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
+                        <input className="auth-input" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
                     </div>
                 </div>
 
-                <input className="auth-input" placeholder="Email"/>
-                <input className="auth-input" type="password" placeholder="Password"/>
+                <input className="auth-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <input className="auth-input" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
 
                  <div className={`collapsible ${isSignUp ? 'expanded' : ''}`}>
                     <div className="collapsible-inner password-hints">
@@ -40,9 +64,9 @@ function AuthPage(){
                     </div>
                 </div>
 
-                <button type="button" className="auth-submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+                <button type="submit" className="auth-submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
 
-            </div>
+            </form>
         </div>
     )
 }

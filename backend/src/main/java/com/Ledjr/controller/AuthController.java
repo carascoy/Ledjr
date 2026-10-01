@@ -1,0 +1,40 @@
+package com.Ledjr.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Ledjr.dto.RegisterRequest;
+import com.Ledjr.service.AppUserService;
+
+@RestController
+@CrossOrigin(origins = "http://localhost:5173") 
+public class AuthController {
+    
+    private final AppUserService appUserService;
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder){
+        this.appUserService = appUserService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request){
+
+        if(appUserService.emailTaken(request.email())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already registered.");
+        }
+
+        String passwordHash = passwordEncoder.encode(request.password());
+        appUserService.register(request.email(), passwordHash, request.firstName(), request.lastName());
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body("Account Created");
+    }
+
+}
