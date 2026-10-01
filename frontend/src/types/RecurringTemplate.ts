@@ -7,6 +7,6 @@ export interface RecurringTemplate{
     categoryId:number;
     name:string;
     amount:number;
-    frequency:Frequency;
-    nextDueDate:string;
+    frequency?:Frequency;
+    nextDueDate?:string;
 }
