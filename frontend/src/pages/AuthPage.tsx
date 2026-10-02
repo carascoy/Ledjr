@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import '../styles/AuthPage.css'
 import { useNavigate } from 'react-router-dom' 
+import { useUser } from '../context/UserContext'
 
 type Mode = "signin" | "signup";
 
@@ -8,6 +9,7 @@ type Error = "account-not-found" | "email-registered" | "none";
 
 function AuthPage(){
     const navigate = useNavigate()
+    const { setUser } = useUser()
 
     const [mode, setMode] = useState<Mode>('signin')
     const [error, setError] = useState<Error>('none');
@@ -42,6 +44,8 @@ function AuthPage(){
             })
 
             if(response.ok){
+                const data = await response.json()
+                setUser(data)
                 navigate('/dashboard')
                 console.log("User successfully logged in.")
             }else{
@@ -60,6 +64,8 @@ function AuthPage(){
             })
 
             if (response.ok) {
+                const data = await response.json()
+                setUser(data)
                 navigate('/dashboard')
                 console.log('Account created')
             } else {
