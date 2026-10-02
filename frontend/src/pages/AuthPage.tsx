@@ -28,21 +28,37 @@ function AuthPage(){
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-
-        if (!isSignUp) return // sign-in isn't built on the backend yet
         
-        const response = await fetch('http://localhost:8080/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, firstName, lastName }),
-        })
+        if(!isSignUp){
+            const response = await fetch('http://localhost:8080/signin' , {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email, password}),
+            })
 
-        if (response.ok) {
-            navigate('/dashboard')
-            console.log('Account created')
-        } else {
-            const message = await response.text()
-            console.log('Signup failed:', message)
+            if(response.ok){
+                navigate('/dashboard')
+                console.log("User successfully logged in.")
+            }else{
+                const message = await response.text()
+                console.log('Signin failed:', message)
+            }
+
+        }else{
+
+            const response = await fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, firstName, lastName }),
+            })
+
+            if (response.ok) {
+                navigate('/dashboard')
+                console.log('Account created')
+            } else {
+                const message = await response.text()
+                console.log('Signup failed:', message)
+            }
         }
 
     }
