@@ -31,6 +31,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already registered.");
         }
 
+        if(request.password() == null){
+
+        }
+
         String passwordHash = passwordEncoder.encode(request.password());
         appUserService.register(request.email(), passwordHash, request.firstName(), request.lastName());
         

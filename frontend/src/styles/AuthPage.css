@@ -89,10 +89,16 @@
    gap: 4px;
 }
 
-.password-hints p{
+.password-hints p.correct{
     font-size: 13px;
     font-family: 'IBM Plex Sans', sans-serif;
-    color: #999999;
+    color: #1C3B2E;
+    margin:  0;
+}
+.password-hints p.wrong{
+    font-size: 13px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: red;
     margin:  0;
 }
 
@@ -108,3 +114,9 @@
     font-family: 'IBM Plex Sans', sans-serif;
     cursor: pointer;
 }
+
+.auth-submit:disabled{
+    background: #999999;
+    cursor: not-allowed;
+}
+

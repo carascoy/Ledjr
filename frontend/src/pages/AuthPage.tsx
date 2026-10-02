@@ -1,24 +1,36 @@
 import { useState } from 'react'
 import '../styles/AuthPage.css'
-import { useNavigate } from 'react-router-dom' //added this
+import { useNavigate } from 'react-router-dom' 
 
 type Mode = "signin" | "signup";
 
 function AuthPage(){
-     const navigate = useNavigate() //added this
+     const navigate = useNavigate()
+
     const [mode, setMode] = useState<Mode>('signin')
 
-    const isSignUp = mode === 'signup'
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
 
+    const isSignUp = mode === 'signup'
+
+    const hasEightChars = password.length >= 8 
+    const hasNumber = /[0-9]/.test(password)
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password)
+    const isPasswordValid = hasEightChars && hasNumber && hasSpecialChar
+
+    const isCharValid = hasEightChars;
+    const isNumValid = hasNumber;
+    const isSpecialCharValid = hasSpecialChar;
+
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
 
         if (!isSignUp) return // sign-in isn't built on the backend yet
-
+        
         const response = await fetch('http://localhost:8080/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -61,13 +73,13 @@ function AuthPage(){
 
                  <div className={`collapsible ${isSignUp ? 'expanded' : ''}`}>
                     <div className="collapsible-inner password-hints">
-                        <p>At least 8 characters.</p>
-                        <p>At least 1 number.</p>
-                        <p>At least 1 special character.</p>
+                        <p className={isCharValid ? 'correct' : 'wrong'}>At least 8 characters.</p>
+                        <p className={isNumValid ? 'correct' : 'wrong'}>At least 1 number.</p>
+                        <p className={isSpecialCharValid ? 'correct' : 'wrong'}>At least 1 special character.</p>
                     </div>
                 </div>
 
-                <button type="submit" className="auth-submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+                <button type="submit" disabled={!isPasswordValid} className='auth-submit'>{isSignUp ? 'Sign Up' : 'Sign In'}</button>
 
             </form>
         </div>
