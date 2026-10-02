@@ -2,8 +2,6 @@ import '../styles/Dashboard.css'
 
 function Dashboard() {
 
-   const { user } = useUser()
-
   return (
     <div className="dash-page">
 
