@@ -46,7 +46,7 @@ public class AuthController {
         Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
         AppUser user = userInfo.get();
         
-        SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+        SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -63,7 +63,7 @@ public class AuthController {
         if(passwordEncoder.matches(request.password(), user.getPasswordHash())){
 
             log.info("User {} {} has logged into their account", user.getFirstName(), user.getLastName());
-            SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+            SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
             return ResponseEntity.status(HttpStatus.OK).body(response);
 
         }else{

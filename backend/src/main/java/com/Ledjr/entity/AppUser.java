@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
@@ -29,7 +30,7 @@ public class AppUser {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(insertable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     public Long getId() {
@@ -78,6 +79,11 @@ public class AppUser {
 
     public void setCreatedAt(LocalDateTime date) {
         this.createdAt = date;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
 }
