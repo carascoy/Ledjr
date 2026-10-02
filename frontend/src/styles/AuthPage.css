@@ -116,7 +116,8 @@
 }
 
 .auth-submit:disabled{
-    background: #999999;
+    color: #999999;
+    background: #1C3B2E;
     cursor: not-allowed;
 }
 
