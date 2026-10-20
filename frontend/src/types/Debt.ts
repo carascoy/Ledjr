@@ -3,6 +3,7 @@ export interface Debt{
     userId: number;
     creditorName: string;
     balance:number;
+    originalBalance:number;
     apr?:number;
     minPayment?:number;
     dueDate?:number;

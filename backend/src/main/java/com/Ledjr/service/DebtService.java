@@ -27,6 +27,7 @@ public class DebtService {
         debt.setUser(user);
         debt.setCreditorName(creditorName);
         debt.setBalance(balance);
+        debt.setOriginalBalance(balance);
         debt.setApr(apr);
         debt.setMinPayment(minPayment);
         debt.setDueDate(dueDate);

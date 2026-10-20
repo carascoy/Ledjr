@@ -29,6 +29,9 @@ public class Debt {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal balance;
 
+    @Column(precision = 10, scale = 2, nullable = false)
+    private BigDecimal originalBalance;
+
     @Column(precision = 5, scale = 2)
     private BigDecimal apr;
 
@@ -71,6 +74,14 @@ public class Debt {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public BigDecimal getOriginalBalance() {
+        return originalBalance;
+    }
+
+    public void setOriginalBalance(BigDecimal originalBalance) {
+        this.originalBalance = originalBalance;
     }
 
     public BigDecimal getApr() {

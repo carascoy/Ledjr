@@ -53,25 +53,20 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> register(@RequestBody  SigninRequest request){
 
-        if(appUserService.findByEmail(request.email()).isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not find user with this email");
+        // Same status + same body for "no such email" and "wrong password",
+        // so the response never reveals which emails are registered.
+        Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
+
+        if(userInfo.isEmpty() || !passwordEncoder.matches(request.password(), userInfo.get().getPasswordHash())){
+            log.info("Failed sign-in attempt.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect email or password.");
         }
 
-        Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
         AppUser user = userInfo.get();
 
-        if(passwordEncoder.matches(request.password(), user.getPasswordHash())){
-
-            log.info("User {} {} has logged into their account", user.getFirstName(), user.getLastName());
-            SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-
-        }else{
-
-            log.info("User was unable to log into an account, possible incorrect username or password entered.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is not cleared to access their account");
-        }
-
+        log.info("User {} {} has logged into their account", user.getFirstName(), user.getLastName());
+        SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 
