@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 20px;
+    padding-top: 24px;
     padding-left: 40px;
     padding-right: 40px; 
     background-color: #ffffff;
@@ -16,4 +16,50 @@
     border-radius: 28px;
     box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;             
 }
+
+.nav-logo img   { width: 64px; height: 64px; display: block; }   
+.nav-avatar     { background: none; border: none; cursor: pointer; }
+.nav-avatar img { width: 66px; height: 61px; display: block; }   
+
+.nav-link {
+    font-family: 'IBM Plex Sans', monospace;
+    color: inherit;
+    text-decoration: none;
+    font-size: 20px;              
+    font-weight: 500;              
+    transition: opacity 150ms ease;
+}
+.nav-link:hover { background-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    outline: none; }
+
+
+.dash-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 360px 220px;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.pill {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #D9D9D9;
+    border-radius: 28px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    padding: 24px;
+}
+
+.pill-income   { grid-column: span 7; }
+.pill-donut    { grid-column: span 5; }
+.pill-debts    { grid-column: span 3; }
+.pill-recent   { grid-column: span 4; }
+.pill-upcoming { grid-column: span 3; }
+.pill-add      { grid-column: span 2; }
