@@ -16,11 +16,11 @@ public class AppUserService {
     private final AppUserRepository userRepository;
     private static final Logger log = LoggerFactory.getLogger(AppUserService.class);
 
-    public AppUserService(AppUserRepository userRepository){
+    public AppUserService(AppUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public void register(String email, String passwordHash, String firstName, String lastName){
+    public void register(String email, String passwordHash, String firstName, String lastName) {
         AppUser user = new AppUser();
         user.setEmail(email);
         user.setPasswordHash(passwordHash);
@@ -30,12 +30,19 @@ public class AppUserService {
         log.info("New User Created-> UserID: {} | Email: {}", user.getId(), user.getEmail());
     }
 
-    public Optional<AppUser> findByEmail(String email){
+    public Optional<AppUser> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public boolean emailTaken(String email){
+    public boolean emailTaken(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public Optional<AppUser> findById(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        return userRepository.findById(id);
     }
 
 }
