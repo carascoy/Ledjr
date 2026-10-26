@@ -27,12 +27,13 @@
 .nav-avatar img { width: 66px; height: 61px; display: block; }   
 
 .nav-link {
-    font-family: 'IBM Plex Sans', monospace;
+    font-family: 'IBM Plex Mono', monospace;
     color: inherit;
     text-decoration: none;
     font-size: 20px;              
     font-weight: 500;              
-    transition: opacity 150ms ease;
+    border-radius: 8px;
+    transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 .nav-link:hover { background-color: rgba(0, 0, 0, 0.08);
     box-shadow: 0 0 0 12px rgba(0, 0, 0, 0.08);
