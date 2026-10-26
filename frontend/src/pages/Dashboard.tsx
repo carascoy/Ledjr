@@ -4,11 +4,20 @@ import avatar from "../assets/profile-icon.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import QuickAdd from "../components/QuickAdd";
+import RecentTransactions from "../components/RecentTransactions";
+import { useUser } from "../context/UserContext";
+import type { TransactionResponse } from "../types/TransactionResponse";
 
 function Dashboard() {
 
   const [scrolled, setScrolled] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const { user } = useUser();
+
+  // This month's transactions. null = still loading.
+  const [transactions, setTransactions] = useState<TransactionResponse[] | null>(null);
+  // Bumped after quick-add saves, to make the fetch below run again.
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // The month every pill shows data for. Always stored as the 1st of the month.
   const [month, setMonth] = useState(() => {
@@ -29,6 +38,30 @@ function Dashboard() {
     month: "long",
     year: "numeric",
   });
+  const monthName = month.toLocaleDateString("en-US", { month: "long" });
+  // "2026-10", the format GET /transactions expects
+  const monthParam = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`;
+
+  // Load the selected month's transactions. Re-runs when the user, month, or refreshKey changes.
+  useEffect(() => {
+    if (!user) return;
+
+    // If the month changes before this request finishes, ignore its (now stale) result.
+    let ignore = false;
+
+    fetch(`http://localhost:8080/transactions?userId=${user.id}&month=${monthParam}`)
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((data: TransactionResponse[]) => {
+        if (!ignore) setTransactions(data);
+      })
+      .catch(() => {
+        if (!ignore) setTransactions([]);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [user, monthParam, refreshKey]);
 
  
   useEffect(() => {
@@ -97,15 +130,29 @@ function Dashboard() {
       <QuickAdd
         open={addOpen}
         onClose={() => setAddOpen(false)}
-        onAdded={() => {}}
+        onAdded={() => setRefreshKey((k) => k + 1)}
       />
 
       <main className="dash-grid">
-        <section className="pill pill-income">Income vs Expenses</section>
-        <section className="pill pill-debts">Debts</section>
-        <section className="pill pill-spending">Spending by Category</section>
-        <section className="pill pill-recent">Recent Transactions</section>
-        <section className="pill pill-upcoming">Upcoming</section>
+        <section className="pill pill-income">
+          <h2 className="pill-title">Income vs Expenses</h2>
+        </section>
+        <section className="pill pill-debts">
+          <h2 className="pill-title">Debts</h2>
+        </section>
+        <section className="pill pill-spending">
+          <h2 className="pill-title">Spending by Category</h2>
+        </section>
+        <section className="pill pill-recent">
+          <RecentTransactions
+            transactions={transactions}
+            monthName={monthName}
+            signedIn={user !== null}
+          />
+        </section>
+        <section className="pill pill-upcoming">
+          <h2 className="pill-title">Upcoming</h2>
+        </section>
       </main>
     </div>
   );

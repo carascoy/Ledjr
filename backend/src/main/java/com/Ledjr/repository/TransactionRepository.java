@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.Ledjr.entity.Transaction;
 
@@ -31,5 +33,21 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     /** One user's transactions that haven't been assigned a category yet. */
     List<Transaction> findByUserIdAndCategoryIsNull(Long userId);
+
+    /**
+     * One user's transactions between two dates, newest first.
+     * Same-day ties go to the most recently added (higher id).
+     * JPQL: written against the Java classes/fields (Transaction, txnDate), not the table/columns.
+     */
+    @Query("""
+        SELECT t FROM Transaction t
+        WHERE t.user.id = :userId
+          AND t.txnDate BETWEEN :start AND :end
+        ORDER BY t.txnDate DESC, t.id DESC
+        """)
+    List<Transaction> findForPeriodNewestFirst(
+        @Param("userId") Long userId,
+        @Param("start") LocalDate start,
+        @Param("end") LocalDate end);
 
 }

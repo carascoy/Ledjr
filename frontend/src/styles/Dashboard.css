@@ -270,3 +270,67 @@
     color: red;
     margin: -16px 0 24px;
 }
+
+/* ---------- Pill contents ---------- */
+.pill {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;             /* long lists can't spill out (the pill's own shadow isn't affected) */
+}
+
+.pill-title {
+    font-family: 'IBM Plex Mono', monospace;   /* headers are mono */
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.pill-empty {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    color: #999999;
+}
+
+/* ---------- Recent transactions ---------- */
+.txn-list {
+    list-style: none;
+}
+
+.txn-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;   /* date | description | amount */
+    align-items: center;
+    gap: 12px;
+    height: 38px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    animation: pill-in 400ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.txn-row:last-child {
+    border-bottom: none;
+}
+
+.txn-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: #999999;
+}
+
+.txn-desc {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;      /* long descriptions end in "…" instead of wrapping */
+}
+
+.txn-amount {
+    font-family: 'IBM Plex Mono', monospace;   /* numbers are mono */
+    font-size: 16px;
+    font-weight: 700;
+    text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .txn-row { animation: none; }
+}

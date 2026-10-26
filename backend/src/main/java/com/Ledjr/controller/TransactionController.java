@@ -1,6 +1,9 @@
 package com.Ledjr.controller;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -46,8 +49,31 @@ public class TransactionController {
 
         Transaction saved = transactionService.newTransaction(user.get(), null, null, request.type(), request.amount(), date, request.description());
 
-        TransactionResponse response = new TransactionResponse(saved.getId(), saved.getType(), saved.getAmount(), saved.getTxnDate(), saved.getDescription());
+        TransactionResponse response = toResponse(saved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /** GET /transactions?userId=1&month=2026-10 — one month's transactions, newest first. */
+    @GetMapping
+    public ResponseEntity<?> list(@RequestParam Long userId, @RequestParam String month){
+        YearMonth ym;
+        try {
+            ym = YearMonth.parse(month);          // expects "2026-10"
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Month must look like 2026-10.");
+        }
+
+        List<TransactionResponse> body = transactionService.findForMonth(userId, ym)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+
+        return ResponseEntity.ok(body);
+    }
+
+    /** Entity -> DTO, so entities (and the user's password hash) never leave the server. */
+    private TransactionResponse toResponse(Transaction t){
+        return new TransactionResponse(t.getId(), t.getType(), t.getAmount(), t.getTxnDate(), t.getDescription());
     }
 }

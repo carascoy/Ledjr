@@ -2,6 +2,7 @@ package com.Ledjr.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -54,6 +55,11 @@ public class TransactionService {
 
     public List<Transaction> findByUserIdBetweenDates(Long userId, LocalDate start, LocalDate end){
         return transactionRepository.findByUserIdAndTxnDateBetween(userId, start, end);
+    }
+
+    /** Every transaction in one calendar month, newest first. */
+    public List<Transaction> findForMonth(Long userId, YearMonth month){
+        return transactionRepository.findForPeriodNewestFirst(userId, month.atDay(1), month.atEndOfMonth());
     }
 
     public List<Transaction> findUncategorized(Long userId){
