@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import QuickAdd from "../components/QuickAdd";
 import RecentTransactions from "../components/RecentTransactions";
+import MoneyInOut from "../components/MoneyInOut";
 import { useUser } from "../context/UserContext";
 import type { TransactionResponse } from "../types/TransactionResponse";
 
@@ -135,7 +136,11 @@ function Dashboard() {
 
       <main className="dash-grid">
         <section className="pill pill-income">
-          <h2 className="pill-title">Income vs Expenses</h2>
+          <MoneyInOut
+            transactions={transactions}
+            monthName={monthName}
+            signedIn={user !== null}
+          />
         </section>
         <section className="pill pill-debts">
           <h2 className="pill-title">Debts</h2>
