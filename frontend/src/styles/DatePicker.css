@@ -1,0 +1,169 @@
+/* ---------- Date picker trigger (looks like the other quick-add inputs) ---------- */
+.dp-trigger {
+    min-width: 150px;
+    text-align: left;
+    color: #000000;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.dp-trigger:hover,
+.dp-trigger[aria-expanded="true"] {
+    background-color: #ECECEC;
+}
+
+/* ---------- Popover ---------- */
+.dp-popover {
+    position: fixed;
+    z-index: 20;                  /* above the sticky nav (10) */
+    padding: 16px;
+    background: #D9D9D9;
+    border-radius: 28px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    transform-origin: top left;
+    animation: dp-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+@keyframes dp-pop {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+
+/* ---------- react-day-picker internals (rdp-*) ---------- */
+.dp-popover .rdp-months {
+    position: relative;           /* anchors the prev/next buttons */
+}
+
+.dp-popover .rdp-month_caption {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-family: 'IBM Plex Mono', monospace;   /* headers are mono */
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.dp-popover .rdp-nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 4px;
+    z-index: 1;
+}
+
+.dp-popover .rdp-button_previous,
+.dp-popover .rdp-button_next {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;          /* 28 − 16 padding: concentric */
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.dp-popover .rdp-button_previous:hover:not([aria-disabled="true"]),
+.dp-popover .rdp-button_next:hover:not([aria-disabled="true"]) {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.dp-popover .rdp-chevron {
+    width: 16px;
+    height: 16px;
+    fill: #000000;
+}
+
+.dp-popover .rdp-button_previous[aria-disabled="true"],
+.dp-popover .rdp-button_next[aria-disabled="true"] {
+    cursor: default;
+}
+
+.dp-popover .rdp-button_previous[aria-disabled="true"] .rdp-chevron,
+.dp-popover .rdp-button_next[aria-disabled="true"] .rdp-chevron {
+    fill: #BBBBBB;
+}
+
+.dp-popover .rdp-month_grid {
+    border-collapse: separate;
+    border-spacing: 4px;
+    margin-top: 8px;
+}
+
+.dp-popover .rdp-weekday {
+    height: 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: #999999;
+}
+
+.dp-popover .rdp-day {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    text-align: center;
+}
+
+.dp-popover .rdp-day_button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    font-family: 'IBM Plex Mono', monospace;   /* numbers are mono */
+    font-size: 15px;
+    color: #000000;
+    cursor: pointer;
+    transition:
+        background-color 150ms ease,
+        transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dp-popover .rdp-day_button:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.dp-popover .rdp-day_button:active {
+    transform: scale(0.92);
+}
+
+.dp-popover .rdp-day_button:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 2px;
+}
+
+.dp-popover .rdp-today .rdp-day_button {
+    font-weight: 700;
+    box-shadow: inset 0 0 0 2px rgba(28, 59, 46, 0.4);
+}
+
+.dp-popover .rdp-selected .rdp-day_button,
+.dp-popover .rdp-selected .rdp-day_button:hover {
+    background-color: #1C3B2E;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+.dp-popover .rdp-outside .rdp-day_button {
+    color: #999999;
+}
+
+.dp-popover .rdp-disabled .rdp-day_button {
+    color: #C4C4C4;
+    cursor: not-allowed;
+}
+
+.dp-popover .rdp-disabled .rdp-day_button:hover {
+    background-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dp-popover { animation: none; }
+    .dp-popover .rdp-day_button { transition: none; }
+}

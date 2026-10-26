@@ -3,3 +3,22 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+/* Shared expand/collapse animation (used by AuthPage and the dashboard quick-add) */
+.collapsible{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms ease;
+    gap: 13px;
+}
+
+.collapsible.expanded{
+    grid-template-rows: 1fr;
+}
+
+.collapsible-inner{
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

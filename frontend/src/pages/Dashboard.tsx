@@ -3,10 +3,12 @@ import logo from "../assets/ledjr.svg";
 import avatar from "../assets/profile-icon.svg";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import QuickAdd from "../components/QuickAdd";
 
 function Dashboard() {
 
   const [scrolled, setScrolled] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
 
   // The month every pill shows data for. Always stored as the 1st of the month.
   const [month, setMonth] = useState(() => {
@@ -83,10 +85,20 @@ function Dashboard() {
             ›
           </button>
         </div>
-        <button type="button" className="quick-add">
-          + Add transaction
+        <button
+          type="button"
+          className="quick-add"
+          onClick={() => setAddOpen((o) => !o)}
+        >
+          {addOpen ? "Close" : "+ Add Transaction"}
         </button>
       </header>
+
+      <QuickAdd
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onAdded={() => {}}
+      />
 
       <main className="dash-grid">
         <section className="pill pill-income">Income vs Expenses</section>

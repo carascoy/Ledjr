@@ -194,3 +194,79 @@
 .pill-spending { grid-area: spending; }
 .pill-recent   { grid-area: recent; }
 .pill-upcoming { grid-area: upcoming; }
+
+/* ---------- Quick-add form ---------- */
+/* No shadow on purpose: .collapsible-inner has overflow: hidden, which would clip it. */
+.qa-form {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 32px;
+    background: #D9D9D9;
+    border-radius: 28px;
+}
+
+.qa-input {
+    height: 48px;
+    background: #F5F5F5;
+    border: none;
+    border-radius: 12px;          /* 28 − 16 padding: concentric */
+    padding: 0 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px;
+}
+
+.qa-amount      { width: 140px; font-family: 'IBM Plex Mono', monospace; }
+.qa-description { flex: 1; }
+
+.qa-type {
+    display: flex;
+    background: #F5F5F5;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.qa-type button {
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 8px;           /* 12 − 4 padding: concentric */
+    background: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #999999;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.qa-type .qa-type-active {
+    background: #ffffff;
+    color: #000000;
+}
+
+.qa-submit {
+    height: 48px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 12px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.qa-submit:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.qa-error {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    color: red;
+    margin: -16px 0 24px;
+}

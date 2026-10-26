@@ -52,24 +52,6 @@
     color: #999999;
 }
 
-.collapsible{
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 300ms ease;
-    gap: 13px;
-}
-
-.collapsible.expanded{
-    grid-template-rows: 1fr;
-}
-
-.collapsible-inner{
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
 .error-text{
     font-size: 16px;
     font-family: 'IBM Plex Sans', sans-serif;
