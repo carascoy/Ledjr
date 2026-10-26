@@ -155,6 +155,9 @@
     border-radius: 28px;
     box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;             /* long lists can't spill out (the pill's own shadow isn't affected) */
     animation: pill-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
     transition:
         transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -176,7 +179,6 @@
 .pill:nth-child(3) { animation-delay: 120ms; }
 .pill:nth-child(4) { animation-delay: 180ms; }
 .pill:nth-child(5) { animation-delay: 240ms; }
-.pill:nth-child(6) { animation-delay: 300ms; }
 
 @keyframes pill-in {
     from { transform: scale(0.94); }
@@ -272,12 +274,6 @@
 }
 
 /* ---------- Pill contents ---------- */
-.pill {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;             /* long lists can't spill out (the pill's own shadow isn't affected) */
-}
-
 .pill-title {
     font-family: 'IBM Plex Mono', monospace;   /* headers are mono */
     font-size: 18px;
@@ -335,76 +331,85 @@
     .txn-row { animation: none; }
 }
 
-/* ---------- Income vs Expenses: money in vs money out ---------- */
-/* Bar colors validated with the dataviz checker against the #D9D9D9 pill
-   (lightness, chroma, colorblind separation and 3:1 contrast all pass).
-   They're identity colors (which pile), not good/bad, so not the brand green. */
-.pill-income {
-    --io-in: #1F7A4D;
-    --io-out: #6250D6;
+/* ---------- Income vs Expenses (IncomeExpenseChart.tsx, Recharts) ---------- */
+/* Bar colors live in the component; they were validated with the dataviz checker
+   against the #D9D9D9 pill (lightness, chroma, colorblind separation, 3:1 contrast). */
+.io-figures {
+    display: flex;
+    gap: 48px;
+    margin-bottom: 20px;
 }
-
-.io-body {
-    flex: 1;
+.io-figures > div {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 40px;
-}
-
-.io-row {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.io-figure {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
+    gap: 4px;
 }
 
 .io-label {
-    width: 120px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     color: #52514E;
 }
 
 .io-amount {
     font-family: 'IBM Plex Mono', monospace;   /* big numbers are mono */
-    font-size: 56px;
+    font-size: 44px;
     font-weight: 700;
     line-height: 1;
     color: #000000;
 }
 
-.io-bar {
-    height: 24px;                 /* thin mark, capped */
-    min-width: 4px;               /* a $0 side still shows a sliver at the baseline */
-    border-radius: 0 4px 4px 0;   /* square at the baseline, rounded data-end */
-    transform-origin: left;
-    animation: io-grow 700ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-    transition: width 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Legend keys mirror the bars: small rounded rects */
+.io-key {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
 }
-.io-in  { background: var(--io-in); }
-.io-out { background: var(--io-out); animation-delay: 80ms; }
 
-@keyframes io-grow {
-    from { transform: scaleX(0); }
-    to   { transform: scaleX(1); }
+/* The chart takes all the height left between the numbers and the verdict */
+.io-chart {
+    flex: 1;
+    min-height: 0;
+}
+
+.io-tooltip {
+    padding: 10px 12px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.18);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.io-tooltip span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.io-tooltip b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+
+/* Tooltip keys are short line strokes, not boxes */
+.io-line {
+    width: 12px;
+    height: 3px;
+    border-radius: 2px;
+    display: inline-block;
 }
 
 .io-verdict {
+    margin-top: 8px;
     font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     color: #52514E;
 }
 .io-verdict b {
     font-family: 'IBM Plex Mono', monospace;
     color: #000000;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .io-bar { animation: none; transition: none; }
 }
