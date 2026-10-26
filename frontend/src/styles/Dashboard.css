@@ -11,9 +11,86 @@
     padding-bottom: 40px;
 }
 
+.dash-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0 24px;
+}
+
+.month-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.month-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    min-width: 300px;          /* fits "September 2026" so the arrows don't jump */
+    text-align: center;
+    animation: month-in 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.month-arrow {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: inherit;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.month-arrow:hover:not(:disabled),
+.month-arrow:focus-visible {
+    background-color: rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+
+.month-arrow:disabled {
+    color: #999999;
+    cursor: default;
+}
+
+@keyframes month-in {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+
+.quick-add {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1C3B2E;
+    border: none;
+    border-radius: 24px;
+    height: 48px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition:
+        transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 250ms ease;
+}
+
+.quick-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 20px 0px rgba(28, 59, 46, 0.35);
+}
+
 .nav-card{
     height: 68px;
-    background: #D9D9D9;
+    background-color: #D9D9D9;
+    backdrop-filter: blur(0px) saturate(100%);
+    -webkit-backdrop-filter: blur(0px) saturate(100%);
+    border: 1px solid transparent;
     border-radius: 28px;
     box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
     width: 100%;
@@ -23,7 +100,22 @@
     padding: 0 15px;
     transition:
         transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 250ms ease;             
+        box-shadow 250ms ease,
+        background-color 300ms ease,
+        backdrop-filter 300ms ease,
+        -webkit-backdrop-filter 300ms ease,
+        border-color 300ms ease;
+    position: sticky;
+    top: 24px;
+    z-index: 10;             
+}
+
+/* Frosted glass once content scrolls underneath (class set in Dashboard.tsx) */
+.nav-card.scrolled {
+    background-color: rgba(217, 217, 217, 0.55);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .nav-logo img   { width: 64px; height: 64px; display: block; }   
@@ -47,12 +139,14 @@
 
 .dash-grid {
     width: 100%;
-    flex: 1;                                              /* take the leftover height */
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: minmax(300px, 3fr) minmax(200px, 2fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 220px 220px 240px;
+    grid-template-areas:
+        "income   income  debts"
+        "income   income  upcoming"
+        "spending recent  upcoming";
     gap: 32px;
-    margin-top: 32px;
 }
 
 .pill {
@@ -92,11 +186,11 @@
 @media (prefers-reduced-motion: reduce) {
     .pill { animation: none; transition: none; }
     .nav-card { transition: none; }
+    .month-label { animation: none; }
 }
 
-.pill-income   { grid-column: span 7; }
-.pill-donut    { grid-column: span 5; }
-.pill-debts    { grid-column: span 3; }
-.pill-recent   { grid-column: span 4; }
-.pill-upcoming { grid-column: span 3; }
-.pill-add      { grid-column: span 2; }
+.pill-income   { grid-area: income; }
+.pill-debts    { grid-area: debts; }
+.pill-spending { grid-area: spending; }
+.pill-recent   { grid-area: recent; }
+.pill-upcoming { grid-area: upcoming; }
