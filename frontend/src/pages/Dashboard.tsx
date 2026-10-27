@@ -6,6 +6,9 @@ import RecentTransactions from "../components/RecentTransactions";
 import IncomeExpenseChart from "../components/IncomeExpenseChart";
 import SpendingDonut from "../components/SpendingDonut";
 import DebtsPill from "../components/DebtsPill";
+import MonthSwitcher from "../components/MonthSwitcher";
+import { toMonthParam } from "../utils/months";
+import { useMonth } from "../context/MonthContext";
 import { useUser } from "../context/UserContext";
 import type { TransactionResponse } from "../types/TransactionResponse";
 
@@ -29,27 +32,10 @@ function Dashboard() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   // the month all the pills show. always stored as the 1st
-  const [month, setMonth] = useState(() => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), 1);
-  });
+  const { month, setMonth } = useMonth();
 
-  const today = new Date();
-  const isCurrentMonth =
-    month.getFullYear() === today.getFullYear() &&
-    month.getMonth() === today.getMonth();
-
-  // -1 = prev month, +1 = next. new Date() handles the year rollover itself
-  const shiftMonth = (delta: number) =>
-    setMonth((m) => new Date(m.getFullYear(), m.getMonth() + delta, 1));
-
-  const monthLabel = month.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
   const monthName = month.toLocaleDateString("en-US", { month: "long" });
-  // "2026-10", what GET /transactions wants
-  const monthParam = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`;
+  const monthParam = toMonthParam(month);
 
   useEffect(() => {
     if (!user) return;
@@ -75,29 +61,7 @@ function Dashboard() {
   return (
     <>
       <header className="dash-header">
-        <div className="month-switcher">
-          <button
-            type="button"
-            className="month-arrow"
-            onClick={() => shiftMonth(-1)}
-            aria-label="Previous month"
-          >
-            ‹
-          </button>
-          {/* key forces a new h1 each change so the pop animation replays */}
-          <h1 key={monthLabel} className="month-label">
-            {monthLabel}
-          </h1>
-          <button
-            type="button"
-            className="month-arrow"
-            onClick={() => shiftMonth(1)}
-            disabled={isCurrentMonth}
-            aria-label="Next month"
-          >
-            ›
-          </button>
-        </div>
+        <MonthSwitcher month={month} onChange={setMonth} />
         <button
           type="button"
           className="quick-add"

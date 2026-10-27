@@ -6,6 +6,7 @@ import CategoryPicker from "./CategoryPicker";
 import OptionPicker from "./OptionPicker";
 import type { CategoryResponse } from "../types/CategoryResponse";
 import type { DebtResponse } from "../types/DebtResponse";
+import type { TransactionResponse } from "../types/TransactionResponse";
 
 // payment = paying off a debt (lowers the balance, NOT spending)
 type TxnType = "expense" | "income" | "payment";
@@ -16,22 +17,25 @@ type Props = {
   open: boolean;
   onClose: () => void;
   onAdded: () => void;
+  // pass a transaction to edit it instead (saves with PUT). give the component
+  // key={editing.id} so it remounts and picks up the new starting values
+  editing?: TransactionResponse | null;
 };
 
-function QuickAdd({ open, onClose, onAdded }: Props) {
+function QuickAdd({ open, onClose, onAdded, editing = null }: Props) {
   const { user } = useUser();
   const today = toInputDate(new Date());
 
-  const [type, setType] = useState<TxnType>("expense");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(today);
+  const [type, setType] = useState<TxnType>(editing?.type ?? "expense");
+  const [amount, setAmount] = useState(editing ? String(editing.amount) : "");
+  const [description, setDescription] = useState(editing?.description ?? "");
+  const [date, setDate] = useState(editing?.txnDate ?? today);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [categoryId, setCategoryId] = useState<number | null>(editing?.categoryId ?? null);
   const [categories, setCategories] = useState<CategoryResponse[] | null>(null);
   // expense: which card (null = bank/cash). payment: which debt
-  const [debtId, setDebtId] = useState<number | null>(null);
+  const [debtId, setDebtId] = useState<number | null>(editing?.debtId ?? null);
   const [debts, setDebts] = useState<DebtResponse[]>([]);
 
   useEffect(() => {
@@ -91,8 +95,11 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
     setSaving(true);
     setError("");
     try {
-      const response = await fetch("http://localhost:8080/transactions", {
-        method: "POST",
+      const url = editing
+        ? `http://localhost:8080/transactions/${editing.id}`
+        : "http://localhost:8080/transactions";
+      const response = await fetch(url, {
+        method: editing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
@@ -202,7 +209,7 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
             className="qa-submit"
             disabled={saving || !amount || (type === "payment" && debtId === null)}
           >
-            {saving ? "Saving…" : "Add"}
+            {saving ? "Saving…" : editing ? "Save" : "Add"}
           </button>
         </form>
 

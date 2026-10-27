@@ -202,6 +202,12 @@
     min-width: 0;                 /* lets text shrink so the tag doesn't shove the amount out */
 }
 
+/* tags + "on Discover" keep their size, the description is what gets cut with "…" */
+.txn-desc > .cat-tag,
+.txn-desc > .txn-debt {
+    flex-shrink: 0;
+}
+
 .txn-desc-text {
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 16px;

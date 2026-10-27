@@ -12,6 +12,12 @@
     padding-bottom: 40px;
 }
 
+/* .app-page centers its kids, so anything that should span the page needs width: 100%.
+   the slide-open forms (quick-add etc) were shrinking to fit their contents */
+.app-page > .collapsible {
+    width: 100%;
+}
+
 
 .nav-card{
     height: 68px;

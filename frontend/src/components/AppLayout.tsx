@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
+import MonthProvider from "./MonthProvider";
 import "../styles/Layout.css";
 
 // wrapper for every signed-in page: padding + nav on top
@@ -13,10 +14,12 @@ function AppLayout() {
   }, [pathname]);
 
   return (
-    <div className="app-page">
-      <NavBar />
-      <Outlet />
-    </div>
+    <MonthProvider>
+      <div className="app-page">
+        <NavBar />
+        <Outlet />
+      </div>
+    </MonthProvider>
   );
 }
 

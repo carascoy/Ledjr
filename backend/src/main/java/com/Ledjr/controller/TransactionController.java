@@ -1,5 +1,6 @@
 package com.Ledjr.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
@@ -39,8 +40,40 @@ public class TransactionController {
         this.debtService = debtService;
     }
 
+    /** POST /transactions - add one */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateTransactionRequest request){
+        return save(request, null);
+    }
+
+    /** PUT /transactions/{id} - replace it. same body as POST, the whole thing gets resent */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CreateTransactionRequest request){
+        Optional<Transaction> existing = transactionService.findById(id);
+        // same 404 if it doesn't exist or isn't theirs
+        if (existing.isEmpty() || request.userId() == null || !existing.get().getUser().getId().equals(request.userId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found.");
+        }
+        return save(request, existing.get());
+    }
+
+    /** DELETE /transactions/{id}?userId=1 - puts any debt balance back first */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam Long userId){
+        Optional<Transaction> existing = transactionService.findById(id);
+        if (existing.isEmpty() || !existing.get().getUser().getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found.");
+        }
+        try {
+            transactionService.delete(existing.get());
+        } catch (TransactionService.BalanceWouldGoNegativeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    /** create and edit share all the same checks. existing = null means create */
+    private ResponseEntity<?> save(CreateTransactionRequest request, Transaction existing){
 
         if (request.amount() == null || request.amount().signum() <= 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Amount must be greater than 0.");
@@ -91,19 +124,26 @@ public class TransactionController {
             if ("expense".equals(type) && debt.getKind() != Debt.Kind.card) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Purchases can only go on a card, not a loan.");
             }
-            if (isPayment && request.amount().compareTo(debt.getBalance()) > 0) {
+            // when editing, the old version's effect gets undone first, so count that in
+            BigDecimal left = transactionService.balanceWithout(existing, debt);
+            if (isPayment && request.amount().compareTo(left) > 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("That's more than the $" + debt.getBalance().toPlainString() + " left on " + debt.getCreditorName() + ".");
+                    .body("That's more than the $" + left.toPlainString() + " left on " + debt.getCreditorName() + ".");
             }
         }
 
         LocalDate date = request.txnDate() != null ? request.txnDate() : LocalDate.now();
 
-        Transaction saved = transactionService.record(user.get(), category, debt, type, request.amount(), date, request.description());
-
-        TransactionResponse response = toResponse(saved);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        if (existing == null) {
+            Transaction saved = transactionService.record(user.get(), category, debt, type, request.amount(), date, request.description());
+            return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(saved));
+        }
+        try {
+            Transaction saved = transactionService.update(existing, category, debt, type, request.amount(), date, request.description());
+            return ResponseEntity.ok(toResponse(saved));
+        } catch (TransactionService.BalanceWouldGoNegativeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     /** GET /transactions?userId=1&month=2026-10 - one month, newest first */

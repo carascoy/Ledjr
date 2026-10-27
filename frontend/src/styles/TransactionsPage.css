@@ -1,0 +1,225 @@
+/* ---------- Transactions page ---------- */
+/* reuses .txn-date / .txn-desc / .txn-amount + the quick-add look from Dashboard.css */
+
+.txns-message {
+    margin-top: 24px;
+}
+
+.txns-editing {
+    width: 100%;
+    margin: -8px 0 12px 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.txns-editing b {
+    color: #000000;
+}
+
+/* income / spent / payments / count across the top, with the income bar under them */
+.txns-summary {
+    width: 100%;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.txns-summary-figures {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
+    gap: 16px 32px;
+}
+.txns-summary-figures > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.txns-summary-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+
+/* little color keys that match the bar (same green + amber as the dashboard chart).
+   debt payments are dark ink, not a 3rd color: every warm color I tried was too close
+   to the green or amber for colorblind people, ink stands out by lightness instead */
+.txns-key {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+.txns-key--income { background: #1F7A4D; }
+.txns-key--spent  { background: #D98F2B; }
+.txns-key--paid   { background: #3A3936; }
+
+/* track = all of the income (light green), segments eat into it from the left */
+.txns-bar {
+    display: flex;
+    gap: 2px;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(31, 122, 77, 0.22);
+    animation: txns-bar-grow 800ms ease-out backwards;
+}
+.txns-bar-seg {
+    height: 100%;
+}
+.txns-bar-seg--spent { background: #D98F2B; }
+.txns-bar-seg--paid  { background: #3A3936; }
+
+/* grows left to right, same timing as the dashboard chart */
+@keyframes txns-bar-grow {
+    from { clip-path: inset(0 100% 0 0 round 6px); }
+    to   { clip-path: inset(0 0 0 0 round 6px); }
+}
+
+.txns-bar-caption {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.txns-bar-caption b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+.txns-summary-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* the big list doesn't lift on hover like the small cards, it's too tall for that */
+.pill.txns-list-pill:hover,
+.pill.txns-list-pill:active,
+.pill.txns-summary:hover,
+.pill.txns-summary:active {
+    transform: none;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+}
+
+.txns-list-pill {
+    width: 100%;
+}
+
+.txns-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+.txns-filter button {
+    font-size: 15px;
+}
+.txns-search {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    font-size: 16px;
+}
+.txns-search:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 1px;
+}
+
+.txns-list {
+    list-style: none;
+}
+
+/* date | description | amount | buttons. buttons column is fixed so amounts line up */
+.txns-row {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto 168px;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 0 8px;
+    border-radius: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    transition: background-color 150ms ease;
+}
+.txns-row:last-child {
+    border-bottom: none;
+}
+.txns-row:hover,
+.txns-row:focus-within {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+.txns-row--editing,
+.txns-row--editing:hover {
+    background-color: #F5F5F5;
+}
+
+.txns-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+.txns-confirm {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 4px;
+}
+.txns-btn {
+    height: 32px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 10px;
+    background: #F5F5F5;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1C3B2E;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.txns-btn:hover,
+.txns-btn:focus-visible {
+    background: #ffffff;
+    outline: none;
+}
+/* no red for this (style guide), dark brand green instead */
+.txns-btn--danger {
+    background: #1C3B2E;
+    color: #ffffff;
+}
+.txns-btn--danger:hover,
+.txns-btn--danger:focus-visible {
+    background: #10241C;
+}
+.txns-btn:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.txns-row-error {
+    grid-column: 1 / -1;
+    padding-bottom: 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: red;
+}
+
+/* deleted row: slides left a bit, squishes, then collapses so the rows below slide up */
+.txns-row--removing {
+    overflow: hidden;
+    pointer-events: none;
+    animation: txns-row-out 360ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes txns-row-out {
+    0%   { transform: none; opacity: 1; max-height: 64px; }
+    45%  { transform: translateX(-24px) scale(0.97); opacity: 0; max-height: 64px; }
+    100% { transform: translateX(-24px) scale(0.97); opacity: 0; max-height: 0; min-height: 0;
+           padding-top: 0; padding-bottom: 0; border-bottom-width: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .txns-row, .txns-btn { transition: none; }
+    .txns-bar { animation: none; }
+}
