@@ -2,6 +2,8 @@ package com.Ledjr.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,6 +16,11 @@ import java.math.BigDecimal;
 @Entity
 @Table(name="debt")
 public class Debt {
+
+    /** loan = installment debt (shown as % paid off), card = revolving debt (shown as % of limit used). */
+    public enum Kind {
+        loan, card
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +50,30 @@ public class Debt {
 
     @Column
     private Integer priorityRank;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Kind kind = Kind.loan;
+
+    /** Cards only: the credit limit, so utilization = balance / creditLimit. */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal creditLimit;
+
+    public Kind getKind() {
+        return kind;
+    }
+
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
+
+    public BigDecimal getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(BigDecimal creditLimit) {
+        this.creditLimit = creditLimit;
+    }
 
     public Long getId() {
         return id;

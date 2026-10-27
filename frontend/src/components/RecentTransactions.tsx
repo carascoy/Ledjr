@@ -39,10 +39,14 @@ function RecentTransactions({ transactions, monthName, signedIn }: Props) {
             <span className="txn-date">{formatDay(t.txnDate)}</span>
             <span className="txn-desc">
               <span className="txn-desc-text">
-                {t.description || (t.type === "income" ? "Income" : "Expense")}
+                {t.description ||
+                (t.type === "income" ? "Income" : t.type === "payment" ? "Payment" : "Expense")}
               </span>
               {t.categoryName && (
                 <CategoryTag name={t.categoryName} colorSlot={t.categoryColorSlot} />
+              )}
+              {t.debtName && (
+                <span className="txn-debt">{t.type === "payment" ? `→ ${t.debtName}` : `on ${t.debtName}`}</span>
               )}
             </span>
             <span className="txn-amount">

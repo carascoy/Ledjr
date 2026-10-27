@@ -1,0 +1,228 @@
+/* ---------- Debts pill ---------- */
+.debt-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.debt-add {
+    height: 32px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 16px;
+    background: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1C3B2E;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.debt-add:hover,
+.debt-add:focus-visible,
+.debt-add[aria-expanded="true"] {
+    background-color: rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+
+.debt-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+}
+
+.debt-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.debt-pct {
+    font-family: 'IBM Plex Mono', monospace;   /* big numbers are mono */
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000000;
+}
+.debt-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    color: #52514E;
+}
+
+/* Meter: the unfilled track is a light step of the same green as the fill */
+.debt-meter {
+    border-radius: 6px;
+    overflow: hidden;
+}
+/* Loans: green "paid off". Cards: amber "used" (same amber as expenses on the dashboard). */
+.debt-meter--loan { background: rgba(31, 122, 77, 0.18); }
+.debt-meter--card { background: rgba(217, 143, 43, 0.22); }
+.debt-meter--large { height: 12px; }
+.debt-meter--small { height: 8px; }
+
+.debt-meter-fill {
+    height: 100%;
+    border-radius: 6px;
+    transform-origin: left;
+    animation: debt-grow 800ms ease-out backwards;
+    transition: width 500ms ease-out;
+}
+@keyframes debt-grow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+.debt-caption {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.debt-caption b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+
+/* ---------- Add-debt popover ---------- */
+.debt-popover {
+    position: fixed;
+    z-index: 20;                  /* above the sticky nav (10) */
+    width: 340px;
+    padding: 16px;
+    background: #D9D9D9;
+    border-radius: 28px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    transform-origin: top right;
+    animation: debt-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes debt-pop {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+
+.debt-form--compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+}
+
+.debt-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #52514E;
+}
+.debt-field em {
+    font-style: normal;
+    color: #999999;
+}
+.debt-form--compact .debt-field-name {
+    grid-column: 1 / -1;
+}
+.debt-field input {
+    width: 100%;                  /* inputs have a default width that would overflow the grid cell */
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 12px;          /* 28 − 16 padding: concentric */
+    background: #F5F5F5;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    color: #000000;
+}
+.debt-field input:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 1px;
+}
+.debt-field-name input {
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.debt-submit {
+    height: 44px;
+    border: none;
+    border-radius: 12px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.debt-submit:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.debt-error {
+    margin-top: 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: red;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .debt-meter-fill, .debt-popover { animation: none; transition: none; }
+}
+
+.debt-form--compact .debt-submit {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+}
+
+/* Wide layout (Debts page): every field on one row, button at the end */
+.debt-form--wide {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) repeat(5, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: 12px;
+}
+.debt-form--wide .debt-submit {
+    padding: 0 20px;
+    height: 40px;
+}
+
+.debt-meter--loan .debt-meter-fill { background: #1F7A4D; }
+.debt-meter--card .debt-meter-fill { background: #D98F2B; }
+
+/* Pill: total owed, then one row per kind */
+.debt-owed {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000000;
+}
+.debt-row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 84px;   /* label | meter | value */
+    align-items: center;
+    gap: 12px;
+}
+.debt-row-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.debt-row-value {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+    text-align: right;
+}
+.debt-row-value b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+
+/* Loan / Credit card toggle above the form (reuses the quick-add toggle look) */
+.debt-kind {
+    display: inline-flex;
+    margin-bottom: 12px;
+}

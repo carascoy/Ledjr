@@ -23,7 +23,7 @@ type Slice = { key: string; name: string; value: number; color: string };
 function buildSlices(transactions: TransactionResponse[]): Slice[] {
   const byKey = new Map<string, Slice>();
   for (const t of transactions) {
-    if (t.type === "income") continue;
+    if (t.type !== "expense") continue; // income and debt payments aren't spending
     const key = t.categoryId == null ? "none" : String(t.categoryId);
     const existing = byKey.get(key);
     if (existing) {

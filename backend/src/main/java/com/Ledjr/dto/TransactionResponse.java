@@ -11,5 +11,7 @@ public record TransactionResponse(
     String description,
     Long categoryId,          // null when uncategorized
     String categoryName,      // null when uncategorized
-    Integer categoryColorSlot // null when uncategorized; 0-7 otherwise
+    Integer categoryColorSlot, // null when uncategorized; 0-7 otherwise
+    Long debtId,              // the debt paid (payment) or the card charged (expense); null otherwise
+    String debtName
 ) {}

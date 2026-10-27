@@ -3,9 +3,14 @@ import { useUser } from "../context/UserContext";
 import { toInputDate } from "../utils/dates";
 import DatePicker from "./DatePicker";
 import CategoryPicker from "./CategoryPicker";
+import OptionPicker from "./OptionPicker";
 import type { CategoryResponse } from "../types/CategoryResponse";
+import type { DebtResponse } from "../types/DebtResponse";
 
-type TxnType = "expense" | "income";
+// payment = money sent to a debt (lowers its balance, not counted as spending)
+type TxnType = "expense" | "income" | "payment";
+
+const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 type Props = {
   open: boolean;
@@ -25,6 +30,9 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
   const [saving, setSaving] = useState(false);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [categories, setCategories] = useState<CategoryResponse[] | null>(null);
+  // Expense: the card it was put on (null = paid from the bank). Payment: the debt being paid.
+  const [debtId, setDebtId] = useState<number | null>(null);
+  const [debts, setDebts] = useState<DebtResponse[]>([]);
 
   // Load the user's categories the first time the form opens.
   useEffect(() => {
@@ -43,9 +51,34 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
     };
   }, [open, user, categories]);
 
-  // Switching Expense/Income clears the category, since categories belong to one kind.
+  // Load debts every time the form opens, so balances in the pickers are current.
+  useEffect(() => {
+    if (!open || !user) return;
+    let ignore = false;
+    fetch(`http://localhost:8080/debts?userId=${user.id}`)
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((data: DebtResponse[]) => {
+        if (!ignore) setDebts(data);
+      })
+      .catch(() => {
+        if (!ignore) setDebts([]);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [open, user]);
+
+  const cardOptions = debts
+    .filter((d) => d.kind === "card")
+    .map((d) => ({ id: d.id, label: d.creditorName, hint: currency.format(d.balance) }));
+  const debtOptions = debts.map((d) => ({ id: d.id, label: d.creditorName, hint: currency.format(d.balance) }));
+
+  // Switching type clears the category and debt, since each belongs to one type.
   function changeType(next: TxnType) {
-    if (next !== type) setCategoryId(null);
+    if (next !== type) {
+      setCategoryId(null);
+      setDebtId(null);
+    }
     setType(next);
   }
 
@@ -68,7 +101,8 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
           amount: Number(amount),
           txnDate: date,
           description,
-          categoryId,
+          categoryId: type === "payment" ? null : categoryId,
+          debtId: type === "income" ? null : debtId,
         }),
       });
 
@@ -77,6 +111,7 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
         setDescription("");
         setDate(today);
         setCategoryId(null);
+        setDebtId(null);
         onAdded();
         onClose();
       } else {
@@ -108,6 +143,13 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
             >
               Income
             </button>
+            <button
+              type="button"
+              className={type === "payment" ? "qa-type-active" : ""}
+              onClick={() => changeType("payment")}
+            >
+              Payment
+            </button>
           </div>
 
           <input
@@ -122,23 +164,44 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
           />
           <input
             className="qa-input qa-description"
-            placeholder="Description"
+            placeholder={type === "payment" ? "Note (optional)" : "Description"}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <CategoryPicker
-            categories={categories}
-            kind={type}
-            value={categoryId}
-            onChange={setCategoryId}
-            onCategoriesChanged={setCategories}
-          />
+          {type === "payment" ? (
+            <OptionPicker
+              ariaLabel="Debt being paid"
+              placeholder="Which debt?"
+              options={debtOptions}
+              value={debtId}
+              onChange={setDebtId}
+              emptyMessage="No debts yet. Add one on the Debts page."
+            />
+          ) : (
+            <CategoryPicker
+              categories={categories}
+              kind={type}
+              value={categoryId}
+              onChange={setCategoryId}
+              onCategoriesChanged={setCategories}
+            />
+          )}
+          {type === "expense" && cardOptions.length > 0 && (
+            <OptionPicker
+              ariaLabel="Paid with"
+              placeholder="Paid with"
+              noneLabel="Bank / cash"
+              options={cardOptions}
+              value={debtId}
+              onChange={setDebtId}
+            />
+          )}
           <DatePicker value={date} onChange={setDate} max={new Date()} />
 
           <button
             type="submit"
             className="qa-submit"
-            disabled={saving || !amount}
+            disabled={saving || !amount || (type === "payment" && debtId === null)}
           >
             {saving ? "Saving…" : "Add"}
           </button>

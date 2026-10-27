@@ -1,0 +1,184 @@
+/* ---------- App shell: page wrapper + nav, shared by every signed-in page ---------- */
+.app-page {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 24px;
+    padding-left: 40px;
+    padding-right: 40px; 
+    background-color: #ffffff;
+    padding-bottom: 40px;
+}
+
+
+.nav-card{
+    height: 68px;
+    background-color: #D9D9D9;
+    backdrop-filter: blur(0px) saturate(100%);
+    -webkit-backdrop-filter: blur(0px) saturate(100%);
+    border: 1px solid transparent;
+    border-radius: 28px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    transition:
+        transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 250ms ease,
+        background-color 300ms ease,
+        backdrop-filter 300ms ease,
+        -webkit-backdrop-filter 300ms ease,
+        border-color 300ms ease;
+    position: sticky;
+    top: 24px;
+    z-index: 10;             
+}
+
+/* Frosted glass once content scrolls underneath (class set in NavBar.tsx) */
+.nav-card.scrolled {
+    background-color: rgba(217, 217, 217, 0.55);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-logo img   { width: 64px; height: 64px; display: block; }   
+.nav-avatar     { background: none; border: none; cursor: pointer; }
+.nav-avatar img { width: 66px; height: 61px; display: block; }   
+
+.nav-link {
+    font-family: 'IBM Plex Mono', monospace;
+    color: inherit;
+    text-decoration: none;
+    font-size: 20px;              
+    font-weight: 500;              
+    border-radius: 8px;
+    transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+.nav-link:hover,
+.nav-link:focus-visible,
+.nav-link.is-active {
+    background-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    outline: none;
+}
+
+/* The page you're on keeps its capsule and goes bold */
+.nav-link.is-active {
+    font-weight: 700;
+}
+
+
+
+.nav-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 14px 32px 0px rgba(0, 0, 0, 0.28);
+}
+
+/* ---------- Shared page pieces ---------- */
+.page-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0 24px;
+}
+
+.page-title {
+    font-family: 'IBM Plex Mono', monospace;   /* headers are mono */
+    font-size: 32px;
+    font-weight: 700;
+    animation: page-title-in 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes page-title-in {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+
+/* Main action button (same look as "+ Add Transaction") */
+.btn-primary {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1C3B2E;
+    border: none;
+    border-radius: 24px;
+    height: 48px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition:
+        transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 250ms ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 20px 0px rgba(28, 59, 46, 0.35);
+}
+
+/* ---------- Cards ("pills"): used by every page ---------- */
+.pill {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #D9D9D9;
+    border-radius: 28px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;             /* long lists can't spill out (the pill's own shadow isn't affected) */
+    animation: pill-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    transition:
+        transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 250ms ease;
+}
+
+.pill:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 14px 32px 0px rgba(0, 0, 0, 0.28);
+}
+
+.pill:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+/* one after another on page load */
+.pill:nth-child(2) { animation-delay: 60ms; }
+.pill:nth-child(3) { animation-delay: 120ms; }
+.pill:nth-child(4) { animation-delay: 180ms; }
+.pill:nth-child(5) { animation-delay: 240ms; }
+
+@keyframes pill-in {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+
+.pill-title {
+    font-family: 'IBM Plex Mono', monospace;   /* headers are mono */
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.pill-empty {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    color: #999999;
+}
+
+/* Placeholder pages */
+.coming-soon {
+    width: 100%;
+    gap: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pill { animation: none; transition: none; }
+    .nav-card { transition: none; }
+    .page-title { animation: none; }
+}

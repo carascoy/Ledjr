@@ -1,20 +1,27 @@
 import "../styles/Dashboard.css";
-import logo from "../assets/ledjr.svg";
-import avatar from "../assets/profile-icon.svg";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import QuickAdd from "../components/QuickAdd";
 import RecentTransactions from "../components/RecentTransactions";
 import IncomeExpenseChart from "../components/IncomeExpenseChart";
 import SpendingDonut from "../components/SpendingDonut";
+import DebtsPill from "../components/DebtsPill";
 import { useUser } from "../context/UserContext";
 import type { TransactionResponse } from "../types/TransactionResponse";
 
 function Dashboard() {
 
-  const [scrolled, setScrolled] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const { user } = useUser();
+  const navigate = useNavigate();
+
+  // Clicking a pill opens its full page, unless the click was on something
+  // interactive inside it (a button, a link, a form, or a popover rendered from it).
+  function openPage(e: React.MouseEvent, path: string) {
+    const target = e.target as HTMLElement;
+    if (target.closest("button, a, input, select, textarea, [role='dialog']")) return;
+    navigate(path);
+  }
 
   // This month's transactions. null = still loading.
   const [transactions, setTransactions] = useState<TransactionResponse[] | null>(null);
@@ -65,37 +72,9 @@ function Dashboard() {
     };
   }, [user, monthParam, refreshKey]);
 
- 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
-    <div className="dash-page">
-      <nav className={`nav-card ${scrolled ? "scrolled" : ""}`}>
-        <Link to="/dashboard" className="nav-logo">
-          <img src={logo} alt="Ledjr home" />
-        </Link>
-        <Link to="/transactions" className="nav-link">
-          Transactions
-        </Link>
-        <Link to="/budget" className="nav-link">
-          Budget
-        </Link>
-        <Link to="/debts" className="nav-link">
-          Debts
-        </Link>
-        <Link to="/recurring" className="nav-link">
-          Recurring
-        </Link>
-        <button type="button" className="nav-avatar">
-          <img src={avatar} alt="Account menu" />
-        </button>
-      </nav>
-
+    <>
       <header className="dash-header">
         <div className="month-switcher">
           <button
@@ -136,35 +115,35 @@ function Dashboard() {
       />
 
       <main className="dash-grid">
-        <section className="pill pill-income">
+        <section className="pill pill-link pill-income" onClick={(e) => openPage(e, "/transactions")}>
           <IncomeExpenseChart
             transactions={transactions}
             monthName={monthName}
             signedIn={user !== null}
           />
         </section>
-        <section className="pill pill-debts">
-          <h2 className="pill-title">Debts</h2>
+        <section className="pill pill-link pill-debts" onClick={(e) => openPage(e, "/debts")}>
+          <DebtsPill refreshKey={refreshKey} />
         </section>
-        <section className="pill pill-spending">
+        <section className="pill pill-link pill-spending" onClick={(e) => openPage(e, "/budget")}>
           <SpendingDonut
             transactions={transactions}
             monthName={monthName}
             signedIn={user !== null}
           />
         </section>
-        <section className="pill pill-recent">
+        <section className="pill pill-link pill-recent" onClick={(e) => openPage(e, "/transactions")}>
           <RecentTransactions
             transactions={transactions}
             monthName={monthName}
             signedIn={user !== null}
           />
         </section>
-        <section className="pill pill-upcoming">
+        <section className="pill pill-link pill-upcoming" onClick={(e) => openPage(e, "/recurring")}>
           <h2 className="pill-title">Upcoming</h2>
         </section>
       </main>
-    </div>
+    </>
   );
 }
 

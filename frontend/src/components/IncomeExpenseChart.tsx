@@ -61,12 +61,13 @@ function IncomeExpenseChart({ transactions, monthName, signedIn }: Props) {
     );
   }
 
-  // Income in one pile, everything else (expenses, debt payments) in the other.
+  // Income in one pile, expenses in the other.
   const moneyIn = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
+  // Payments to debts aren't spending (the purchase already counted), so only expenses.
   const moneyOut = transactions
-    .filter((t) => t.type !== "income")
+    .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
 
   if (moneyIn === 0 && moneyOut === 0) {

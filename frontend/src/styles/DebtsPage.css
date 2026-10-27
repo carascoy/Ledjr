@@ -1,0 +1,217 @@
+/* ---------- Debts page ---------- */
+.debts-add {
+    width: 100%;
+}
+
+/* No shadow on purpose: .collapsible-inner has overflow: hidden, which would clip it */
+.debts-add-panel {
+    margin-bottom: 32px;
+    padding: 16px;
+    background: #D9D9D9;
+    border-radius: 28px;
+}
+
+.debts-message {
+    width: 100%;
+}
+
+.debts-empty,
+.debts-overview {
+    width: 100%;
+    margin-bottom: 32px;
+    gap: 12px;
+}
+
+.debts-overview-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+/* Loans and cards side by side, each with its own meter */
+.debts-overview-kinds {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px 48px;
+}
+.debts-overview-kind {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.debts-kind-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+}
+.debts-kind-stats {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.debts-kind-stats b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+
+/* One card per debt; as many columns as fit, each at least 300px wide */
+.debt-cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+.debt-card {
+    gap: 10px;
+}
+
+.debt-card-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.debt-card-balance {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* APR / Minimum / Due as three small labeled stats */
+.debt-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.debt-meta dt {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    color: #52514E;
+}
+.debt-meta dd {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.debt-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+/* Small "Loan" / "Card" label next to the name; the dot repeats the meter color */
+.debt-kind-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 22px;
+    padding: 0 10px 0 8px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.65);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #3A3936;
+}
+.debt-kind-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.debt-kind-badge--loan::before { background: #1F7A4D; }
+.debt-kind-badge--card::before { background: #D98F2B; }
+
+.debt-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.debt-action-btn {
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.65);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1C3B2E;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.debt-action-btn:hover:not(:disabled),
+.debt-action-btn:focus-visible {
+    background-color: #ffffff;
+    outline: none;
+}
+.debt-action-btn:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+/* Inline Pay / Charge form */
+.debt-action {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+    margin-top: 4px;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.debt-action-input {
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 12px;
+    background: #F5F5F5;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+}
+.debt-action-input:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 1px;
+}
+.debt-action-save {
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 12px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.debt-action-save:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+.debt-action-cancel {
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+    cursor: pointer;
+}
+.debt-action-cancel:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+.debt-action-error {
+    grid-column: 1 / -1;
+    margin-top: 0;
+}
