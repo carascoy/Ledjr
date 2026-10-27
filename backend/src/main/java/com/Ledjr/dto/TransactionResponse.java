@@ -8,5 +8,8 @@ public record TransactionResponse(
     String type,
     BigDecimal amount,
     LocalDate txnDate,
-    String description
+    String description,
+    Long categoryId,          // null when uncategorized
+    String categoryName,      // null when uncategorized
+    Integer categoryColorSlot // null when uncategorized; 0-7 otherwise
 ) {}

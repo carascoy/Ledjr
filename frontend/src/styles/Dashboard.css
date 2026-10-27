@@ -313,6 +313,13 @@
 }
 
 .txn-desc {
+    display: flex;
+    align-items: center;
+    gap: 16px;                    /* breathing room between the description and its tag */
+    min-width: 0;                 /* lets the text shrink so the tag never pushes the amount out */
+}
+
+.txn-desc-text {
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 16px;
     white-space: nowrap;

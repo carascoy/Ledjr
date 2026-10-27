@@ -5,4 +5,7 @@ export interface TransactionResponse {
   amount: number;
   txnDate: string; // "YYYY-MM-DD"
   description: string | null;
+  categoryId: number | null; // the three category fields are null when uncategorized
+  categoryName: string | null;
+  categoryColorSlot: number | null;
 }

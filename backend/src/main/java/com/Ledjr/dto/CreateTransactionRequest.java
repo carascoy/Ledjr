@@ -8,5 +8,6 @@ public record CreateTransactionRequest(
     String type,          // "income" or "expense"
     BigDecimal amount,
     LocalDate txnDate,    // optional: defaults to today
-    String description
+    String description,
+    Long categoryId       // optional: leave out for an uncategorized transaction
 ) {}

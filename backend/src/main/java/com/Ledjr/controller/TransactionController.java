@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import com.Ledjr.dto.CreateTransactionRequest;
 import com.Ledjr.dto.TransactionResponse;
 import com.Ledjr.entity.AppUser;
+import com.Ledjr.entity.Category;
 import com.Ledjr.entity.Transaction;
 import com.Ledjr.service.AppUserService;
+import com.Ledjr.service.CategoryService;
 import com.Ledjr.service.TransactionService;
 
 @RestController
@@ -24,10 +26,12 @@ public class TransactionController {
 
     private final TransactionService transactionService;
     private final AppUserService appUserService;
+    private final CategoryService categoryService;
 
-    public TransactionController(TransactionService transactionService, AppUserService appUserService){
+    public TransactionController(TransactionService transactionService, AppUserService appUserService, CategoryService categoryService){
         this.transactionService = transactionService;
         this.appUserService = appUserService;
+        this.categoryService = categoryService;
     }
 
     @PostMapping
@@ -45,9 +49,23 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
 
+        // Optional category: it must exist, belong to this user, and match the transaction type.
+        Category category = null;
+        if (request.categoryId() != null) {
+            Optional<Category> found = categoryService.findById(request.categoryId());
+            // Same 404 whether it doesn't exist or belongs to someone else, so other users' ids aren't revealed.
+            if (found.isEmpty() || !found.get().getUser().getId().equals(user.get().getId())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found.");
+            }
+            category = found.get();
+            if (!category.getKind().name().equals(request.type())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("\"" + category.getName() + "\" is an " + category.getKind().name() + " category.");
+            }
+        }
+
         LocalDate date = request.txnDate() != null ? request.txnDate() : LocalDate.now();
 
-        Transaction saved = transactionService.newTransaction(user.get(), null, null, request.type(), request.amount(), date, request.description());
+        Transaction saved = transactionService.newTransaction(user.get(), category, null, request.type(), request.amount(), date, request.description());
 
         TransactionResponse response = toResponse(saved);
 
@@ -74,6 +92,11 @@ public class TransactionController {
 
     /** Entity -> DTO, so entities (and the user's password hash) never leave the server. */
     private TransactionResponse toResponse(Transaction t){
-        return new TransactionResponse(t.getId(), t.getType(), t.getAmount(), t.getTxnDate(), t.getDescription());
+        Category c = t.getCategory();
+        return new TransactionResponse(
+            t.getId(), t.getType(), t.getAmount(), t.getTxnDate(), t.getDescription(),
+            c == null ? null : c.getId(),
+            c == null ? null : c.getName(),
+            c == null ? null : c.getColorSlot());
     }
 }

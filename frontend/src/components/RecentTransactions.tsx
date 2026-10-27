@@ -1,5 +1,6 @@
 import type { TransactionResponse } from "../types/TransactionResponse";
 import { fromInputDate } from "../utils/dates";
+import CategoryTag from "./CategoryTag";
 
 type Props = {
   transactions: TransactionResponse[] | null; // null = still loading
@@ -37,7 +38,12 @@ function RecentTransactions({ transactions, monthName, signedIn }: Props) {
           <li key={t.id} className="txn-row">
             <span className="txn-date">{formatDay(t.txnDate)}</span>
             <span className="txn-desc">
-              {t.description || (t.type === "income" ? "Income" : "Expense")}
+              <span className="txn-desc-text">
+                {t.description || (t.type === "income" ? "Income" : "Expense")}
+              </span>
+              {t.categoryName && (
+                <CategoryTag name={t.categoryName} colorSlot={t.categoryColorSlot} />
+              )}
             </span>
             <span className="txn-amount">
               {t.type === "income" ? "+" : "−"}

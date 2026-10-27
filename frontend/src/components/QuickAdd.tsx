@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { toInputDate } from "../utils/dates";
 import DatePicker from "./DatePicker";
+import CategoryPicker from "./CategoryPicker";
+import type { CategoryResponse } from "../types/CategoryResponse";
 
 type TxnType = "expense" | "income";
 
@@ -21,6 +23,31 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
   const [date, setDate] = useState(today);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [categories, setCategories] = useState<CategoryResponse[] | null>(null);
+
+  // Load the user's categories the first time the form opens.
+  useEffect(() => {
+    if (!open || !user || categories !== null) return;
+    let ignore = false;
+    fetch(`http://localhost:8080/categories?userId=${user.id}`)
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((data: CategoryResponse[]) => {
+        if (!ignore) setCategories(data);
+      })
+      .catch(() => {
+        if (!ignore) setCategories([]);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [open, user, categories]);
+
+  // Switching Expense/Income clears the category, since categories belong to one kind.
+  function changeType(next: TxnType) {
+    if (next !== type) setCategoryId(null);
+    setType(next);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -41,6 +68,7 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
           amount: Number(amount),
           txnDate: date,
           description,
+          categoryId,
         }),
       });
 
@@ -48,6 +76,7 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
         setAmount("");
         setDescription("");
         setDate(today);
+        setCategoryId(null);
         onAdded();
         onClose();
       } else {
@@ -68,14 +97,14 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
             <button
               type="button"
               className={type === "expense" ? "qa-type-active" : ""}
-              onClick={() => setType("expense")}
+              onClick={() => changeType("expense")}
             >
               Expense
             </button>
             <button
               type="button"
               className={type === "income" ? "qa-type-active" : ""}
-              onClick={() => setType("income")}
+              onClick={() => changeType("income")}
             >
               Income
             </button>
@@ -96,6 +125,13 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+          <CategoryPicker
+            categories={categories}
+            kind={type}
+            value={categoryId}
+            onChange={setCategoryId}
+            onCategoriesChanged={setCategories}
           />
           <DatePicker value={date} onChange={setDate} max={new Date()} />
 

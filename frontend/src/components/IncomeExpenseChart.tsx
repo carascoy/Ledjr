@@ -18,9 +18,10 @@ type Props = {
 };
 
 // Identity colors, validated against the #D9D9D9 pill with the dataviz checker
-// (lightness, chroma, colorblind separation, 3:1 contrast). Not good/bad colors.
+// (lightness, chroma, colorblind separation). Amber is under 3:1 on the gray, which is fine
+// here because every value is also printed as a big number. Identity colors, not good/bad.
 const IN_COLOR = "#1F7A4D";
-const OUT_COLOR = "#6250D6";
+const OUT_COLOR = "#D98F2B";
 
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 const compact = new Intl.NumberFormat("en-US", {

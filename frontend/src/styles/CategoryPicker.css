@@ -1,0 +1,160 @@
+/* ---------- Category tag (used everywhere a category shows) ---------- */
+.cat-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 10px 0 8px;
+    border-radius: 12px;          /* full capsule at 24px tall */
+    background: rgba(255, 255, 255, 0.65);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #3A3936;               /* text stays neutral: the dot carries the color */
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;      /* a very long name ends in "…" rather than overflowing */
+}
+
+.cat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ---------- Picker trigger (looks like the other quick-add inputs) ---------- */
+.cp-trigger {
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.cp-trigger:hover,
+.cp-trigger[aria-expanded="true"] {
+    background-color: #ECECEC;
+}
+.cp-trigger .cat-tag {
+    background: #ffffff;
+}
+.cp-placeholder {
+    color: #999999;
+}
+
+/* ---------- Popover ---------- */
+.cp-popover {
+    position: fixed;
+    z-index: 20;                  /* above the sticky nav (10) */
+    width: 280px;
+    padding: 12px;
+    background: #D9D9D9;
+    border-radius: 24px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    transform-origin: top left;
+    animation: cp-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+@keyframes cp-pop {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+
+.cp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.cp-option {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 8px;
+    border: none;
+    border-radius: 12px;          /* 24 − 12 padding: concentric */
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 150ms ease;
+}
+.cp-option:hover,
+.cp-option:focus-visible {
+    background-color: rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+.cp-option.is-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.cp-none {
+    padding-left: 4px;
+    font-size: 14px;
+    color: #52514E;
+}
+
+.cp-starters {
+    height: 40px;
+    margin-top: 4px;
+    border: none;
+    border-radius: 12px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cp-new {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cp-new-input {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 12px;
+    background: #F5F5F5;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+}
+
+.cp-new-add {
+    height: 40px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 12px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.cp-new-add:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.cp-error {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: red;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cp-popover { animation: none; }
+}

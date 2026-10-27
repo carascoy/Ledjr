@@ -39,6 +39,10 @@ public class Category {
     @Column(precision = 10, scale = 2)
     private BigDecimal budgetedAmount;
 
+    /** Which of the 8 palette colors this category's tag uses (0-7). Set once at creation. */
+    @Column(nullable = false)
+    private Integer colorSlot;
+
     public Long getId() {
         return id;
     }
@@ -77,6 +81,14 @@ public class Category {
 
     public void setBudgetedAmount(BigDecimal budgetedAmount) {
         this.budgetedAmount = budgetedAmount;
+    }
+
+    public Integer getColorSlot() {
+        return colorSlot;
+    }
+
+    public void setColorSlot(Integer colorSlot) {
+        this.colorSlot = colorSlot;
     }
 
 }

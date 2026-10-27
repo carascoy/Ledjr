@@ -28,4 +28,13 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     /** One user's categories of a specific kind — e.g. just their expense categories. */
     List<Category> findByUserIdAndKind(Long userId, Category.Kind kind);
 
+    /** One user's categories, A to Z — what the category picker shows. */
+    List<Category> findByUserIdOrderByNameAsc(Long userId);
+
+    /** Does this user already have a category with this name (ignoring upper/lower case)? */
+    boolean existsByUserIdAndNameIgnoreCase(Long userId, String name);
+
+    /** How many categories this user has — used to hand out the next color slot. */
+    long countByUserId(Long userId);
+
 }

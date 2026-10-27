@@ -17,6 +17,7 @@ import com.Ledjr.dto.SigninRequest;
 import com.Ledjr.dto.SigninResponse;
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.service.AppUserService;
+import com.Ledjr.service.CategoryService;
 
 
 @RestController
@@ -25,11 +26,13 @@ public class AuthController {
     
     private final AppUserService appUserService;
     private final PasswordEncoder passwordEncoder;
+    private final CategoryService categoryService;
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-    public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder){
+    public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder, CategoryService categoryService){
         this.appUserService = appUserService;
         this.passwordEncoder = passwordEncoder;
+        this.categoryService = categoryService;
     }
 
 
@@ -45,7 +48,10 @@ public class AuthController {
 
         Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
         AppUser user = userInfo.get();
-        
+
+        // Every new account starts with a handful of categories so quick-add works right away.
+        categoryService.seedDefaults(user);
+
         SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
