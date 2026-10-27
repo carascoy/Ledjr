@@ -54,6 +54,28 @@ function DebtsPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   // which card has Pay/Charge open (one at a time)
   const [activeAction, setActiveAction] = useState<{ id: number; action: "payment" | "charge" | "plan" } | null>(null);
+  // delete asks first, inline (no browser popup)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
+  async function removeDebt(id: number) {
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const response = await api(`/debts/${id}`, { method: "DELETE" });
+      if (!response.ok) {
+        setDeleteError(await response.text());
+        return;
+      }
+      setConfirmDeleteId(null);
+      setRefreshKey((k) => k + 1);
+    } catch {
+      setDeleteError("Couldn't reach the server.");
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   // load list + totals together, both rerun after adding a debt
   useEffect(() => {
@@ -193,7 +215,23 @@ function DebtsPage() {
 
                   <PlanLine debt={d} />
 
-                  {open === "plan" ? (
+                  {confirmDeleteId === d.id ? (
+                    <div className="debt-confirm">
+                      <p className="debt-confirm-text">
+                        Delete <b>{d.creditorName}</b>? Payments to it get deleted too.
+                        {isCard && " Purchases you put on it stay as normal spending."}
+                      </p>
+                      <div className="debt-card-actions">
+                        <button type="button" className="debt-action-save" disabled={deleting} onClick={() => removeDebt(d.id)}>
+                          {deleting ? "…" : "Delete"}
+                        </button>
+                        <button type="button" className="debt-action-cancel" onClick={() => setConfirmDeleteId(null)}>
+                          Keep
+                        </button>
+                      </div>
+                      {deleteError && <p className="debt-error">{deleteError}</p>}
+                    </div>
+                  ) : open === "plan" ? (
                     <PayoffPlanner
                       debt={d}
                       onCancel={() => setActiveAction(null)}
@@ -238,6 +276,17 @@ function DebtsPage() {
                         disabled={d.balance <= 0}
                       >
                         Plan
+                      </button>
+                      <button
+                        type="button"
+                        className="debt-action-btn debt-action-btn--quiet"
+                        onClick={() => {
+                          setActiveAction(null);
+                          setDeleteError("");
+                          setConfirmDeleteId(d.id);
+                        }}
+                      >
+                        Delete
                       </button>
                     </div>
                   )}

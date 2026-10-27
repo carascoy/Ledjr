@@ -12,12 +12,18 @@ import jakarta.persistence.Enumerated;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 
 @Entity
 @Table(name="recurring_template")
 public class RecurringTemplate {
+
+    /** money in (paycheck) or out (rent, spotify) */
+    public enum Type {
+        income, expense
+    }
 
     public enum Frequency {
         daily, weekly, biweekly, monthly, annually,
@@ -32,7 +38,7 @@ public class RecurringTemplate {
     private AppUser user;
 
     @ManyToOne
-    @JoinColumn(name="category_id", nullable = false)
+    @JoinColumn(name="category_id", nullable = true)
     private Category category;
 
     @Column(nullable = false)
@@ -46,7 +52,28 @@ public class RecurringTemplate {
     private Frequency frequency;
 
     @Column(nullable = false)
-    private LocalDate nextDueDate;
+    /** the first due date. every other occurrence is counted from this (see RecurringTemplateService.occurrences) */
+    private LocalDate startDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Type type = Type.expense;
+
+    /** when it was added (V16). due dates before that month don't count as missed */
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     public Long getId() {
         return id;
@@ -96,11 +123,11 @@ public class RecurringTemplate {
         this.frequency = frequency;
     }
 
-    public LocalDate getNextDueDate() {
-        return nextDueDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setNextDueDate(LocalDate nextDueDate) {
-        this.nextDueDate = nextDueDate;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 }

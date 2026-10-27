@@ -38,4 +38,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         @Param("start") LocalDate start,
         @Param("end") LocalDate end);
 
+    /** the paid recurring items whose due date falls in a range, for the calendar */
+    List<Transaction> findByUserIdAndRecurringTemplateIsNotNullAndDueDateBetween(Long userId, LocalDate start, LocalDate end);
+
+    /** has this due date of this recurring item already been paid? */
+    boolean existsByRecurringTemplateIdAndDueDate(Long recurringTemplateId, LocalDate dueDate);
+
 }

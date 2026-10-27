@@ -143,6 +143,18 @@ public class DebtController {
         return ResponseEntity.ok(toResponse(debtService.setPayoffTarget(found.get(), target)));
     }
 
+    /** DELETE /debts/{id} - payments to it go too, card purchases stay as normal spending */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal Long userId, @PathVariable Long id){
+        Optional<Debt> found = debtService.findById(id);
+        // same 404 if it doesn't exist or isn't theirs
+        if (found.isEmpty() || !found.get().getUser().getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Debt not found.");
+        }
+        debtService.delete(found.get());
+        return ResponseEntity.noContent().build();
+    }
+
     private static ResponseEntity<String> badRequest(String message){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }

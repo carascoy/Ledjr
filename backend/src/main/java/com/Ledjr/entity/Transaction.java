@@ -44,6 +44,31 @@ public class Transaction {
     @Column
     private String description;
 
+    /** the recurring bill/paycheck this paid, if any (V16) */
+    @ManyToOne
+    @JoinColumn(name="recurring_template_id", nullable = true)
+    private RecurringTemplate recurringTemplate;
+
+    /** which due date of that recurring item it paid, e.g. the Nov 1 rent */
+    @Column
+    private LocalDate dueDate;
+
+    public RecurringTemplate getRecurringTemplate() {
+        return recurringTemplate;
+    }
+
+    public void setRecurringTemplate(RecurringTemplate recurringTemplate) {
+        this.recurringTemplate = recurringTemplate;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public Long getId() {
         return id;
     }

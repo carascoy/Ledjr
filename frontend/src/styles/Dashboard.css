@@ -408,3 +408,80 @@
     color: #52514E;
     white-space: nowrap;
 }
+
+/* ---------- Upcoming (UpcomingPill.tsx) ---------- */
+/* little type dots, shared with the recurring calendar: green = income, amber = bill, ink = debt payment
+   (same colors as the income/expenses chart + the transactions bar) */
+.cal-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.cal-dot--income  { background: #1F7A4D; }
+.cal-dot--expense { background: #D98F2B; }
+.cal-dot--debt    { background: #3A3936; }
+
+.upcoming-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+.upcoming-row {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.upcoming-row:last-child {
+    border-bottom: none;
+}
+.upcoming-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: #999999;
+}
+/* late = still unpaid after its day. dark amber + bold, not red */
+.upcoming-date--late {
+    color: #8A5A12;
+    font-weight: 700;
+}
+.upcoming-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.upcoming-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: right;
+}
+.upcoming-left {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #52514E;
+}
+.upcoming-late-note {
+    margin: -4px 0 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #8A5A12;
+}
+.upcoming-more {
+    padding-top: 8px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}

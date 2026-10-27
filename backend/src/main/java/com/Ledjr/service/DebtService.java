@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.Ledjr.dto.DebtSummary;
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Debt;
+import com.Ledjr.entity.Transaction;
 import com.Ledjr.repository.DebtRepository;
+import com.Ledjr.repository.TransactionRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +24,32 @@ import org.slf4j.LoggerFactory;
 public class DebtService {
 
     private final DebtRepository debtRepository;
+    private final TransactionRepository transactionRepository;
     private static final Logger log = LoggerFactory.getLogger(DebtService.class);
 
-    public DebtService(DebtRepository debtRepository){
+    public DebtService(DebtRepository debtRepository, TransactionRepository transactionRepository){
         this.debtRepository = debtRepository;
+        this.transactionRepository = transactionRepository;
+    }
+
+    /**
+     * deletes the debt and sorts out what pointed at it, all or nothing:
+     *   payments to it -> deleted too (a payment without its debt means nothing, and the
+     *                     database won't allow one anyway, V13's CHECK)
+     *   purchases on a card -> kept as normal spending, just not linked to the card anymore
+     */
+    @Transactional
+    public void delete(Debt debt){
+        for (Transaction t : transactionRepository.findByDebtId(debt.getId())) {
+            if ("payment".equals(t.getType())) {
+                transactionRepository.delete(t);
+            } else {
+                t.setDebt(null);
+                transactionRepository.save(t);
+            }
+        }
+        debtRepository.delete(debt);
+        log.info("Debt id# {} deleted", debt.getId());
     }
 
     /**

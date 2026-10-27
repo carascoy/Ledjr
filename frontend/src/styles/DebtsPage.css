@@ -53,11 +53,12 @@
     color: #000000;
 }
 
-/* one card per debt, as many columns as fit, min 300px each */
+/* one card per debt, as many columns as fit. 340px min so a card's 4 buttons fit on one line,
+   min() so it still shrinks on a phone */
 .debt-cards {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
     gap: 32px;
 }
 
@@ -132,16 +133,19 @@
 
 .debt-card-actions {
     display: flex;
+    /* if the card's too narrow for all of them, drop to a 2nd line instead of spilling out */
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 4px;
 }
 
 .debt-action-btn {
     height: 36px;
-    padding: 0 16px;
+    padding: 0 14px;
     border: none;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;
@@ -227,6 +231,8 @@
 .debt-plan b {
     font-family: 'IBM Plex Mono', monospace;
     color: #000000;
+    /* keep "Oct 2027" and "$244.49/mo" in one piece */
+    white-space: nowrap;
 }
 
 .payoff {
@@ -294,4 +300,30 @@
 .payoff-actions {
     display: flex;
     gap: 8px;
+}
+
+/* delete sits apart from the money buttons, quieter so it isn't hit by accident */
+.debt-action-btn--quiet {
+    margin-left: auto;
+    padding: 0 10px;
+    background: transparent;
+    color: #52514E;
+}
+.debt-confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 12px;
+    border-radius: 16px;
+    background: #F5F5F5;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.debt-confirm-text {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #3A3936;
+}
+@media (prefers-reduced-motion: reduce) {
+    .debt-confirm { animation: none; }
 }

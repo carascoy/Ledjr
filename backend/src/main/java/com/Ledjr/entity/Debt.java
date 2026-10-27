@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="debt")
@@ -55,6 +56,14 @@ public class Debt {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Kind kind = Kind.loan;
+
+    /** when it was added (V16). the calendar only counts due dates from then on */
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
     /** cards only. utilization = balance / creditLimit */
     @Column(precision = 10, scale = 2)

@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import AuthPage from './pages/AuthPage'
 import Dashboard from './pages/Dashboard'
 import DebtsPage from './pages/DebtsPage'
+import RecurringPage from './pages/RecurringPage'
 import TransactionsPage from './pages/TransactionsPage'
 import ComingSoon from './pages/ComingSoon'
 import AppLayout from './components/AppLayout'
@@ -23,10 +24,7 @@ function App() {
             path="/budget"
             element={<ComingSoon title="Budget" description="Category envelopes and monthly budgets live here soon. Your categories already work in quick-add." />}
           />
-          <Route
-            path="/recurring"
-            element={<ComingSoon title="Recurring" description="Recurring bills and paychecks, with what's due next, are coming here." />}
-          />
+          <Route path="/recurring" element={<RecurringPage />} />
           <Route
             path="/settings"
             element={<ComingSoon title="Settings" description="Your name, email, password and preferences will live here." />}

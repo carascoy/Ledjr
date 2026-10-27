@@ -1,12 +1,14 @@
 type Props = {
   month: Date; // always the 1st of the month
   onChange: (month: Date) => void;
+  allowFuture?: boolean; // the recurring calendar can look ahead, money pages can't
 };
 
-// ‹ October 2026 › used on the dashboard + transactions page. can't go past this month
-function MonthSwitcher({ month, onChange }: Props) {
+// ‹ October 2026 › used on the dashboard, transactions + recurring pages.
+// can't go past this month unless allowFuture (the month is shared, so the calendar can leave it in the future)
+function MonthSwitcher({ month, onChange, allowFuture = false }: Props) {
   const today = new Date();
-  const isCurrentMonth = month.getFullYear() === today.getFullYear() && month.getMonth() === today.getMonth();
+  const atOrPastThisMonth = month.getTime() >= new Date(today.getFullYear(), today.getMonth(), 1).getTime();
   const label = month.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   // -1 = prev month, +1 = next. new Date() handles the year rollover itself
@@ -25,7 +27,7 @@ function MonthSwitcher({ month, onChange }: Props) {
         type="button"
         className="month-arrow"
         onClick={() => shift(1)}
-        disabled={isCurrentMonth}
+        disabled={!allowFuture && atOrPastThisMonth}
         aria-label="Next month"
       >
         ›

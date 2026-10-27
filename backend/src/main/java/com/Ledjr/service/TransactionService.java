@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Category;
 import com.Ledjr.entity.Debt;
+import com.Ledjr.entity.RecurringTemplate;
 import com.Ledjr.entity.Transaction;
 import com.Ledjr.repository.DebtRepository;
 import com.Ledjr.repository.TransactionRepository;
@@ -143,6 +144,27 @@ public class TransactionService {
         transactionRepository.save(transaction);
         log.info("User id# {} logged a {} transaction of {} on {}", user.getId(), type, amount, txnDate);
         return transaction;
+    }
+
+    /**
+     * "mark paid" on the calendar: a normal transaction (shows in charts + the Transactions page)
+     * that also remembers which recurring item and which due date it paid
+     */
+    public Transaction recordRecurring(AppUser user, RecurringTemplate template, LocalDate dueDate, BigDecimal amount, LocalDate txnDate){
+        Transaction transaction = newTransaction(user, template.getCategory(), null, template.getType().name(), amount, txnDate, template.getName());
+        transaction.setRecurringTemplate(template);
+        transaction.setDueDate(dueDate);
+        transactionRepository.save(transaction);
+        return transaction;
+    }
+
+    /** paid recurring items whose due date is in the range */
+    public List<Transaction> findPaidRecurringBetween(Long userId, LocalDate start, LocalDate end){
+        return transactionRepository.findByUserIdAndRecurringTemplateIsNotNullAndDueDateBetween(userId, start, end);
+    }
+
+    public boolean isRecurringPaid(Long recurringTemplateId, LocalDate dueDate){
+        return transactionRepository.existsByRecurringTemplateIdAndDueDate(recurringTemplateId, dueDate);
     }
 
     public List<Transaction> findByUserId(Long userId){
