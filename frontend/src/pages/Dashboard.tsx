@@ -7,6 +7,7 @@ import IncomeExpenseChart from "../components/IncomeExpenseChart";
 import SpendingDonut from "../components/SpendingDonut";
 import DebtsPill from "../components/DebtsPill";
 import UpcomingPill from "../components/UpcomingPill";
+import SetupBanner from "../components/SetupBanner";
 import MonthSwitcher from "../components/MonthSwitcher";
 import { toMonthParam } from "../utils/months";
 import { useMonth } from "../context/MonthContext";
@@ -78,6 +79,8 @@ function Dashboard() {
         onClose={() => setAddOpen(false)}
         onAdded={() => setRefreshKey((k) => k + 1)}
       />
+
+      <SetupBanner />
 
       <main className="dash-grid">
         <section className="pill pill-link pill-income" onClick={(e) => openPage(e, "/transactions")}>

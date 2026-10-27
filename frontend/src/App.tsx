@@ -4,6 +4,8 @@ import AuthPage from './pages/AuthPage'
 import Dashboard from './pages/Dashboard'
 import DebtsPage from './pages/DebtsPage'
 import RecurringPage from './pages/RecurringPage'
+import BudgetPage from './pages/BudgetPage'
+import SetupPage from './pages/SetupPage'
 import TransactionsPage from './pages/TransactionsPage'
 import ComingSoon from './pages/ComingSoon'
 import AppLayout from './components/AppLayout'
@@ -20,10 +22,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/debts" element={<DebtsPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
-          <Route
-            path="/budget"
-            element={<ComingSoon title="Budget" description="Category envelopes and monthly budgets live here soon. Your categories already work in quick-add." />}
-          />
+          <Route path="/budget" element={<BudgetPage />} />
+          <Route path="/setup" element={<SetupPage />} />
           <Route path="/recurring" element={<RecurringPage />} />
           <Route
             path="/settings"

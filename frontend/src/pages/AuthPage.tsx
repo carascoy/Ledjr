@@ -15,6 +15,8 @@ function AuthPage(){
 
     const [mode, setMode] = useState<Mode>('signin')
     const [error, setError] = useState<Error>('none');
+    // brand new account -> the optional setup instead of the dashboard
+    const [justRegistered, setJustRegistered] = useState(false)
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -69,8 +71,10 @@ function AuthPage(){
 
             if (response.ok) {
                 const data = await response.json()
+                // new accounts get the optional setup first (skippable, see SetupPage).
+                // the `if (user)` redirect above does the navigating once user is set
+                setJustRegistered(true)
                 setUser(data)
-                navigate('/dashboard')
                 console.log('Account created')
             } else {
                 const message = await response.text()
@@ -90,7 +94,7 @@ function AuthPage(){
     }
     // already logged in (session cookie still good) -> skip the sign in page
     if (user) {
-        return <Navigate to="/dashboard" replace />
+        return <Navigate to={justRegistered ? "/setup" : "/dashboard"} replace />
     }
 
     return (

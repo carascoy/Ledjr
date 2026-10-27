@@ -1,7 +1,5 @@
 package com.Ledjr.entity;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,9 +33,6 @@ public class Category {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Kind kind;
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal budgetedAmount;
 
     /** which of the 8 palette colors the tag uses (0-7). set once when it's made */
     @Column(nullable = false)
@@ -73,14 +68,6 @@ public class Category {
 
     public void setKind(Kind kind) {
         this.kind = kind;
-    }
-
-    public BigDecimal getBudgetedAmount() {
-        return budgetedAmount;
-    }
-
-    public void setBudgetedAmount(BigDecimal budgetedAmount) {
-        this.budgetedAmount = budgetedAmount;
     }
 
     public Integer getColorSlot() {

@@ -108,6 +108,17 @@ public class AuthController {
         return ResponseEntity.ok(toResponse(user.get()));
     }
 
+    /** POST /me/setup-done - finished or skipped the setup, don't offer it again */
+    @PostMapping("/me/setup-done")
+    public ResponseEntity<?> setupDone(@AuthenticationPrincipal Long userId){
+        Optional<AppUser> user = appUserService.findById(userId);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        appUserService.markSetupDone(user.get());
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * GET /csrf - hands the frontend the CSRF token for this session.
      * it sends it back in a header (headerName) on every POST/PUT/DELETE, so another
@@ -153,6 +164,6 @@ public class AuthController {
     }
 
     private static SigninResponse toResponse(AppUser user){
-        return new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
+        return new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt(), user.isSetupDone());
     }
 }

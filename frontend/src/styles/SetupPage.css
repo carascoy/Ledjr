@@ -1,0 +1,237 @@
+/* ---------- optional setup after sign-up ---------- */
+.setup {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto 48px;
+}
+
+.setup-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin: 40px 0 20px;
+}
+.setup-title {
+    font-size: 28px;
+}
+.setup-sub {
+    margin-top: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: #52514E;
+}
+.setup-skip-all {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* 4 little bars, filled up to the current step */
+.setup-progress {
+    list-style: none;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+.setup-progress li {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(28, 59, 46, 0.15);
+    transition: background-color 300ms ease;
+}
+.setup-progress li.setup-progress-on {
+    background: #1C3B2E;
+}
+
+.setup-card {
+    gap: 14px;
+}
+.setup-card .pill-title {
+    margin-bottom: 0;
+}
+.setup-help {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: #52514E;
+}
+
+/* step 1: amount | how often | next payday */
+.setup-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+.setup-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+.setup-field > span {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}
+.setup-input {
+    width: 100%;
+    min-width: 0;
+    font-family: 'IBM Plex Mono', monospace;
+}
+.setup-input:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 1px;
+}
+
+/* step 2: tap-to-add bill chips */
+.setup-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.setup-chip {
+    height: 36px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.65);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C3B2E;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+.setup-chip:hover,
+.setup-chip:focus-visible {
+    background: #ffffff;
+    outline: none;
+}
+.setup-chip--on,
+.setup-chip--on:hover,
+.setup-chip--on:focus-visible {
+    background: #1C3B2E;
+    color: #ffffff;
+}
+
+/* each picked bill: name | amount | due on the [day] | x */
+.setup-bills {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.setup-bill {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 140px auto 36px;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 8px 8px 14px;
+    border-radius: 14px;
+    background: #F5F5F5;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.setup-bill .setup-input {
+    height: 40px;
+    background: #ffffff;
+    font-size: 15px;
+}
+.setup-bill-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.setup-bill-day {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+    white-space: nowrap;
+}
+.setup-bill-day .setup-input {
+    width: 64px;
+    padding: 0 10px;
+}
+.setup-bill-remove {
+    width: 36px;
+    padding: 0;
+}
+
+/* step 3 */
+.setup-added {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: #1C3B2E;
+}
+.setup-added b {
+    font-family: 'IBM Plex Mono', monospace;
+}
+/* no panel, so the form's inputs sit on the gray card the same as on the Debts page */
+.setup-debt-form {
+    padding-top: 2px;
+}
+
+/* Skip on the left, Next on the right */
+.setup-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.setup-actions .bud-save,
+.setup-push-right {
+    margin-left: auto;
+}
+
+/* dashboard: "finish setting up" strip for people who left setup halfway */
+.setup-banner {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin-bottom: 24px;
+    padding: 14px 16px 14px 20px;
+    border-radius: 20px;
+    background: rgba(28, 59, 46, 0.08);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: #1C3B2E;
+    animation: pill-in 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.setup-banner p {
+    flex: 1;
+    min-width: 220px;
+}
+.setup-banner-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* phone: bill row goes to 2 lines (name + x, then amount + day) */
+@media (max-width: 560px) {
+    .setup-head { flex-direction: column; }
+    .setup-bill {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .setup-bill-label,
+    .setup-bill-name { grid-column: 1; grid-row: 1; }
+    .setup-bill-remove { grid-column: 2; grid-row: 1; justify-self: end; }
+    .setup-bill-amount { grid-column: 1; grid-row: 2; }
+    .setup-bill-day { grid-column: 2; grid-row: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .setup-bill, .setup-banner { animation: none; }
+    .setup-progress li { transition: none; }
+}

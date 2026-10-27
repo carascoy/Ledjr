@@ -1,0 +1,395 @@
+/* ---------- Budget page ---------- */
+.bud-message {
+    width: 100%;
+}
+
+.bud-overview,
+.bud-list-pill {
+    width: 100%;
+    margin-bottom: 32px;
+}
+.bud-overview {
+    gap: 14px;
+}
+
+/* big "$1,320.50 spent of $1,600.00 budgeted" */
+.bud-figure {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 12px;
+    row-gap: 4px;
+}
+.bud-big {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+}
+.bud-big-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    color: #52514E;
+}
+
+/* spent vs budget bar. green while under, amber once over (no red, style guide) */
+.bud-bar {
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(31, 122, 77, 0.18);
+}
+.bud-bar--large { height: 12px; }
+.bud-bar--small { height: 8px; }
+.bud-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 6px;
+    background: #1F7A4D;
+    transform-origin: left;
+    animation: bud-grow 800ms ease-out backwards;
+    transition: width 500ms ease-out;
+}
+.bud-bar--over { background: rgba(217, 143, 43, 0.22); }
+.bud-bar--over .bud-bar-fill { background: #D98F2B; }
+@keyframes bud-grow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+/* the 4 small numbers under the bar */
+.bud-figures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px 24px;
+    margin-top: 4px;
+}
+.bud-figures dt {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}
+.bud-figures dd {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.bud-note,
+.bud-empty-text,
+.bud-saved-line {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.bud-note b,
+.bud-saved-line b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+.bud-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* ---------- category rows ---------- */
+.bud-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+/* desktop: name | bar | $spent of $budget | left, all on one line */
+.bud-row {
+    display: grid;
+    grid-template-columns: minmax(0, 200px) minmax(0, 1fr) 210px 130px;
+    align-items: center;
+    column-gap: 20px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.bud-row:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+.bud-name {
+    min-width: 0;
+}
+.bud-name .cat-tag {
+    max-width: 100%;
+}
+
+.bud-amount {
+    justify-self: end;
+    height: 32px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.bud-amount b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+/* looks like text until you hover, then shows it's clickable */
+.bud-amount:hover,
+.bud-amount:focus-visible {
+    background: rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+
+.bud-left {
+    justify-self: end;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #175F3B;   /* the bar green, darkened so the text reads on gray */
+    white-space: nowrap;
+}
+.bud-left--over {
+    color: #7A4A10;   /* darker amber so it reads on the gray card */
+}
+
+/* no-budget rows: name | spent (spans bar + amount) | Set budget */
+.bud-spent-only {
+    grid-column: 2 / 4;
+    justify-self: end;
+    padding-right: 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+    white-space: nowrap;
+}
+.bud-spent-only b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+.bud-set {
+    justify-self: end;
+}
+
+.bud-btn {
+    height: 32px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 10px;
+    background: #F5F5F5;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1C3B2E;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.bud-btn:hover,
+.bud-btn:focus-visible {
+    background: #ffffff;
+    outline: none;
+}
+
+/* inline "October budget [ 400 ] Save Remove Cancel", drops in under the row */
+.bud-edit {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 16px;
+    background: #F5F5F5;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bud-edit-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #3A3936;
+    margin-right: 4px;
+}
+.bud-edit-input {
+    width: 160px;
+    height: 36px;
+    background: #ffffff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+}
+.bud-edit-input:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 1px;
+}
+.bud-save {
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 12px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.bud-save:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+.bud-cancel {
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+    cursor: pointer;
+}
+.bud-cancel:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+.bud-error {
+    margin-top: 8px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: red;
+}
+.bud-edit-error {
+    flex-basis: 100%;
+    margin-top: 0;
+}
+
+.bud-footnote {
+    width: 100%;
+    margin-top: -12px;
+    margin-bottom: 32px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #999999;
+}
+
+/* phone: name + numbers on top, bar under them full width */
+@media (max-width: 700px) {
+    .bud-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        row-gap: 8px;
+    }
+    .bud-name { grid-column: 1; grid-row: 1; }
+    .bud-left { grid-column: 2; grid-row: 1; }
+    .bud-bar { grid-column: 1 / -1; grid-row: 2; }
+    .bud-amount { grid-column: 1 / -1; grid-row: 3; justify-self: start; padding: 0; height: auto; }
+    .bud-spent-only { grid-column: 1 / -1; grid-row: 2; justify-self: start; padding: 0; }
+    .bud-set { grid-column: 2; grid-row: 1; }
+    .bud-big { font-size: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bud-bar-fill, .bud-edit { animation: none; transition: none; }
+}
+
+/* ---------- the "you can budget" estimate + suggestions ---------- */
+.bud-estimate {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.bud-estimate-line {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    color: #3A3936;
+}
+.bud-estimate-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: #000000;
+    margin-left: 4px;
+}
+.bud-breakdown,
+.bud-hint,
+.bud-nudge {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+.bud-breakdown b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+    white-space: nowrap;
+}
+.bud-nudge a {
+    color: #1C3B2E;
+    font-weight: 700;
+}
+.bud-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.bud-btn--tall {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.65);
+}
+.bud-btn:disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+/* "Not budgeted" title with Fill in suggestions on the right */
+.bud-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.bud-list-head .pill-title {
+    margin-bottom: 0;
+}
+.bud-list-error {
+    margin: -4px 0 8px;
+}
+
+.bud-suggest {
+    color: #52514E;
+}
+.bud-suggest b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #1C3B2E;
+}
+
+/* "You usually spend about [$307.00] a month here." click the amount to use it */
+.bud-edit-hint {
+    flex-basis: 100%;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}
+.bud-hint-amount {
+    padding: 1px 6px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(28, 59, 46, 0.1);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1C3B2E;
+    cursor: pointer;
+}
+.bud-hint-amount:hover,
+.bud-hint-amount:focus-visible {
+    background: rgba(28, 59, 46, 0.18);
+    outline: none;
+}

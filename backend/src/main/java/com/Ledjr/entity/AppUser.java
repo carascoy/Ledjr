@@ -33,6 +33,18 @@ public class AppUser {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    /** finished or skipped the setup after sign-up (V18). false = they bailed partway, dashboard offers it again */
+    @Column(nullable = false)
+    private boolean setupDone = false;
+
+    public boolean isSetupDone() {
+        return setupDone;
+    }
+
+    public void setSetupDone(boolean setupDone) {
+        this.setupDone = setupDone;
+    }
+
     public Long getId() {
         return id;
     }

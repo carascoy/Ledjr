@@ -45,4 +45,10 @@ public class AppUserService {
         return userRepository.findById(id);
     }
 
+    /** they finished or skipped the setup after sign-up */
+    public void markSetupDone(AppUser user) {
+        user.setSetupDone(true);
+        userRepository.save(user);
+    }
+
 }

@@ -7,5 +7,6 @@ public record SigninResponse(
     String email,
     String firstName,
     String lastName,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    boolean setupDone       // false = show the optional setup
 ) {}
