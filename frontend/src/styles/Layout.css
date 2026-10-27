@@ -187,3 +187,73 @@
     .nav-card { transition: none; }
     .page-title { animation: none; }
 }
+
+/* ---------- Account menu (avatar in the nav) ---------- */
+.nav-account {
+    position: relative;
+}
+.nav-menu {
+    position: absolute;
+    top: calc(100% + 16px);
+    right: 0;
+    z-index: 20;                  /* above the sticky nav (10) */
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    background: #D9D9D9;
+    border-radius: 20px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
+    transform-origin: top right;
+    animation: nav-menu-in 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-menu-who {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+}
+.nav-menu-who span {
+    color: #52514E;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nav-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 12px;          /* 20 - 8 padding, concentric */
+    background: transparent;
+    text-align: left;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+.nav-menu-item img {
+    width: 20px;
+    height: 20px;
+}
+.nav-menu-item:hover,
+.nav-menu-item:focus-visible {
+    background-color: rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+@keyframes nav-menu-in {
+    from { transform: scale(0.94); }
+    to   { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .nav-menu { animation: none; }
+    .nav-menu-item { transition: none; }
+}

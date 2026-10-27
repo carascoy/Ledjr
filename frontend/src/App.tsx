@@ -27,6 +27,10 @@ function App() {
             path="/recurring"
             element={<ComingSoon title="Recurring" description="Recurring bills and paychecks, with what's due next, are coming here." />}
           />
+          <Route
+            path="/settings"
+            element={<ComingSoon title="Settings" description="Your name, email, password and preferences will live here." />}
+          />
         </Route>
       </Routes>
     </UserProvider>

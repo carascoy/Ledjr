@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import type { DebtSummary } from "../types/DebtSummary";
 import AddDebtForm from "./AddDebtForm";
 import DebtMeter from "./DebtMeter";
 import "../styles/DebtsPill.css";
 
-const API = "http://localhost:8080";
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 type Props = {
@@ -27,7 +27,7 @@ function DebtsPill({ refreshKey: outsideRefresh = 0 }: Props) {
   useEffect(() => {
     if (!user) return;
     let ignore = false;
-    fetch(`${API}/debts/summary?userId=${user.id}`)
+    api("/debts/summary")
       .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
       .then((data: DebtSummary) => {
         if (!ignore) setSummary(data);

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.Ledjr.dto.CreateDebtRequest;
@@ -19,7 +20,6 @@ import com.Ledjr.service.AppUserService;
 import com.Ledjr.service.DebtService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/debts")
 public class DebtController {
 
@@ -37,9 +37,9 @@ public class DebtController {
         this.appUserService = appUserService;
     }
 
-    /** GET /debts?userId=1 - user's debts, biggest balance first */
+    /** GET /debts - your debts, biggest balance first */
     @GetMapping
-    public ResponseEntity<List<DebtResponse>> list(@RequestParam Long userId){
+    public ResponseEntity<List<DebtResponse>> list(@AuthenticationPrincipal Long userId){
         List<DebtResponse> body = debtService.findByUserIdLargestFirst(userId)
             .stream()
             .map(DebtController::toResponse)
@@ -47,15 +47,15 @@ public class DebtController {
         return ResponseEntity.ok(body);
     }
 
-    /** GET /debts/summary?userId=1 - totals + percents for the dashboard pill */
+    /** GET /debts/summary - totals + percents for the dashboard pill */
     @GetMapping("/summary")
-    public ResponseEntity<DebtSummary> summary(@RequestParam Long userId){
+    public ResponseEntity<DebtSummary> summary(@AuthenticationPrincipal Long userId){
         return ResponseEntity.ok(debtService.getSummary(userId));
     }
 
     /** POST /debts - add a debt */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateDebtRequest request){
+    public ResponseEntity<?> create(@AuthenticationPrincipal Long userId, @RequestBody CreateDebtRequest request){
 
         String name = request.creditorName() == null ? "" : request.creditorName().trim();
         if (name.isEmpty()) {
@@ -107,7 +107,7 @@ public class DebtController {
             return badRequest("Due day must be between 1 and 31.");
         }
 
-        Optional<AppUser> user = appUserService.findById(request.userId());
+        Optional<AppUser> user = appUserService.findById(userId);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
@@ -120,10 +120,10 @@ public class DebtController {
 
     /** PUT /debts/{id}/plan - set or clear (null) the payoff target month */
     @PutMapping("/{id}/plan")
-    public ResponseEntity<?> setPlan(@PathVariable Long id, @RequestBody SetPlanRequest request){
+    public ResponseEntity<?> setPlan(@AuthenticationPrincipal Long userId, @PathVariable Long id, @RequestBody SetPlanRequest request){
         Optional<Debt> found = debtService.findById(id);
         // same 404 if it doesn't exist or isn't theirs
-        if (found.isEmpty() || request.userId() == null || !found.get().getUser().getId().equals(request.userId())) {
+        if (found.isEmpty() || !found.get().getUser().getId().equals(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Debt not found.");
         }
 

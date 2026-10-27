@@ -1,0 +1,35 @@
+/* ---------- Loading screen (logo flipping like a book page) ---------- */
+.splash {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: #ffffff;
+    perspective: 600px;           /* gives the flip some depth */
+}
+
+.splash-logo {
+    width: 64px;
+    height: 64px;
+    /* hidden for the first 150ms, then pops in and starts flipping */
+    animation:
+        splash-in 350ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms backwards,
+        splash-flip 1400ms cubic-bezier(0.65, 0, 0.35, 1) 500ms infinite;
+}
+
+@keyframes splash-in {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+/* full turn on the vertical axis, with a short pause facing front each loop */
+@keyframes splash-flip {
+    0%, 15%  { transform: rotateY(0deg); }
+    85%, 100% { transform: rotateY(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .splash-logo {
+        animation: none;
+    }
+}

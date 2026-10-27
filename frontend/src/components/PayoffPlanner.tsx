@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import { formatTarget, monthsFor, monthsUntil, planFor, targetFromMonths } from "../utils/payoff";
 import type { DebtResponse } from "../types/DebtResponse";
 
@@ -33,10 +34,9 @@ function PayoffPlanner({ debt, onDone, onCancel }: Props) {
     setSaving(true);
     setError("");
     try {
-      const response = await fetch(`http://localhost:8080/debts/${debt.id}/plan`, {
+      const response = await api(`/debts/${debt.id}/plan`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, payoffTarget }),
+        body: JSON.stringify({ payoffTarget }),
       });
       if (!response.ok) {
         setError(await response.text());

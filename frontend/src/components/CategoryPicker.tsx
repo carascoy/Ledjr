@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import type { CategoryResponse } from "../types/CategoryResponse";
 import CategoryTag from "./CategoryTag";
 import "../styles/CategoryPicker.css";
@@ -13,7 +14,6 @@ type Props = {
   onCategoriesChanged: (categories: CategoryResponse[]) => void; // after making one / seeding
 };
 
-const API = "http://localhost:8080";
 
 function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged }: Props) {
   const { user } = useUser();
@@ -86,10 +86,9 @@ function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged
     setBusy(true);
     setError("");
     try {
-      const response = await fetch(`${API}/categories`, {
+      const response = await api("/categories", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, name: newName.trim(), kind }),
+        body: JSON.stringify({ name: newName.trim(), kind }),
       });
       if (!response.ok) {
         setError(await response.text());
@@ -111,7 +110,7 @@ function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged
     setBusy(true);
     setError("");
     try {
-      const response = await fetch(`${API}/categories/defaults?userId=${user.id}`, { method: "POST" });
+      const response = await api("/categories/defaults", { method: "POST" });
       if (!response.ok) {
         setError(await response.text());
         return;

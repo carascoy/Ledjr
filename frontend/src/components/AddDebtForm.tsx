@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 
 type Props = {
   layout: "compact" | "wide"; // compact = 2 columns in the popover, wide = one row on the Debts page
@@ -9,7 +10,6 @@ type Props = {
 
 type Kind = "loan" | "card";
 
-const API = "http://localhost:8080";
 
 // "" -> null, else a number. blank optional fields get sent as null
 const numberOrNull = (value: string) => (value.trim() === "" ? null : Number(value));
@@ -39,11 +39,9 @@ function AddDebtForm({ layout, onSaved, autoFocus = false }: Props) {
     setSaving(true);
     setError("");
     try {
-      const response = await fetch(`${API}/debts`, {
+      const response = await api("/debts", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user.id,
           kind,
           creditorName: name,
           balance: numberOrNull(balance),

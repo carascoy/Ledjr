@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.Ledjr.dto.CategoryResponse;
@@ -15,7 +16,6 @@ import com.Ledjr.service.AppUserService;
 import com.Ledjr.service.CategoryService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/categories")
 public class CategoryController {
 
@@ -29,9 +29,9 @@ public class CategoryController {
         this.appUserService = appUserService;
     }
 
-    /** GET /categories?userId=1 - user's categories, A to Z */
+    /** GET /categories - your categories, A to Z */
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> list(@RequestParam Long userId){
+    public ResponseEntity<List<CategoryResponse>> list(@AuthenticationPrincipal Long userId){
         List<CategoryResponse> body = categoryService.findByUserIdSorted(userId)
             .stream()
             .map(CategoryController::toResponse)
@@ -41,7 +41,7 @@ public class CategoryController {
 
     /** POST /categories - make a category */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateCategoryRequest request){
+    public ResponseEntity<?> create(@AuthenticationPrincipal Long userId, @RequestBody CreateCategoryRequest request){
 
         String name = request.name() == null ? "" : request.name().trim();
         if (name.isEmpty()) {
@@ -54,7 +54,7 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Kind must be income or expense.");
         }
 
-        Optional<AppUser> user = appUserService.findById(request.userId());
+        Optional<AppUser> user = appUserService.findById(userId);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
@@ -68,12 +68,12 @@ public class CategoryController {
     }
 
     /**
-     * POST /categories/defaults?userId=1 - gives a user the starter categories.
+     * POST /categories/defaults - gives you the starter categories.
      * only adds them if they have none yet, so calling it twice is fine.
      * new accounts already get these at sign-up, this is for older accounts
      */
     @PostMapping("/defaults")
-    public ResponseEntity<?> seedDefaults(@RequestParam Long userId){
+    public ResponseEntity<?> seedDefaults(@AuthenticationPrincipal Long userId){
         Optional<AppUser> user = appUserService.findById(userId);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");

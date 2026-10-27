@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.Ledjr.dto.CreateTransactionRequest;
@@ -23,7 +24,6 @@ import com.Ledjr.service.DebtService;
 import com.Ledjr.service.TransactionService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/transactions")
 public class TransactionController {
 
@@ -42,24 +42,24 @@ public class TransactionController {
 
     /** POST /transactions - add one */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateTransactionRequest request){
-        return save(request, null);
+    public ResponseEntity<?> create(@AuthenticationPrincipal Long userId, @RequestBody CreateTransactionRequest request){
+        return save(userId, request, null);
     }
 
     /** PUT /transactions/{id} - replace it. same body as POST, the whole thing gets resent */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CreateTransactionRequest request){
+    public ResponseEntity<?> update(@AuthenticationPrincipal Long userId, @PathVariable Long id, @RequestBody CreateTransactionRequest request){
         Optional<Transaction> existing = transactionService.findById(id);
         // same 404 if it doesn't exist or isn't theirs
-        if (existing.isEmpty() || request.userId() == null || !existing.get().getUser().getId().equals(request.userId())) {
+        if (existing.isEmpty() || !existing.get().getUser().getId().equals(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found.");
         }
-        return save(request, existing.get());
+        return save(userId, request, existing.get());
     }
 
-    /** DELETE /transactions/{id}?userId=1 - puts any debt balance back first */
+    /** DELETE /transactions/{id} - puts any debt balance back first */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam Long userId){
+    public ResponseEntity<?> delete(@AuthenticationPrincipal Long userId, @PathVariable Long id){
         Optional<Transaction> existing = transactionService.findById(id);
         if (existing.isEmpty() || !existing.get().getUser().getId().equals(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found.");
@@ -73,7 +73,7 @@ public class TransactionController {
     }
 
     /** create and edit share all the same checks. existing = null means create */
-    private ResponseEntity<?> save(CreateTransactionRequest request, Transaction existing){
+    private ResponseEntity<?> save(Long userId, CreateTransactionRequest request, Transaction existing){
 
         if (request.amount() == null || request.amount().signum() <= 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Amount must be greater than 0.");
@@ -84,7 +84,7 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Type must be income, expense or payment.");
         }
 
-        Optional<AppUser> user = appUserService.findById(request.userId());
+        Optional<AppUser> user = appUserService.findById(userId);
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
@@ -146,9 +146,9 @@ public class TransactionController {
         }
     }
 
-    /** GET /transactions?userId=1&month=2026-10 - one month, newest first */
+    /** GET /transactions?month=2026-10 - one month, newest first */
     @GetMapping
-    public ResponseEntity<?> list(@RequestParam Long userId, @RequestParam String month){
+    public ResponseEntity<?> list(@AuthenticationPrincipal Long userId, @RequestParam String month){
         YearMonth ym;
         try {
             ym = YearMonth.parse(month);          // wants "2026-10"

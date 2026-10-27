@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import { toInputDate } from "../utils/dates";
 import DatePicker from "./DatePicker";
 import CategoryPicker from "./CategoryPicker";
@@ -41,7 +42,7 @@ function QuickAdd({ open, onClose, onAdded, editing = null }: Props) {
   useEffect(() => {
     if (!open || !user || categories !== null) return;
     let ignore = false;
-    fetch(`http://localhost:8080/categories?userId=${user.id}`)
+    api("/categories")
       .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
       .then((data: CategoryResponse[]) => {
         if (!ignore) setCategories(data);
@@ -58,7 +59,7 @@ function QuickAdd({ open, onClose, onAdded, editing = null }: Props) {
   useEffect(() => {
     if (!open || !user) return;
     let ignore = false;
-    fetch(`http://localhost:8080/debts?userId=${user.id}`)
+    api("/debts")
       .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
       .then((data: DebtResponse[]) => {
         if (!ignore) setDebts(data);
@@ -95,14 +96,10 @@ function QuickAdd({ open, onClose, onAdded, editing = null }: Props) {
     setSaving(true);
     setError("");
     try {
-      const url = editing
-        ? `http://localhost:8080/transactions/${editing.id}`
-        : "http://localhost:8080/transactions";
-      const response = await fetch(url, {
+      const path = editing ? `/transactions/${editing.id}` : "/transactions";
+      const response = await api(path, {
         method: editing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user.id,
           type,
           amount: Number(amount),
           txnDate: date,

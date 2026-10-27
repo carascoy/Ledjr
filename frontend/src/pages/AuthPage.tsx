@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import '../styles/AuthPage.css'
-import { useNavigate } from 'react-router-dom' 
+import { Navigate, useNavigate } from 'react-router-dom'
+import { api } from '../api/client'
+import Splash from '../components/Splash'
 import { useUser } from '../context/UserContext'
 
 type Mode = "signin" | "signup";
@@ -9,7 +11,7 @@ type Error = "account-not-found" | "email-registered" | "none";
 
 function AuthPage(){
     const navigate = useNavigate()
-    const { setUser } = useUser()
+    const { user, setUser, checking } = useUser()
 
     const [mode, setMode] = useState<Mode>('signin')
     const [error, setError] = useState<Error>('none');
@@ -37,9 +39,8 @@ function AuthPage(){
         e.preventDefault()
 
         if(!isSignUp){
-            const response = await fetch('http://localhost:8080/signin' , {
+            const response = await api('/signin', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email, password}),
             })
 
@@ -57,9 +58,8 @@ function AuthPage(){
 
         }else{
 
-            const response = await fetch('http://localhost:8080/register', {
+            const response = await api('/register', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, firstName, lastName }),
             })
 
@@ -78,6 +78,16 @@ function AuthPage(){
     }
 
    
+
+    // still asking the backend if the session is good. logo instead of the form,
+    // otherwise the sign in form flashes for a split second before the redirect
+    if (checking) {
+        return <Splash />
+    }
+    // already logged in (session cookie still good) -> skip the sign in page
+    if (user) {
+        return <Navigate to="/dashboard" replace />
+    }
 
     return (
         <div className="auth-page">

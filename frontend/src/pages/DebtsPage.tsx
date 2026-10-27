@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import AddDebtForm from "../components/AddDebtForm";
 import DebtMeter from "../components/DebtMeter";
 import DebtAction from "../components/DebtAction";
@@ -10,7 +11,6 @@ import type { DebtSummary } from "../types/DebtSummary";
 import "../styles/DebtsPill.css";
 import "../styles/DebtsPage.css";
 
-const API = "http://localhost:8080";
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 // 1 -> "1st", 2 -> "2nd", 3 -> "3rd", 11 -> "11th", 22 -> "22nd"
@@ -60,8 +60,8 @@ function DebtsPage() {
     if (!user) return;
     let ignore = false;
     Promise.all([
-      fetch(`${API}/debts?userId=${user.id}`).then((r) => (r.ok ? r.json() : Promise.reject(r.status))),
-      fetch(`${API}/debts/summary?userId=${user.id}`).then((r) => (r.ok ? r.json() : Promise.reject(r.status))),
+      api("/debts").then((r) => (r.ok ? r.json() : Promise.reject(r.status))),
+      api("/debts/summary").then((r) => (r.ok ? r.json() : Promise.reject(r.status))),
     ])
       .then(([list, totals]: [DebtResponse[], DebtSummary]) => {
         if (ignore) return;

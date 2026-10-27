@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record CreateTransactionRequest(
-    Long userId,          // temp until sessions (phase 5)
     String type,          // "income", "expense" or "payment" (paying off a debt)
     BigDecimal amount,
     LocalDate txnDate,    // optional, defaults to today

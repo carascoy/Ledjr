@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
 import { toInputDate } from "../utils/dates";
+import { api } from "../api/client";
 import type { DebtResponse } from "../types/DebtResponse";
 
 type Props = {
@@ -24,11 +25,9 @@ function DebtAction({ debt, action, onDone, onCancel }: Props) {
     setSaving(true);
     setError("");
     try {
-      const response = await fetch("http://localhost:8080/transactions", {
+      const response = await api("/transactions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user.id,
           type: action === "payment" ? "payment" : "expense",
           amount: Number(amount),
           txnDate: toInputDate(new Date()),

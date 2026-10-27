@@ -3,7 +3,6 @@ package com.Ledjr.dto;
 import java.math.BigDecimal;
 
 public record CreateDebtRequest(
-    Long userId,                 // temp until sessions (phase 5)
     String kind,                 // "loan" or "card", defaults to loan
     String creditorName,
     BigDecimal balance,

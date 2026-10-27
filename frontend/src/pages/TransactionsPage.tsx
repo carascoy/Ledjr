@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import MonthSwitcher from "../components/MonthSwitcher";
 import QuickAdd from "../components/QuickAdd";
 import CategoryTag from "../components/CategoryTag";
@@ -10,7 +11,6 @@ import type { TransactionResponse } from "../types/TransactionResponse";
 import "../styles/Dashboard.css";
 import "../styles/TransactionsPage.css";
 
-const API = "http://localhost:8080";
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 type Filter = "all" | "expense" | "income" | "payment";
@@ -59,7 +59,7 @@ function TransactionsPage() {
     if (!user) return;
     // if the month changes before this finishes, ignore the old result
     let ignore = false;
-    fetch(`${API}/transactions?userId=${user.id}&month=${monthParam}`)
+    api(`/transactions?month=${monthParam}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((data: TransactionResponse[]) => {
         if (!ignore) setTransactions(data);
@@ -104,7 +104,7 @@ function TransactionsPage() {
     setDeletingId(t.id);
     setRowError(null);
     try {
-      const response = await fetch(`${API}/transactions/${t.id}?userId=${user.id}`, { method: "DELETE" });
+      const response = await api(`/transactions/${t.id}`, { method: "DELETE" });
       if (!response.ok) {
         setRowError({ id: t.id, message: await response.text() });
         return;

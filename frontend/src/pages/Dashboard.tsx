@@ -10,6 +10,7 @@ import MonthSwitcher from "../components/MonthSwitcher";
 import { toMonthParam } from "../utils/months";
 import { useMonth } from "../context/MonthContext";
 import { useUser } from "../context/UserContext";
+import { api } from "../api/client";
 import type { TransactionResponse } from "../types/TransactionResponse";
 
 function Dashboard() {
@@ -43,7 +44,7 @@ function Dashboard() {
     // if the month changes before this finishes, ignore the old result
     let ignore = false;
 
-    fetch(`http://localhost:8080/transactions?userId=${user.id}&month=${monthParam}`)
+    api(`/transactions?month=${monthParam}`)
       .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
       .then((data: TransactionResponse[]) => {
         if (!ignore) setTransactions(data);
