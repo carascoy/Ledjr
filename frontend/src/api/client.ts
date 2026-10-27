@@ -3,7 +3,9 @@
 //  - the CSRF token header on POST/PUT/DELETE (spring blocks writes without it)
 //  - a 401 anywhere = session expired, tells the app you're signed out
 
-export const API_URL = "http://localhost:8080";
+// where the backend lives. set VITE_API_URL on the server (see frontend/.env.example),
+// falls back to localhost for dev. vite bakes this in at build time, so rebuild after changing it
+export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
 type Csrf = { headerName: string; token: string };
 let csrf: Csrf | null = null;
