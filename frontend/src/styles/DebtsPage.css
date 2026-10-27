@@ -79,8 +79,11 @@
 
 .debt-meta {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    /* columns size to their content + spread out, so big numbers push
+       the gap smaller instead of running into the next column */
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+    gap: 8px 12px;
     margin-top: 6px;
     padding-top: 12px;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
@@ -212,4 +215,83 @@
 .debt-action-error {
     grid-column: 1 / -1;
     margin-top: 0;
+}
+
+/* payoff plan line on the card + the planner panel */
+.debt-plan {
+    margin-top: 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}
+.debt-plan b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+
+.payoff {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+    padding: 14px;
+    border-radius: 16px;
+    background: #F5F5F5;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.payoff-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #3A3936;
+}
+.payoff-label b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+/* keep "· by Oct 2027" together so the date never splits across lines */
+.payoff-by {
+    white-space: nowrap;
+}
+.payoff-slider {
+    width: 100%;
+    accent-color: #1C3B2E;
+    cursor: pointer;
+}
+.payoff-figures {
+    display: grid;
+    /* monthly gets its own row, interest + total share the one under it.
+       3 across didn't fit once totals hit 5 digits */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+}
+.payoff-monthly {
+    grid-column: 1 / -1;
+}
+.payoff-figures .payoff-monthly dd {
+    font-size: 22px;
+}
+.payoff-figures dt {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    color: #52514E;
+}
+.payoff-figures dd {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.payoff-note {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    color: #52514E;
+}
+.payoff-note b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #000000;
+}
+.payoff-actions {
+    display: flex;
+    gap: 8px;
 }

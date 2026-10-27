@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="debt")
@@ -58,6 +59,18 @@ public class Debt {
     /** cards only. utilization = balance / creditLimit */
     @Column(precision = 10, scale = 2)
     private BigDecimal creditLimit;
+
+    /** month you want it paid off by (1st of the month), null = no plan */
+    @Column
+    private LocalDate payoffTarget;
+
+    public LocalDate getPayoffTarget() {
+        return payoffTarget;
+    }
+
+    public void setPayoffTarget(LocalDate payoffTarget) {
+        this.payoffTarget = payoffTarget;
+    }
 
     public Kind getKind() {
         return kind;

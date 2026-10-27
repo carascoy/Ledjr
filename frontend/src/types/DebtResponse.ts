@@ -9,4 +9,5 @@ export interface DebtResponse {
   apr: number | null;
   minPayment: number | null;
   dueDate: number | null; // day of the month 1-31
+  payoffTarget: string | null; // "2027-10-01", null = no plan
 }

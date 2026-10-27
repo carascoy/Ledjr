@@ -3,6 +3,8 @@ import { useUser } from "../context/UserContext";
 import AddDebtForm from "../components/AddDebtForm";
 import DebtMeter from "../components/DebtMeter";
 import DebtAction from "../components/DebtAction";
+import PayoffPlanner from "../components/PayoffPlanner";
+import { formatTarget, monthsUntil, paymentFor } from "../utils/payoff";
 import type { DebtResponse } from "../types/DebtResponse";
 import type { DebtSummary } from "../types/DebtSummary";
 import "../styles/DebtsPill.css";
@@ -28,6 +30,22 @@ function percentUsed(d: DebtResponse) {
   return Math.round((d.balance / d.creditLimit) * 100);
 }
 
+// the saved plan, recalculated from what's left now
+function PlanLine({ debt }: { debt: DebtResponse }) {
+  if (!debt.payoffTarget) return null;
+  if (debt.balance <= 0) return <p className="debt-plan">Paid off, plan done.</p>;
+  const left = monthsUntil(debt.payoffTarget);
+  if (left < 1) {
+    return <p className="debt-plan">Plan date ({formatTarget(debt.payoffTarget)}) passed, set a new one.</p>;
+  }
+  return (
+    <p className="debt-plan">
+      Plan: <b>{currency.format(paymentFor(debt.balance, debt.apr, left))}/mo</b> to be done by{" "}
+      <b>{formatTarget(debt.payoffTarget)}</b>
+    </p>
+  );
+}
+
 function DebtsPage() {
   const { user } = useUser();
   const [debts, setDebts] = useState<DebtResponse[] | null>(null);
@@ -35,7 +53,7 @@ function DebtsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   // which card has Pay/Charge open (one at a time)
-  const [activeAction, setActiveAction] = useState<{ id: number; action: "payment" | "charge" } | null>(null);
+  const [activeAction, setActiveAction] = useState<{ id: number; action: "payment" | "charge" | "plan" } | null>(null);
 
   // load list + totals together, both rerun after adding a debt
   useEffect(() => {
@@ -173,7 +191,18 @@ function DebtsPage() {
                     </div>
                   </dl>
 
-                  {open ? (
+                  <PlanLine debt={d} />
+
+                  {open === "plan" ? (
+                    <PayoffPlanner
+                      debt={d}
+                      onCancel={() => setActiveAction(null)}
+                      onDone={() => {
+                        setActiveAction(null);
+                        setRefreshKey((k) => k + 1);
+                      }}
+                    />
+                  ) : open ? (
                     <DebtAction
                       debt={d}
                       action={open}
@@ -202,6 +231,14 @@ function DebtsPage() {
                           + Charge
                         </button>
                       )}
+                      <button
+                        type="button"
+                        className="debt-action-btn"
+                        onClick={() => setActiveAction({ id: d.id, action: "plan" })}
+                        disabled={d.balance <= 0}
+                      >
+                        Plan
+                      </button>
                     </div>
                   )}
                 </article>

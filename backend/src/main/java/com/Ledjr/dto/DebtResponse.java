@@ -1,6 +1,7 @@
 package com.Ledjr.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record DebtResponse(
     Long id,
@@ -11,5 +12,6 @@ public record DebtResponse(
     BigDecimal creditLimit,      // cards only, null on loans
     BigDecimal apr,
     BigDecimal minPayment,
-    Integer dueDate
+    Integer dueDate,
+    LocalDate payoffTarget       // null = no plan
 ) {}

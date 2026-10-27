@@ -1,6 +1,7 @@
 package com.Ledjr.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.Ledjr.dto.CreateDebtRequest;
 import com.Ledjr.dto.DebtResponse;
 import com.Ledjr.dto.DebtSummary;
+import com.Ledjr.dto.SetPlanRequest;
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Debt;
 import com.Ledjr.service.AppUserService;
@@ -25,6 +27,7 @@ public class DebtController {
     // NUMERIC(10,2) maxes out at 99,999,999.99
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("99999999.99");
     private static final BigDecimal MAX_APR = new BigDecimal("100");
+    private static final int MAX_PLAN_YEARS = 30;
 
     private final DebtService debtService;
     private final AppUserService appUserService;
@@ -115,6 +118,31 @@ public class DebtController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(saved));
     }
 
+    /** PUT /debts/{id}/plan - set or clear (null) the payoff target month */
+    @PutMapping("/{id}/plan")
+    public ResponseEntity<?> setPlan(@PathVariable Long id, @RequestBody SetPlanRequest request){
+        Optional<Debt> found = debtService.findById(id);
+        // same 404 if it doesn't exist or isn't theirs
+        if (found.isEmpty() || request.userId() == null || !found.get().getUser().getId().equals(request.userId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Debt not found.");
+        }
+
+        LocalDate target = request.payoffTarget();
+        if (target != null) {
+            // always store the 1st so "months left" math is clean
+            target = target.withDayOfMonth(1);
+            LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
+            if (!target.isAfter(thisMonth)) {
+                return badRequest("Pick a month after this one.");
+            }
+            if (target.isAfter(thisMonth.plusYears(MAX_PLAN_YEARS))) {
+                return badRequest("Plans can go up to " + MAX_PLAN_YEARS + " years out.");
+            }
+        }
+
+        return ResponseEntity.ok(toResponse(debtService.setPayoffTarget(found.get(), target)));
+    }
+
     private static ResponseEntity<String> badRequest(String message){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
@@ -122,6 +150,6 @@ public class DebtController {
     /** entity -> DTO so entities (and the password hash) never leave the server */
     static DebtResponse toResponse(Debt d){
         return new DebtResponse(d.getId(), d.getKind().name(), d.getCreditorName(), d.getBalance(),
-            d.getOriginalBalance(), d.getCreditLimit(), d.getApr(), d.getMinPayment(), d.getDueDate());
+            d.getOriginalBalance(), d.getCreditLimit(), d.getApr(), d.getMinPayment(), d.getDueDate(), d.getPayoffTarget());
     }
 }

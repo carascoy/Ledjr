@@ -2,6 +2,7 @@ package com.Ledjr.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,14 @@ public class DebtService {
             return Optional.empty();
         }
         return debtRepository.findById(id);
+    }
+
+    /** null clears the plan */
+    public Debt setPayoffTarget(Debt debt, LocalDate target){
+        debt.setPayoffTarget(target);
+        debtRepository.save(debt);
+        log.info("Debt id# {} payoff target set to {}", debt.getId(), target);
+        return debt;
     }
 
     public List<Debt> findByUserId(Long userId){
