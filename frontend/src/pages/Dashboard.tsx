@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import QuickAdd from "../components/QuickAdd";
 import RecentTransactions from "../components/RecentTransactions";
 import IncomeExpenseChart from "../components/IncomeExpenseChart";
+import SpendingDonut from "../components/SpendingDonut";
 import { useUser } from "../context/UserContext";
 import type { TransactionResponse } from "../types/TransactionResponse";
 
@@ -146,7 +147,11 @@ function Dashboard() {
           <h2 className="pill-title">Debts</h2>
         </section>
         <section className="pill pill-spending">
-          <h2 className="pill-title">Spending by Category</h2>
+          <SpendingDonut
+            transactions={transactions}
+            monthName={monthName}
+            signedIn={user !== null}
+          />
         </section>
         <section className="pill pill-recent">
           <RecentTransactions
