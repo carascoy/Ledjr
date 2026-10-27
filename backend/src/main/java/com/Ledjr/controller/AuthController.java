@@ -2,6 +2,7 @@ package com.Ledjr.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class AuthController {
     // where the "you're logged in" info gets saved: the session (which Spring Session keeps in Postgres)
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+    // same regexes as AuthPage.tsx: any digit, and anything that isn't a letter or digit
+    private static final Pattern DIGIT = Pattern.compile("[0-9]");
+    private static final Pattern SPECIAL = Pattern.compile("[^A-Za-z0-9]");
 
     public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder, CategoryService categoryService){
         this.appUserService = appUserService;
@@ -49,6 +53,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse){
+
+        // same 3 rules as the sign up form in AuthPage.tsx. the form is just for showing hints,
+        // THIS is the real check, anyone can skip the form and hit /register directly
+        String problem = passwordProblem(request.password());
+        if (problem != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
+        }
 
         if(appUserService.emailTaken(request.email())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already registered.");
@@ -125,6 +136,20 @@ public class AuthController {
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, request, response);
+    }
+
+    /** what's wrong with this password, or null if it's fine */
+    private static String passwordProblem(String password){
+        if (password == null || password.length() < 8) {
+            return "Password must be at least 8 characters.";
+        }
+        if (!DIGIT.matcher(password).find()) {
+            return "Password needs at least 1 number.";
+        }
+        if (!SPECIAL.matcher(password).find()) {
+            return "Password needs at least 1 special character.";
+        }
+        return null;
     }
 
     private static SigninResponse toResponse(AppUser user){
