@@ -30,6 +30,10 @@ function AuthPage(){
     const hasSpecialChar = /[^A-Za-z0-9]/.test(password)
     const isPasswordValid = hasEightChars && hasNumber && hasSpecialChar
 
+    // sign up has to meet the password rules, sign in just needs both boxes filled
+    // (older accounts might not meet newer rules, and the server checks the password anyway)
+    const canSubmit = isSignUp ? isPasswordValid : email.trim() !== '' && password !== ''
+
     const isCharValid = hasEightChars;
     const isNumValid = hasNumber;
     const isSpecialCharValid = hasSpecialChar;
@@ -134,7 +138,7 @@ function AuthPage(){
 
                 </div>
 
-                <button type="submit" disabled={!isPasswordValid} className='auth-submit'>{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+                <button type="submit" disabled={!canSubmit} className='auth-submit'>{isSignUp ? 'Sign Up' : 'Sign In'}</button>
 
             </form>
         </div>
