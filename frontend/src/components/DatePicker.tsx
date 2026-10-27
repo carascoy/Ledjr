@@ -7,10 +7,10 @@ import "../styles/DatePicker.css";
 type Props = {
   value: string; // "YYYY-MM-DD"
   onChange: (value: string) => void;
-  max?: Date; // days after this are disabled
+  max?: Date; // days after this are greyed out
 };
 
-// Shows "Today", "Yesterday", or a short date like "Oct 22".
+// shows "Today", "Yesterday", or like "Oct 22"
 function labelFor(date: Date) {
   const today = new Date();
   const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
@@ -33,7 +33,6 @@ function DatePicker({ value, onChange, max }: Props) {
     const roomBelow = window.innerHeight - rect.bottom;
     const left = Math.min(rect.left, window.innerWidth - popoverWidth - 16);
 
-    // Open downward if there's room, otherwise open upward above the field.
     setPosition(
       roomBelow > 400
         ? { top: rect.bottom + 8, left }
@@ -42,7 +41,6 @@ function DatePicker({ value, onChange, max }: Props) {
     setOpen(true);
   }
 
-  // While open: close on outside click, Escape, or scroll.
   useEffect(() => {
     if (!open) return;
 
@@ -85,7 +83,7 @@ function DatePicker({ value, onChange, max }: Props) {
         {labelFor(selected)}
       </button>
 
-      {/* Portal: render into <body> so the quick-add panel's overflow: hidden can't clip the calendar. */}
+      {/* portal into <body> so quick-add's overflow: hidden doesn't cut off the calendar */}
       {open &&
         createPortal(
           <div

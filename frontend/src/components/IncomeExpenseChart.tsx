@@ -12,14 +12,14 @@ import type { TooltipContentProps } from "recharts";
 import type { TransactionResponse } from "../types/TransactionResponse";
 
 type Props = {
-  transactions: TransactionResponse[] | null; // null = still loading
-  monthName: string; // "October"
+  transactions: TransactionResponse[] | null; // null = loading
+  monthName: string;
   signedIn: boolean;
 };
 
-// Identity colors, validated against the #D9D9D9 pill with the dataviz checker
-// (lightness, chroma, colorblind separation). Amber is under 3:1 on the gray, which is fine
-// here because every value is also printed as a big number. Identity colors, not good/bad.
+// these colors passed the dataviz checker on the #D9D9D9 pill (incl. colorblind).
+// amber is under 3:1 on the gray but that's fine bc the numbers are printed big anyway.
+// they're just labels, NOT good/bad colors
 const IN_COLOR = "#1F7A4D";
 const OUT_COLOR = "#D98F2B";
 
@@ -35,7 +35,6 @@ const axisText = { fontFamily: "IBM Plex Mono, monospace", fontSize: 13, fill: "
 
 type Row = { name: string; value: number; color: string };
 
-// Hover card: value leads, label follows, short line key in the bar's color.
 function ChartTooltip({ active, payload }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
   const row = payload[0].payload as Row;
@@ -61,11 +60,10 @@ function IncomeExpenseChart({ transactions, monthName, signedIn }: Props) {
     );
   }
 
-  // Income in one pile, expenses in the other.
   const moneyIn = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
-  // Payments to debts aren't spending (the purchase already counted), so only expenses.
+  // only expenses, payments aren't spending (the purchase already counted)
   const moneyOut = transactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -89,7 +87,6 @@ function IncomeExpenseChart({ transactions, monthName, signedIn }: Props) {
     <>
       {title}
 
-      {/* The headline numbers, big enough to read from across the room */}
       <div className="io-figures">
         <div>
           <span className="io-label"><i className="io-key" style={{ background: IN_COLOR }} />Income</span>

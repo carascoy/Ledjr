@@ -7,8 +7,8 @@ public record DebtResponse(
     String kind,                 // "loan" or "card"
     String creditorName,
     BigDecimal balance,
-    BigDecimal originalBalance,  // meaningful for loans
-    BigDecimal creditLimit,      // cards only, null for loans
+    BigDecimal originalBalance,  // only really matters for loans
+    BigDecimal creditLimit,      // cards only, null on loans
     BigDecimal apr,
     BigDecimal minPayment,
     Integer dueDate

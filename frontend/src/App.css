@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-/* Shared expand/collapse animation (used by AuthPage and the dashboard quick-add) */
+/* expand/collapse animation, used by AuthPage + dashboard quick-add */
 .collapsible{
     display: grid;
     grid-template-rows: 0fr;

@@ -1,14 +1,14 @@
-// Mirrors the backend's TransactionResponse DTO (what GET/POST /transactions return).
+// matches the backend TransactionResponse DTO (GET/POST /transactions)
 export interface TransactionResponse {
   id: number;
-  // payment = money sent to a debt: lowers its balance, and is NOT counted as spending
+  // payment = paying off a debt, lowers the balance and is NOT spending
   type: "income" | "expense" | "payment";
   amount: number;
   txnDate: string; // "YYYY-MM-DD"
   description: string | null;
-  categoryId: number | null; // the three category fields are null when uncategorized
+  categoryId: number | null; // all 3 category fields are null if uncategorized
   categoryName: string | null;
   categoryColorSlot: number | null;
-  debtId: number | null; // payment: the debt paid; expense: the card it went on
+  debtId: number | null; // payment: the debt paid. expense: the card it went on
   debtName: string | null;
 }

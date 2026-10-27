@@ -10,8 +10,8 @@ public record TransactionResponse(
     LocalDate txnDate,
     String description,
     Long categoryId,          // null when uncategorized
-    String categoryName,      // null when uncategorized
-    Integer categoryColorSlot, // null when uncategorized; 0-7 otherwise
-    Long debtId,              // the debt paid (payment) or the card charged (expense); null otherwise
+    String categoryName,
+    Integer categoryColorSlot, // null if uncategorized, else 0-7
+    Long debtId,              // debt paid (payment) or card charged (expense), null otherwise
     String debtName
 ) {}

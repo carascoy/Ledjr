@@ -5,21 +5,21 @@ import "../styles/CategoryPicker.css";
 export type Option = {
   id: number;
   label: string;
-  hint?: string; // small gray text on the right, e.g. a balance
+  hint?: string; // gray text on the right, like a balance
 };
 
 type Props = {
   options: Option[];
   value: number | null;
   onChange: (id: number | null) => void;
-  placeholder: string; // shown in the trigger when nothing is picked
-  noneLabel?: string; // if set, an extra first option that means "none" (value null)
-  emptyMessage?: string; // shown in the list when there are no options
+  placeholder: string;
+  noneLabel?: string; // if set, adds a "none" option at the top (value null)
+  emptyMessage?: string;
   ariaLabel: string;
 };
 
-// A small dropdown in the same style as the category picker, for "Paid with" and "Debt".
-// Rendered through a portal like the other popovers, so the quick-add panel can't clip it.
+// dropdown that looks like the category picker, for "Paid with" and "Which debt?".
+// portal like the other popovers so quick-add doesn't cut it off
 function OptionPicker({ options, value, onChange, placeholder, noneLabel, emptyMessage, ariaLabel }: Props) {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<React.CSSProperties>({});

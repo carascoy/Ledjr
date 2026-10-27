@@ -10,13 +10,12 @@ const LINKS = [
   { to: "/recurring", label: "Recurring" },
 ];
 
-// NavLink knows which route is active, so the current page keeps its highlight.
 const linkClass = ({ isActive }: { isActive: boolean }) => `nav-link ${isActive ? "is-active" : ""}`;
 
 function NavBar() {
   const [scrolled, setScrolled] = useState(false);
 
-  // Frost the nav once page content starts sliding under it.
+  // frost the nav once stuff scrolls under it
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();

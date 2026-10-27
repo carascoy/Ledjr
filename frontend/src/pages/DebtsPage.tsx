@@ -28,17 +28,16 @@ function percentUsed(d: DebtResponse) {
   return Math.round((d.balance / d.creditLimit) * 100);
 }
 
-// The full Debts view: overall progress, every debt as a card, and the add form.
 function DebtsPage() {
   const { user } = useUser();
   const [debts, setDebts] = useState<DebtResponse[] | null>(null);
   const [summary, setSummary] = useState<DebtSummary | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  // Which card has its Pay / Charge form open (only one at a time)
+  // which card has Pay/Charge open (one at a time)
   const [activeAction, setActiveAction] = useState<{ id: number; action: "payment" | "charge" } | null>(null);
 
-  // Load the list and the totals together; both re-run after a debt is added.
+  // load list + totals together, both rerun after adding a debt
   useEffect(() => {
     if (!user) return;
     let ignore = false;

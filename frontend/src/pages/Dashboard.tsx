@@ -15,20 +15,20 @@ function Dashboard() {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  // Clicking a pill opens its full page, unless the click was on something
-  // interactive inside it (a button, a link, a form, or a popover rendered from it).
+  // clicking a pill opens its page, UNLESS you clicked something inside it
+  // (button, link, form, or a popover that came from it)
   function openPage(e: React.MouseEvent, path: string) {
     const target = e.target as HTMLElement;
     if (target.closest("button, a, input, select, textarea, [role='dialog']")) return;
     navigate(path);
   }
 
-  // This month's transactions. null = still loading.
+  // this month's transactions, null = loading
   const [transactions, setTransactions] = useState<TransactionResponse[] | null>(null);
-  // Bumped after quick-add saves, to make the fetch below run again.
+  // bump after quick-add saves so the fetch below runs again
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // The month every pill shows data for. Always stored as the 1st of the month.
+  // the month all the pills show. always stored as the 1st
   const [month, setMonth] = useState(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -39,7 +39,7 @@ function Dashboard() {
     month.getFullYear() === today.getFullYear() &&
     month.getMonth() === today.getMonth();
 
-  // delta = -1 for previous month, +1 for next. new Date() rolls the year over by itself.
+  // -1 = prev month, +1 = next. new Date() handles the year rollover itself
   const shiftMonth = (delta: number) =>
     setMonth((m) => new Date(m.getFullYear(), m.getMonth() + delta, 1));
 
@@ -48,14 +48,13 @@ function Dashboard() {
     year: "numeric",
   });
   const monthName = month.toLocaleDateString("en-US", { month: "long" });
-  // "2026-10", the format GET /transactions expects
+  // "2026-10", what GET /transactions wants
   const monthParam = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`;
 
-  // Load the selected month's transactions. Re-runs when the user, month, or refreshKey changes.
   useEffect(() => {
     if (!user) return;
 
-    // If the month changes before this request finishes, ignore its (now stale) result.
+    // if the month changes before this finishes, ignore the old result
     let ignore = false;
 
     fetch(`http://localhost:8080/transactions?userId=${user.id}&month=${monthParam}`)
@@ -85,7 +84,7 @@ function Dashboard() {
           >
             ‹
           </button>
-          {/* key makes React re-create the h1 on each change, replaying its pop animation */}
+          {/* key forces a new h1 each change so the pop animation replays */}
           <h1 key={monthLabel} className="month-label">
             {monthLabel}
           </h1>

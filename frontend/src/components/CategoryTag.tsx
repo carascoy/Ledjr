@@ -5,7 +5,7 @@ type Props = {
   colorSlot: number | null | undefined;
 };
 
-// A small rounded chip: colored dot + name. The text stays neutral; the dot carries the color.
+// little chip: colored dot + name. text stays neutral, the dot has the color
 function CategoryTag({ name, colorSlot }: Props) {
   return (
     <span className="cat-tag">

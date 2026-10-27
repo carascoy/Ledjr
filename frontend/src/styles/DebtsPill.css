@@ -39,7 +39,7 @@
     gap: 10px;
 }
 .debt-pct {
-    font-family: 'IBM Plex Mono', monospace;   /* big numbers are mono */
+    font-family: 'IBM Plex Mono', monospace;
     font-size: 48px;
     font-weight: 700;
     line-height: 1;
@@ -51,12 +51,11 @@
     color: #52514E;
 }
 
-/* Meter: the unfilled track is a light step of the same green as the fill */
 .debt-meter {
     border-radius: 6px;
     overflow: hidden;
 }
-/* Loans: green "paid off". Cards: amber "used" (same amber as expenses on the dashboard). */
+/* loans = green paid off, cards = amber used (same amber as expenses) */
 .debt-meter--loan { background: rgba(31, 122, 77, 0.18); }
 .debt-meter--card { background: rgba(217, 143, 43, 0.22); }
 .debt-meter--large { height: 12px; }
@@ -124,12 +123,12 @@
     grid-column: 1 / -1;
 }
 .debt-field input {
-    width: 100%;                  /* inputs have a default width that would overflow the grid cell */
+    width: 100%;                  /* inputs have a default width that overflows the grid cell otherwise */
     min-width: 0;
     height: 40px;
     padding: 0 12px;
     border: none;
-    border-radius: 12px;          /* 28 − 16 padding: concentric */
+    border-radius: 12px;          /* 28 - 16 padding, concentric */
     background: #F5F5F5;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 15px;
@@ -176,7 +175,7 @@
     margin-top: 4px;
 }
 
-/* Wide layout (Debts page): every field on one row, button at the end */
+/* wide layout (Debts page): all fields in one row, button at the end */
 .debt-form--wide {
     display: grid;
     grid-template-columns: minmax(0, 2fr) repeat(5, minmax(0, 1fr)) auto;
@@ -191,7 +190,6 @@
 .debt-meter--loan .debt-meter-fill { background: #1F7A4D; }
 .debt-meter--card .debt-meter-fill { background: #D98F2B; }
 
-/* Pill: total owed, then one row per kind */
 .debt-owed {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 36px;
@@ -221,7 +219,7 @@
     color: #000000;
 }
 
-/* Loan / Credit card toggle above the form (reuses the quick-add toggle look) */
+/* Loan / Credit card toggle, same look as the quick-add one */
 .debt-kind {
     display: inline-flex;
     margin-bottom: 12px;

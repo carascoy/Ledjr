@@ -10,7 +10,7 @@ const API = "http://localhost:8080";
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 type Props = {
-  refreshKey?: number; // bumped by the dashboard after quick-add (a payment changes balances)
+  refreshKey?: number; // dashboard bumps this after quick-add (payments change balances)
 };
 
 function DebtsPill({ refreshKey: outsideRefresh = 0 }: Props) {
@@ -18,13 +18,12 @@ function DebtsPill({ refreshKey: outsideRefresh = 0 }: Props) {
   const [summary, setSummary] = useState<DebtSummary | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Add-debt popover (a shortcut; the Debts page is the full view)
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<React.CSSProperties>({});
   const buttonRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  // Load the summary. Debts don't depend on the selected month, only on the user (and new debts).
+  // debts don't care about the selected month, just the user (and new debts)
   useEffect(() => {
     if (!user) return;
     let ignore = false;
@@ -48,7 +47,7 @@ function DebtsPill({ refreshKey: outsideRefresh = 0 }: Props) {
     setOpen(true);
   }
 
-  // While open: close on outside click, Escape, or scroll (same as the other popovers).
+  // when open: close on outside click, Escape, or scroll (same as the other popovers)
   useEffect(() => {
     if (!open) return;
     function onPointerDown(e: MouseEvent) {
@@ -90,7 +89,6 @@ function DebtsPill({ refreshKey: outsideRefresh = 0 }: Props) {
           <span className="debt-owed">{currency.format(summary.totalOwed)}</span>
           <span className="debt-label">owed</span>
         </div>
-        {/* Loans and cards are measured differently: % paid off vs. % of limit used */}
         {summary.loanCount > 0 && (
           <div className="debt-row">
             <span className="debt-row-label">Loans</span>

@@ -3,7 +3,7 @@
     width: 100%;
 }
 
-/* No shadow on purpose: .collapsible-inner has overflow: hidden, which would clip it */
+/* no shadow on purpose, .collapsible-inner's overflow: hidden would cut it off */
 .debts-add-panel {
     margin-bottom: 32px;
     padding: 16px;
@@ -28,7 +28,6 @@
     gap: 12px;
 }
 
-/* Loans and cards side by side, each with its own meter */
 .debts-overview-kinds {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -54,7 +53,7 @@
     color: #000000;
 }
 
-/* One card per debt; as many columns as fit, each at least 300px wide */
+/* one card per debt, as many columns as fit, min 300px each */
 .debt-cards {
     width: 100%;
     display: grid;
@@ -78,7 +77,6 @@
     line-height: 1;
 }
 
-/* APR / Minimum / Due as three small labeled stats */
 .debt-meta {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -106,7 +104,7 @@
     gap: 8px;
 }
 
-/* Small "Loan" / "Card" label next to the name; the dot repeats the meter color */
+/* little Loan/Card label by the name, dot matches the meter color */
 .debt-kind-badge {
     display: inline-flex;
     align-items: center;
@@ -158,7 +156,7 @@
     cursor: not-allowed;
 }
 
-/* Inline Pay / Charge form */
+/* inline Pay/Charge form */
 .debt-action {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;

@@ -3,7 +3,7 @@ type Props = {
   description: string;
 };
 
-// Placeholder for the pages that aren't built yet, so the nav links never land on a blank screen.
+// placeholder for pages i haven't built yet so the nav doesn't go to a blank screen
 function ComingSoon({ title, description }: Props) {
   return (
     <>

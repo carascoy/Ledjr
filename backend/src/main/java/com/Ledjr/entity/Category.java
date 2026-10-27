@@ -39,7 +39,7 @@ public class Category {
     @Column(precision = 10, scale = 2)
     private BigDecimal budgetedAmount;
 
-    /** Which of the 8 palette colors this category's tag uses (0-7). Set once at creation. */
+    /** which of the 8 palette colors the tag uses (0-7). set once when it's made */
     @Column(nullable = false)
     private Integer colorSlot;
 

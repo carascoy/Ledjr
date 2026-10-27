@@ -27,8 +27,8 @@ public class DebtService {
     }
 
     /**
-     * originalBalance = what the debt started at. Pass null to use today's balance
-     * (i.e. "I'm starting to track this now"), which means 0% paid off so far.
+     * originalBalance = what it started at. null = use today's balance
+     * ("just started tracking it"), so it shows 0% paid off
      */
     public Debt newDebt(AppUser user, Debt.Kind kind, String creditorName, BigDecimal balance, BigDecimal originalBalance,
                         BigDecimal creditLimit, BigDecimal apr, BigDecimal minPayment, Integer dueDate){
@@ -58,14 +58,13 @@ public class DebtService {
         return debtRepository.findByUserId(userId);
     }
 
-    /** The user's debts, biggest balance first. */
     public List<Debt> findByUserIdLargestFirst(Long userId){
         return debtRepository.findByUserId(userId).stream()
             .sorted(Comparator.comparing(Debt::getBalance).reversed())
             .toList();
     }
 
-    /** Totals for the dashboard: loans as "% paid off", cards as "% of limit used". */
+    /** dashboard totals: loans = % paid off, cards = % of limit used */
     public DebtSummary getSummary(Long userId){
         List<Debt> debts = debtRepository.findByUserId(userId);
         List<Debt> loans = debts.stream().filter(d -> d.getKind() == Debt.Kind.loan).toList();
@@ -73,12 +72,12 @@ public class DebtService {
 
         BigDecimal loanOriginal = sum(loans.stream().map(Debt::getOriginalBalance).toList());
         BigDecimal loanRemaining = sum(loans.stream().map(Debt::getBalance).toList());
-        // paid / started-at; clamped because interest can push a balance above where it started
+        // paid / started at. clamped bc interest can push it above where it started
         int loanPercentPaid = clamp(percent(loanOriginal.subtract(loanRemaining), loanOriginal), 0, 100);
 
         BigDecimal cardBalance = sum(cards.stream().map(Debt::getBalance).toList());
         BigDecimal cardLimit = sum(cards.stream().map(Debt::getCreditLimit).toList());
-        // not clamped at 100: being over the limit is worth seeing
+        // NOT capped at 100, you wanna see if you're over the limit
         int cardPercentUsed = clamp(percent(cardBalance, cardLimit), 0, 999);
 
         return new DebtSummary(
@@ -93,7 +92,7 @@ public class DebtService {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    /** part / whole as a rounded whole-number percent; 0 when whole is 0. */
+    /** part / whole as a rounded %, 0 if whole is 0 */
     private static int percent(BigDecimal part, BigDecimal whole){
         if (whole.signum() <= 0) {
             return 0;
@@ -111,12 +110,12 @@ public class DebtService {
         return debtRepository.findByCreditorName(creditorName);
     }
 
-    /** Avalanche order: highest interest rate first. */
+    /** avalanche: highest APR first */
     public List<Debt> findByUserIdAvalanche(Long userId){
         return debtRepository.findByUserIdOrderByAprDesc(userId);
     }
 
-    /** Snowball order: smallest balance first. */
+    /** snowball: smallest balance first */
     public List<Debt> findByUserIdSnowball(Long userId){
         return debtRepository.findByUserIdOrderByBalanceAsc(userId);
     }

@@ -1,8 +1,8 @@
-// The 8 category tag colors, in a fixed order. A category's colorSlot (0-7, assigned once by
-// the backend) picks its color, so a category keeps its color forever.
-// Palette: the dataviz reference categorical palette, validated against the app's gray
-// surfaces (colorblind separation passes). Some slots are under 3:1 contrast on gray, which is
-// why a tag always shows its name next to the dot: color is never the only signal.
+// the 8 tag colors, order matters. colorSlot (0-7, backend sets it once) picks the color
+// so a category keeps the same color forever.
+// palette is from the dataviz skill, passed the colorblind check on the gray cards.
+// some are under 3:1 contrast on gray, that's why tags always show the name too,
+// color is never the only clue
 export const CATEGORY_COLORS = [
   "#2a78d6", // blue
   "#eb6834", // orange

@@ -3,8 +3,8 @@ import { fromInputDate } from "../utils/dates";
 import CategoryTag from "./CategoryTag";
 
 type Props = {
-  transactions: TransactionResponse[] | null; // null = still loading
-  monthName: string; // e.g. "October", for the empty message
+  transactions: TransactionResponse[] | null; // null = loading
+  monthName: string;
   signedIn: boolean;
 };
 

@@ -22,7 +22,7 @@ import com.Ledjr.service.DebtService;
 public class DebtController {
 
     private static final int MAX_NAME_LENGTH = 60;
-    // NUMERIC(10,2) holds up to 99,999,999.99
+    // NUMERIC(10,2) maxes out at 99,999,999.99
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("99999999.99");
     private static final BigDecimal MAX_APR = new BigDecimal("100");
 
@@ -34,7 +34,7 @@ public class DebtController {
         this.appUserService = appUserService;
     }
 
-    /** GET /debts?userId=1 — the user's debts, biggest balance first. */
+    /** GET /debts?userId=1 - user's debts, biggest balance first */
     @GetMapping
     public ResponseEntity<List<DebtResponse>> list(@RequestParam Long userId){
         List<DebtResponse> body = debtService.findByUserIdLargestFirst(userId)
@@ -44,13 +44,13 @@ public class DebtController {
         return ResponseEntity.ok(body);
     }
 
-    /** GET /debts/summary?userId=1 — totals and "% paid off" for the dashboard pill. */
+    /** GET /debts/summary?userId=1 - totals + percents for the dashboard pill */
     @GetMapping("/summary")
     public ResponseEntity<DebtSummary> summary(@RequestParam Long userId){
         return ResponseEntity.ok(debtService.getSummary(userId));
     }
 
-    /** POST /debts — add one debt. */
+    /** POST /debts - add a debt */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateDebtRequest request){
 
@@ -62,7 +62,7 @@ public class DebtController {
             return badRequest("Name must be " + MAX_NAME_LENGTH + " characters or fewer.");
         }
 
-        // Loan or card (defaults to loan, so older clients keep working)
+        // loan or card, defaults to loan so old requests still work
         Debt.Kind kind;
         if (request.kind() == null || "loan".equals(request.kind())) {
             kind = Debt.Kind.loan;
@@ -80,18 +80,18 @@ public class DebtController {
         BigDecimal original = null;
         BigDecimal limit = null;
         if (kind == Debt.Kind.loan) {
-            // Optional starting amount: defaults to today's balance, and can't be smaller than it.
+            // starting amount is optional, defaults to the balance now and can't be less than it
             original = request.originalBalance() == null ? balance : request.originalBalance();
             if (original.compareTo(balance) < 0 || original.compareTo(MAX_AMOUNT) > 0 || original.signum() <= 0) {
                 return badRequest("Original amount must be at least the current balance (and more than $0).");
             }
         } else {
-            // A card needs its limit; utilization is balance / limit. A balance over the limit is allowed (it happens).
+            // cards need a limit (utilization = balance / limit). going over the limit is allowed, it happens
             limit = request.creditLimit();
             if (limit == null || limit.signum() <= 0 || limit.compareTo(MAX_AMOUNT) > 0) {
                 return badRequest("A card needs its credit limit (more than $0).");
             }
-            original = balance; // not used for cards, but the column is required
+            original = balance; // cards don't use this but the column is NOT NULL
         }
 
         if (request.apr() != null && (request.apr().signum() < 0 || request.apr().compareTo(MAX_APR) > 0)) {
@@ -119,7 +119,7 @@ public class DebtController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
-    /** Entity -> DTO, so entities (and the user's password hash) never leave the server. */
+    /** entity -> DTO so entities (and the password hash) never leave the server */
     static DebtResponse toResponse(Debt d){
         return new DebtResponse(d.getId(), d.getKind().name(), d.getCreditorName(), d.getBalance(),
             d.getOriginalBalance(), d.getCreditLimit(), d.getApr(), d.getMinPayment(), d.getDueDate());

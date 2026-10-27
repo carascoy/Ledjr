@@ -5,13 +5,13 @@ import type { DebtResponse } from "../types/DebtResponse";
 
 type Props = {
   debt: DebtResponse;
-  action: "payment" | "charge"; // payment lowers the balance; charge (cards) raises it
+  action: "payment" | "charge"; // payment lowers the balance, charge (cards only) raises it
   onDone: () => void;
   onCancel: () => void;
 };
 
-// The small inline form on a debt card. It posts a normal transaction with debtId set,
-// and the backend updates the debt's balance in the same database transaction.
+// little Pay/Charge form on a debt card. just posts a normal transaction with debtId,
+// backend updates the balance in the same db transaction
 function DebtAction({ debt, action, onDone, onCancel }: Props) {
   const { user } = useUser();
   const [amount, setAmount] = useState("");

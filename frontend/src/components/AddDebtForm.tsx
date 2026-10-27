@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useUser } from "../context/UserContext";
 
 type Props = {
-  layout: "compact" | "wide"; // compact = 2-column popover, wide = one row on the Debts page
+  layout: "compact" | "wide"; // compact = 2 columns in the popover, wide = one row on the Debts page
   onSaved: () => void;
   autoFocus?: boolean;
 };
@@ -11,11 +11,11 @@ type Kind = "loan" | "card";
 
 const API = "http://localhost:8080";
 
-// "" -> null, otherwise a number. Optional fields are sent as null when left blank.
+// "" -> null, else a number. blank optional fields get sent as null
 const numberOrNull = (value: string) => (value.trim() === "" ? null : Number(value));
 
-// The add-debt form, shared by the dashboard pill's popover and the Debts page.
-// Loans ask for what they started at (-> % paid off); cards ask for the credit limit (-> % used).
+// add-debt form, used in the dashboard popover AND the Debts page.
+// loans ask what they started at (-> % paid off), cards ask for the limit (-> % used)
 function AddDebtForm({ layout, onSaved, autoFocus = false }: Props) {
   const { user } = useUser();
   const [kind, setKind] = useState<Kind>("loan");
@@ -31,7 +31,7 @@ function AddDebtForm({ layout, onSaved, autoFocus = false }: Props) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    e.stopPropagation(); // this form can live in a portal: don't let React bubble the submit upward
+    e.stopPropagation(); // this can be in a portal, don't let the submit bubble up to other forms
     if (!user) {
       setError("You've been signed out. Sign in again.");
       return;

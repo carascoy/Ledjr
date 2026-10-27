@@ -1,4 +1,4 @@
-// Mirrors the backend's CategoryResponse DTO (GET/POST /categories).
+// matches the backend CategoryResponse DTO (GET/POST /categories)
 export interface CategoryResponse {
   id: number;
   name: string;

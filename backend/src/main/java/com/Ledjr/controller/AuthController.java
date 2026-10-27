@@ -49,7 +49,7 @@ public class AuthController {
         Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
         AppUser user = userInfo.get();
 
-        // Every new account starts with a handful of categories so quick-add works right away.
+        // new accounts get some starter categories so quick-add isn't empty
         categoryService.seedDefaults(user);
 
         SigninResponse response = new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
@@ -59,8 +59,8 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> register(@RequestBody  SigninRequest request){
 
-        // Same status + same body for "no such email" and "wrong password",
-        // so the response never reveals which emails are registered.
+        // same error for wrong email AND wrong password, otherwise you could
+        // figure out which emails have accounts
         Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
 
         if(userInfo.isEmpty() || !passwordEncoder.matches(request.password(), userInfo.get().getPasswordHash())){

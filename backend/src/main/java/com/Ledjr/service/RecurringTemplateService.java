@@ -57,7 +57,7 @@ public class RecurringTemplateService {
         return recurringTemplateRepository.findByNextDueDate(date);
     }
 
-    /** Feeds the calendar view - everything a user has due in a date range. */
+    /** for the calendar view, everything due in a date range */
     public List<RecurringTemplate> findByUserIdDueBetween(Long userId, LocalDate start, LocalDate end){
         return recurringTemplateRepository.findByUserIdAndNextDueDateBetween(userId, start, end);
     }

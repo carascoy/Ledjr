@@ -29,7 +29,7 @@ public class CategoryController {
         this.appUserService = appUserService;
     }
 
-    /** GET /categories?userId=1 — the user's categories, A to Z. */
+    /** GET /categories?userId=1 - user's categories, A to Z */
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> list(@RequestParam Long userId){
         List<CategoryResponse> body = categoryService.findByUserIdSorted(userId)
@@ -39,7 +39,7 @@ public class CategoryController {
         return ResponseEntity.ok(body);
     }
 
-    /** POST /categories — create one category. */
+    /** POST /categories - make a category */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateCategoryRequest request){
 
@@ -68,9 +68,9 @@ public class CategoryController {
     }
 
     /**
-     * POST /categories/defaults?userId=1 — give a user the starter categories.
-     * Only adds them if the user has no categories yet, so calling it twice is harmless.
-     * New accounts get these automatically at sign-up; this is for accounts made before that.
+     * POST /categories/defaults?userId=1 - gives a user the starter categories.
+     * only adds them if they have none yet, so calling it twice is fine.
+     * new accounts already get these at sign-up, this is for older accounts
      */
     @PostMapping("/defaults")
     public ResponseEntity<?> seedDefaults(@RequestParam Long userId){
@@ -82,7 +82,7 @@ public class CategoryController {
         return list(userId);
     }
 
-    /** Entity -> DTO, so entities (and the user's password hash) never leave the server. */
+    /** entity -> DTO so entities (and the password hash) never leave the server */
     static CategoryResponse toResponse(Category c){
         return new CategoryResponse(c.getId(), c.getName(), c.getKind().name(), c.getColorSlot());
     }

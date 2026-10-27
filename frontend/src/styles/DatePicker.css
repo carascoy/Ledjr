@@ -1,4 +1,4 @@
-/* ---------- Date picker trigger (looks like the other quick-add inputs) ---------- */
+/* ---------- Date picker trigger (matches the other quick-add inputs) ---------- */
 .dp-trigger {
     min-width: 150px;
     text-align: left;
@@ -32,7 +32,7 @@
 
 /* ---------- react-day-picker internals (rdp-*) ---------- */
 .dp-popover .rdp-months {
-    position: relative;           /* anchors the prev/next buttons */
+    position: relative;           /* so the prev/next buttons position off this */
 }
 
 .dp-popover .rdp-month_caption {
@@ -40,7 +40,7 @@
     display: flex;
     align-items: center;
     padding-left: 8px;
-    font-family: 'IBM Plex Mono', monospace;   /* headers are mono */
+    font-family: 'IBM Plex Mono', monospace;
     font-size: 18px;
     font-weight: 700;
 }
@@ -59,7 +59,7 @@
     width: 40px;
     height: 40px;
     border: none;
-    border-radius: 12px;          /* 28 − 16 padding: concentric */
+    border-radius: 12px;          /* 28 - 16 padding, concentric */
     background: transparent;
     display: flex;
     align-items: center;
@@ -116,7 +116,7 @@
     border: none;
     border-radius: 12px;
     background: transparent;
-    font-family: 'IBM Plex Mono', monospace;   /* numbers are mono */
+    font-family: 'IBM Plex Mono', monospace;
     font-size: 15px;
     color: #000000;
     cursor: pointer;

@@ -56,15 +56,15 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
 
-        // Optional category: it must exist, belong to this user, and match the transaction type.
-        // Payments don't get one: they aren't income or spending, just money moving to a debt.
+        // category is optional but has to exist, be theirs, and match the type.
+        // payments don't get one, they're not income or spending, just money going to a debt
         Category category = null;
         if (isPayment && request.categoryId() != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payments don't take a category.");
         }
         if (request.categoryId() != null) {
             Optional<Category> found = categoryService.findById(request.categoryId());
-            // Same 404 whether it doesn't exist or belongs to someone else, so other users' ids aren't revealed.
+            // same 404 if it doesn't exist or isn't theirs, so you can't fish for other people's ids
             if (found.isEmpty() || !found.get().getUser().getId().equals(user.get().getId())) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found.");
             }
@@ -74,7 +74,7 @@ public class TransactionController {
             }
         }
 
-        // Optional debt: required for a payment, optional for an expense (the card it was put on), never for income.
+        // debt: required for payments, optional for expenses (the card), never on income
         Debt debt = null;
         if (isPayment && request.debtId() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pick which debt this payment went to.");
@@ -84,7 +84,6 @@ public class TransactionController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Income can't be linked to a debt.");
             }
             Optional<Debt> found = debtService.findById(request.debtId());
-            // Same 404 for "doesn't exist" and "someone else's", like categories.
             if (found.isEmpty() || !found.get().getUser().getId().equals(user.get().getId())) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Debt not found.");
             }
@@ -100,7 +99,6 @@ public class TransactionController {
 
         LocalDate date = request.txnDate() != null ? request.txnDate() : LocalDate.now();
 
-        // record() saves the transaction and updates the debt's balance together (one database transaction).
         Transaction saved = transactionService.record(user.get(), category, debt, type, request.amount(), date, request.description());
 
         TransactionResponse response = toResponse(saved);
@@ -108,12 +106,12 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /** GET /transactions?userId=1&month=2026-10 — one month's transactions, newest first. */
+    /** GET /transactions?userId=1&month=2026-10 - one month, newest first */
     @GetMapping
     public ResponseEntity<?> list(@RequestParam Long userId, @RequestParam String month){
         YearMonth ym;
         try {
-            ym = YearMonth.parse(month);          // expects "2026-10"
+            ym = YearMonth.parse(month);          // wants "2026-10"
         } catch (DateTimeParseException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Month must look like 2026-10.");
         }
@@ -126,7 +124,7 @@ public class TransactionController {
         return ResponseEntity.ok(body);
     }
 
-    /** Entity -> DTO, so entities (and the user's password hash) never leave the server. */
+    /** entity -> DTO so entities (and the password hash) never leave the server */
     private TransactionResponse toResponse(Transaction t){
         Category c = t.getCategory();
         Debt d = t.getDebt();

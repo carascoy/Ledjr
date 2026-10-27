@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AuthPage />} />
 
-        {/* Every signed-in page shares AppLayout (page padding + nav); the page renders in its <Outlet /> */}
+        {/* every signed-in page goes inside AppLayout (padding + nav), page shows up in its <Outlet /> */}
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/debts" element={<DebtsPage />} />

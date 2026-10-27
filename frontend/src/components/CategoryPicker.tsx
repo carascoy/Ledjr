@@ -6,11 +6,11 @@ import CategoryTag from "./CategoryTag";
 import "../styles/CategoryPicker.css";
 
 type Props = {
-  categories: CategoryResponse[] | null; // null = still loading
-  kind: "income" | "expense"; // only categories of this kind are offered
-  value: number | null; // selected category id, or null for "No category"
+  categories: CategoryResponse[] | null; // null = loading
+  kind: "income" | "expense"; // only shows categories of this kind
+  value: number | null; // picked id, null = "No category"
   onChange: (id: number | null) => void;
-  onCategoriesChanged: (categories: CategoryResponse[]) => void; // after creating / seeding
+  onCategoriesChanged: (categories: CategoryResponse[]) => void; // after making one / seeding
 };
 
 const API = "http://localhost:8080";
@@ -48,7 +48,7 @@ function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged
     triggerRef.current?.focus();
   }
 
-  // While open: close on outside click, Escape, or scroll (same behavior as the date picker).
+  // when open: close on outside click, Escape, or scroll (same as the date picker)
   useEffect(() => {
     if (!open) return;
     function onPointerDown(e: MouseEvent) {
@@ -78,9 +78,9 @@ function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged
 
   async function createCategory(e: React.FormEvent) {
     e.preventDefault();
-    // This form is rendered through a portal, so in the DOM it sits in <body>, but React still
-    // bubbles its events up the *component* tree, straight into QuickAdd's <form onSubmit>.
-    // Without this line, adding a category also submitted the whole transaction.
+    // this form is in a portal so it's in <body> in the DOM, BUT react still bubbles
+    // events up the component tree, right into QuickAdd's <form onSubmit>.
+    // without this, adding a category also submitted the whole transaction lol
     e.stopPropagation();
     if (!user || !newName.trim()) return;
     setBusy(true);
@@ -141,7 +141,7 @@ function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged
         )}
       </button>
 
-      {/* Portal: render into <body> so the quick-add panel's overflow: hidden can't clip it. */}
+      {/* portal into <body> so quick-add's overflow: hidden doesn't cut it off */}
       {open &&
         createPortal(
           <div ref={popoverRef} className="cp-popover" style={position}>

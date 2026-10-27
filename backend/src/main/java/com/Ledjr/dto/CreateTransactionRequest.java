@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record CreateTransactionRequest(
-    Long userId,          // temporary until sessions (Phase 5)
-    String type,          // "income", "expense" or "payment" (money sent to a debt)
+    Long userId,          // temp until sessions (phase 5)
+    String type,          // "income", "expense" or "payment" (paying off a debt)
     BigDecimal amount,
-    LocalDate txnDate,    // optional: defaults to today
+    LocalDate txnDate,    // optional, defaults to today
     String description,
-    Long categoryId,      // optional: leave out for an uncategorized transaction
-    Long debtId           // payment: the debt being paid (required); expense: the card it was put on (optional)
+    Long categoryId,      // optional, leave out for uncategorized
+    Long debtId           // payment: which debt (required). expense: which card (optional)
 ) {}

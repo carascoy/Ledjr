@@ -4,26 +4,26 @@ import type { TransactionResponse } from "../types/TransactionResponse";
 import { categoryColor } from "../utils/categoryColors";
 
 type Props = {
-  transactions: TransactionResponse[] | null; // null = still loading
-  monthName: string; // "October"
+  transactions: TransactionResponse[] | null; // null = loading
+  monthName: string;
   signedIn: boolean;
 };
 
-// The pill is small, so: the 5 biggest categories get their own slice, the rest fold into "Other".
+// pill's small so top 5 get a slice, rest go in "Other"
 const MAX_SLICES = 5;
 const UNCATEGORIZED_COLOR = "#A8A8A8";
 const OTHER_COLOR = "#6E6E6E";
-const SIZE = 136; // donut width/height in px
+const SIZE = 136;
 
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 type Slice = { key: string; name: string; value: number; color: string };
 
-// Groups the month's expenses by category, biggest first, with "Other" for the leftovers.
+// groups the month's expenses by category, biggest first, leftovers -> "Other"
 function buildSlices(transactions: TransactionResponse[]): Slice[] {
   const byKey = new Map<string, Slice>();
   for (const t of transactions) {
-    if (t.type !== "expense") continue; // income and debt payments aren't spending
+    if (t.type !== "expense") continue; // income + debt payments aren't spending
     const key = t.categoryId == null ? "none" : String(t.categoryId);
     const existing = byKey.get(key);
     if (existing) {
@@ -39,7 +39,7 @@ function buildSlices(transactions: TransactionResponse[]): Slice[] {
   }
 
   const sorted = [...byKey.values()].sort((a, b) => b.value - a.value);
-  if (sorted.length <= MAX_SLICES + 1) return sorted; // folding just one would be pointless
+  if (sorted.length <= MAX_SLICES + 1) return sorted; // no point folding just one
 
   const top = sorted.slice(0, MAX_SLICES);
   const rest = sorted.slice(MAX_SLICES).reduce((sum, s) => sum + s.value, 0);
@@ -110,14 +110,13 @@ function SpendingDonut({ transactions, monthName, signedIn }: Props) {
             <Tooltip content={SliceTooltip} />
           </PieChart>
 
-          {/* The month's total, sitting in the hole of the donut */}
           <div className="sd-center" aria-hidden="true">
             <span className="sd-total">{currency.format(total)}</span>
             <span className="sd-caption">spent</span>
           </div>
         </div>
 
-        {/* Legend: never make anyone judge a thin slice by eye */}
+        {/* legend so nobody has to eyeball thin slices */}
         <ul className="sd-legend">
           {slices.map((s) => (
             <li key={s.key} className="sd-row">

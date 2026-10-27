@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Table(name="debt")
 public class Debt {
 
-    /** loan = installment debt (shown as % paid off), card = revolving debt (shown as % of limit used). */
+    /** loan = installment debt (% paid off), card = revolving debt (% of limit used) */
     public enum Kind {
         loan, card
     }
@@ -55,7 +55,7 @@ public class Debt {
     @Column(nullable = false)
     private Kind kind = Kind.loan;
 
-    /** Cards only: the credit limit, so utilization = balance / creditLimit. */
+    /** cards only. utilization = balance / creditLimit */
     @Column(precision = 10, scale = 2)
     private BigDecimal creditLimit;
 

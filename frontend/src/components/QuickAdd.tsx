@@ -7,7 +7,7 @@ import OptionPicker from "./OptionPicker";
 import type { CategoryResponse } from "../types/CategoryResponse";
 import type { DebtResponse } from "../types/DebtResponse";
 
-// payment = money sent to a debt (lowers its balance, not counted as spending)
+// payment = paying off a debt (lowers the balance, NOT spending)
 type TxnType = "expense" | "income" | "payment";
 
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
@@ -30,11 +30,10 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
   const [saving, setSaving] = useState(false);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [categories, setCategories] = useState<CategoryResponse[] | null>(null);
-  // Expense: the card it was put on (null = paid from the bank). Payment: the debt being paid.
+  // expense: which card (null = bank/cash). payment: which debt
   const [debtId, setDebtId] = useState<number | null>(null);
   const [debts, setDebts] = useState<DebtResponse[]>([]);
 
-  // Load the user's categories the first time the form opens.
   useEffect(() => {
     if (!open || !user || categories !== null) return;
     let ignore = false;
@@ -51,7 +50,7 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
     };
   }, [open, user, categories]);
 
-  // Load debts every time the form opens, so balances in the pickers are current.
+  // refetch debts every time it opens so the balances are up to date
   useEffect(() => {
     if (!open || !user) return;
     let ignore = false;
@@ -73,7 +72,7 @@ function QuickAdd({ open, onClose, onAdded }: Props) {
     .map((d) => ({ id: d.id, label: d.creditorName, hint: currency.format(d.balance) }));
   const debtOptions = debts.map((d) => ({ id: d.id, label: d.creditorName, hint: currency.format(d.balance) }));
 
-  // Switching type clears the category and debt, since each belongs to one type.
+  // switching type clears category + debt bc they only fit one type
   function changeType(next: TxnType) {
     if (next !== type) {
       setCategoryId(null);

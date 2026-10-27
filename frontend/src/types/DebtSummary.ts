@@ -1,5 +1,5 @@
-// Mirrors the backend's DebtSummary DTO (GET /debts/summary).
-// Loans are measured as "% paid off", cards as "% of limit used".
+// matches the backend DebtSummary DTO (GET /debts/summary)
+// loans = % paid off, cards = % of limit used
 export interface DebtSummary {
   totalOwed: number;
   debtCount: number;
@@ -7,10 +7,10 @@ export interface DebtSummary {
   loanCount: number;
   loanOriginal: number;
   loanRemaining: number;
-  loanPercentPaid: number; // 0-100
+  loanPercentPaid: number;
 
   cardCount: number;
   cardBalance: number;
   cardLimit: number;
-  cardPercentUsed: number; // can exceed 100 when over the limit
+  cardPercentUsed: number; // can go over 100 if over the limit
 }

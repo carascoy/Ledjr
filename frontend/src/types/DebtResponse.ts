@@ -1,4 +1,4 @@
-// Mirrors the backend's DebtResponse DTO (GET/POST /debts).
+// matches the backend DebtResponse DTO (GET/POST /debts)
 export interface DebtResponse {
   id: number;
   kind: "loan" | "card";
@@ -8,5 +8,5 @@ export interface DebtResponse {
   creditLimit: number | null; // cards only
   apr: number | null;
   minPayment: number | null;
-  dueDate: number | null; // day of the month, 1-31
+  dueDate: number | null; // day of the month 1-31
 }

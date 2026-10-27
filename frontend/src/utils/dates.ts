@@ -1,7 +1,7 @@
-// Dates as "YYYY-MM-DD" strings, the format the backend's LocalDate expects.
-// Both helpers work in LOCAL time on purpose:
-//  - toISOString() would use UTC, which is already "tomorrow" after 8pm in New York.
-//  - new Date("2026-10-22") is parsed as UTC midnight, which is still the 21st in New York.
+// dates as "YYYY-MM-DD" strings, what the backend's LocalDate wants.
+// both of these use LOCAL time on purpose:
+//  - toISOString() uses UTC, which is already "tomorrow" after 8pm in NY
+//  - new Date("2026-10-22") parses as UTC midnight, which is still the 21st in NY
 
 export function toInputDate(d: Date): string {
   const month = String(d.getMonth() + 1).padStart(2, "0");

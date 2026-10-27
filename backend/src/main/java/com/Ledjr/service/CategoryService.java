@@ -22,15 +22,15 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    /** The 8 tag colors on the frontend; slots are handed out 0, 1, 2 ... and wrap after 7. */
+    /** 8 tag colors on the frontend, slots go 0, 1, 2... and wrap after 7 */
     private static final int COLOR_SLOTS = 8;
 
-    /** Starter categories every new user gets, so the picker isn't empty on day one. */
+    /** starter categories so the picker isn't empty on day one */
     private static final List<String> DEFAULT_EXPENSES = List.of(
         "Groceries", "Rent", "Dining Out", "Transportation", "Utilities", "Shopping", "Entertainment");
     private static final List<String> DEFAULT_INCOME = List.of("Paycheck");
 
-    /** Creates a category and gives it the next color slot. */
+    /** makes the category + gives it the next color slot */
     public Category create(AppUser user, String name, Category.Kind kind){
         Category category = new Category();
         category.setUser(user);
@@ -42,7 +42,7 @@ public class CategoryService {
         return category;
     }
 
-    /** Adds the starter categories, but only if the user has none yet (safe to call twice). */
+    /** only adds them if the user has none yet, so it's safe to call twice */
     public void seedDefaults(AppUser user){
         if (categoryRepository.countByUserId(user.getId()) > 0) {
             return;

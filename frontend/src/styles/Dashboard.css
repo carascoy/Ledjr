@@ -16,7 +16,7 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 32px;
     font-weight: 700;
-    min-width: 300px;          /* fits "September 2026" so the arrows don't jump */
+    min-width: 300px;          /* fits "September 2026" so the arrows don't move around */
     text-align: center;
     animation: month-in 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -84,10 +84,6 @@
     gap: 32px;
 }
 
-
-
-
-
 @media (prefers-reduced-motion: reduce) {
     .month-label { animation: none; }
 }
@@ -99,7 +95,7 @@
 .pill-upcoming { grid-area: upcoming; }
 
 /* ---------- Quick-add form ---------- */
-/* No shadow on purpose: .collapsible-inner has overflow: hidden, which would clip it. */
+/* no shadow on purpose, .collapsible-inner's overflow: hidden would cut it off */
 .qa-form {
     display: flex;
     align-items: center;
@@ -114,7 +110,7 @@
     height: 48px;
     background: #F5F5F5;
     border: none;
-    border-radius: 12px;          /* 28 − 16 padding: concentric */
+    border-radius: 12px;          /* 28 - 16 padding, concentric */
     padding: 0 16px;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 18px;
@@ -134,7 +130,7 @@
     height: 40px;
     padding: 0 16px;
     border: none;
-    border-radius: 8px;           /* 12 − 4 padding: concentric */
+    border-radius: 8px;           /* 12 - 4 padding, concentric */
     background: transparent;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 16px;
@@ -174,9 +170,6 @@
     margin: -16px 0 24px;
 }
 
-/* ---------- Pill contents ---------- */
-
-
 /* ---------- Recent transactions ---------- */
 .txn-list {
     list-style: none;
@@ -205,8 +198,8 @@
 .txn-desc {
     display: flex;
     align-items: center;
-    gap: 16px;                    /* breathing room between the description and its tag */
-    min-width: 0;                 /* lets the text shrink so the tag never pushes the amount out */
+    gap: 16px;
+    min-width: 0;                 /* lets text shrink so the tag doesn't shove the amount out */
 }
 
 .txn-desc-text {
@@ -214,11 +207,11 @@
     font-size: 16px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;      /* long descriptions end in "…" instead of wrapping */
+    text-overflow: ellipsis;
 }
 
 .txn-amount {
-    font-family: 'IBM Plex Mono', monospace;   /* numbers are mono */
+    font-family: 'IBM Plex Mono', monospace;
     font-size: 16px;
     font-weight: 700;
     text-align: right;
@@ -252,14 +245,13 @@
 }
 
 .io-amount {
-    font-family: 'IBM Plex Mono', monospace;   /* big numbers are mono */
+    font-family: 'IBM Plex Mono', monospace;
     font-size: 44px;
     font-weight: 700;
     line-height: 1;
     color: #000000;
 }
 
-/* Legend keys mirror the bars: small rounded rects */
 .io-key {
     width: 12px;
     height: 12px;
@@ -267,7 +259,7 @@
     display: inline-block;
 }
 
-/* The chart takes all the height left between the numbers and the verdict */
+/* chart fills whatever height is left between the numbers and the verdict */
 .io-chart {
     flex: 1;
     min-height: 0;
@@ -292,7 +284,6 @@
     color: #000000;
 }
 
-/* Tooltip keys are short line strokes, not boxes */
 .io-line {
     width: 12px;
     height: 3px;
@@ -325,7 +316,7 @@
     flex-shrink: 0;
 }
 
-/* Total in the hole: absolutely centered over the chart, clicks pass through to the slices */
+/* total in the middle of the donut, clicks go through to the slices */
 .sd-center {
     position: absolute;
     inset: 0;
@@ -360,13 +351,13 @@
 }
 
 .sd-row {
-    display: contents;            /* the row's cells become cells of the legend grid */
+    display: contents;            /* row's cells become legend grid cells */
 }
 
 .sd-dot {
     width: 10px;
     height: 10px;
-    border-radius: 3px;           /* legend keys mirror the mark: a small rounded block */
+    border-radius: 3px;
 }
 
 .sd-name {
@@ -383,12 +374,11 @@
 .sd-pct {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 12px;
-    font-variant-numeric: tabular-nums;   /* columns of numbers line up */
+    font-variant-numeric: tabular-nums;   /* numbers line up in columns */
     text-align: right;
 }
 .sd-amount { color: #000000; font-weight: 700; padding-left: 14px; }
 .sd-pct    { color: #52514E; }
-
 
 /* ---------- Pills as links to their full pages ---------- */
 .pill-link {
@@ -405,7 +395,7 @@
     transform: translateX(4px);
 }
 
-/* "→ Car loan" on payments, "on Discover" on card purchases */
+/* "→ Car loan" on payments, "on Discover" on card buys */
 .txn-debt {
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 13px;

@@ -31,11 +31,11 @@ public class TransactionService {
     }
 
     /**
-     * Saves a transaction AND applies it to its debt, as one database transaction:
-     *   payment           -> the debt's balance goes down by the amount
-     *   expense on a card -> the card's balance goes up by the amount
-     * @Transactional means both writes succeed together or neither happens,
-     * so a transaction row can never exist without its balance change (or the other way round).
+     * saves the transaction AND updates the debt in one go:
+     *   payment           -> debt balance goes down
+     *   expense on a card -> card balance goes up
+     * @Transactional = both writes happen or neither does, so you never get
+     * a transaction saved without the balance changing (or the other way around)
      */
     @Transactional
     public Transaction record(AppUser user, Category category, Debt debt, String type, BigDecimal amount, LocalDate txnDate, String description){
@@ -48,7 +48,7 @@ public class TransactionService {
         return newTransaction(user, category, debt, type, amount, txnDate, description);
     }
 
-    /** debt can be null for a transaction that isn't a debt payment. */
+    /** debt is null if it's not touching a debt */
     public Transaction newTransaction(AppUser user, Category category, Debt debt, String type, BigDecimal amount, LocalDate txnDate, String description){
         Transaction transaction = new Transaction();
         transaction.setUser(user);
@@ -79,7 +79,6 @@ public class TransactionService {
         return transactionRepository.findByUserIdAndTxnDateBetween(userId, start, end);
     }
 
-    /** Every transaction in one calendar month, newest first. */
     public List<Transaction> findForMonth(Long userId, YearMonth month){
         return transactionRepository.findForPeriodNewestFirst(userId, month.atDay(1), month.atEndOfMonth());
     }
