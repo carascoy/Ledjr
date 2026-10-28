@@ -395,6 +395,21 @@
 .sd-amount { color: #000000; font-weight: 700; padding-left: 14px; }
 .sd-pct    { color: #52514E; }
 
+/* the card is narrow on laptops (3 columns) and phones: names were getting cut to "R…".
+   when it's under 440px, drop the $ column so the names fit (the % stays).
+   container query = based on the card's width, not the screen's */
+.pill-spending {
+    container-type: inline-size;
+}
+@container (max-width: 440px) {
+    .sd-legend {
+        grid-template-columns: 10px minmax(0, max-content) max-content;   /* dot | name | % */
+    }
+    .sd-amount {
+        display: none;
+    }
+}
+
 /* ---------- Pills as links to their full pages ---------- */
 .pill-link {
     cursor: pointer;
