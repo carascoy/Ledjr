@@ -63,6 +63,14 @@
             <artifactId>spring-session-jdbc</artifactId>
         </dependency>
 
+        <!--JUnit 5 for the tests in src/test (version comes from the spring boot parent).
+            test scope = only used by `mvn test`, never shipped in the jar-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

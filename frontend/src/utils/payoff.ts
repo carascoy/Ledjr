@@ -25,9 +25,12 @@ export function paymentFor(balance: number, apr: number | null, months: number) 
 export function monthsFor(balance: number, apr: number | null, payment: number): number | null {
   if (payment <= 0) return null;
   const r = monthlyRate(apr);
-  if (r === 0) return Math.ceil(balance / payment);
+  if (r === 0) return Math.ceil(balance / payment - 1e-9);
   if (payment <= r * balance) return null;
-  return Math.ceil(-Math.log(1 - (r * balance) / payment) / Math.log(1 + r));
+  const exact = -Math.log(1 - (r * balance) / payment) / Math.log(1 + r);
+  // floating point lands on stuff like 12.0000000001 for an exact 12, and ceil would make that 13.
+  // so shave off a hair before rounding up
+  return Math.ceil(exact - 1e-9);
 }
 
 export function planFor(balance: number, apr: number | null, months: number): PayoffPlan {
