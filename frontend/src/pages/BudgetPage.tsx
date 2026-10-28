@@ -42,6 +42,11 @@ function BudgetPage() {
   // copy last month / fill suggestions share one busy flag + error
   const [bulkBusy, setBulkBusy] = useState(false);
   const [bulkError, setBulkError] = useState("");
+  // "+ New category" form at the top
+  const [newOpen, setNewOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [newError, setNewError] = useState("");
 
   const monthParam = toMonthParam(month);
   const monthName = month.toLocaleDateString("en-US", { month: "long" });
@@ -78,6 +83,45 @@ function BudgetPage() {
     const start = line.budgeted ?? line.suggested;
     setDraft(start != null ? String(start) : "");
     setError("");
+  }
+
+  // make the category, reload the month, then open its budget box so you can set it right away
+  async function createCategory(e: React.FormEvent) {
+    e.preventDefault();
+    const name = newName.trim();
+    if (!name) return;
+    setCreating(true);
+    setNewError("");
+    try {
+      const response = await api("/categories", {
+        method: "POST",
+        body: JSON.stringify({ name, kind: "expense" }),
+      });
+      if (!response.ok) {
+        setNewError(await response.text());
+        return;
+      }
+      const created: { id: number } = await response.json();
+      const month = await api(`/budget?month=${monthParam}`);
+      if (!month.ok) return;
+      const body: BudgetResponse = await month.json();
+      setData(body);
+      setNewOpen(false);
+      setNewName("");
+      const line = body.lines.find((l) => l.categoryId === created.id);
+      if (line) {
+        startEdit(line);
+        // wait a frame so the row exists, then bring it into view
+        requestAnimationFrame(() => {
+          const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          document.getElementById(`bud-row-${created.id}`)?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+        });
+      }
+    } catch {
+      setNewError("Couldn't reach the server.");
+    } finally {
+      setCreating(false);
+    }
   }
 
   // amount null = take the budget off this category for the month
@@ -136,7 +180,7 @@ function BudgetPage() {
     const draftOk = draft.trim() !== "" && Number.isFinite(draftNumber) && draftNumber > 0;
 
     return (
-      <li key={line.categoryId} className={`bud-row ${has ? "" : "bud-row--none"}`}>
+      <li key={line.categoryId} id={`bud-row-${line.categoryId}`} className={`bud-row ${has ? "" : "bud-row--none"}`}>
         <span className="bud-name">
           <CategoryTag name={line.name} colorSlot={line.colorSlot} />
         </span>
@@ -249,7 +293,46 @@ function BudgetPage() {
     <>
       <header className="dash-header">
         <MonthSwitcher month={month} onChange={changeMonth} allowFuture />
+        {user && (
+          <button
+            type="button"
+            className="quick-add"
+            onClick={() => {
+              setNewOpen((o) => !o);
+              setNewError("");
+            }}
+          >
+            {newOpen ? "Close" : "+ New category"}
+          </button>
+        )}
       </header>
+
+      <div className={`collapsible ${newOpen ? "expanded" : ""}`}>
+        <div className="collapsible-inner">
+          <form className="bud-new" onSubmit={createCategory}>
+            <input
+              className="qa-input bud-new-input"
+              placeholder="Category name, like Pets or Gifts"
+              maxLength={40}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              aria-label="New category name"
+              tabIndex={newOpen ? 0 : -1}
+            />
+            <button type="submit" className="bud-save bud-new-add" disabled={creating || !newName.trim()} tabIndex={newOpen ? 0 : -1}>
+              {creating ? "Adding…" : "Add"}
+            </button>
+            <p className="bud-new-hint">
+              Rename, recolor or delete categories in{" "}
+              <Link to="/settings#categories" tabIndex={newOpen ? 0 : -1}>
+                Settings
+              </Link>
+              .
+            </p>
+            {newError && <p className="bud-error bud-new-error">{newError}</p>}
+          </form>
+        </div>
+      </div>
 
       {!user ? (
         <p className="pill-empty bud-message">Sign in to see your budget.</p>
@@ -375,7 +458,8 @@ function BudgetPage() {
           )}
 
           <p className="bud-footnote">
-            Whatever's left in a budget when the month ends counts as saved. Going over just adds $0 that month, each month starts fresh.
+            Whatever's left in a budget when the month ends counts as saved. Going over just adds $0 that month, each month starts fresh.{" "}
+            <Link to="/settings#categories">Manage categories</Link>
           </p>
         </>
       )}

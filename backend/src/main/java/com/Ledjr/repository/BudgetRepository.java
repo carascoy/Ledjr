@@ -20,4 +20,10 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     boolean existsByUserIdAndMonth(Long userId, LocalDate month);
 
+    /** every month's budget for one category, for when the category gets deleted */
+    List<Budget> findByCategoryId(Long categoryId);
+
+    /** everything, for deleting the account */
+    List<Budget> findByUserId(Long userId);
+
 }
