@@ -135,3 +135,61 @@
 @media (prefers-reduced-motion: reduce) {
     .auth-card > .collapsible { transition: none; }
 }
+
+/* ---------- forgot / reset password ---------- */
+.auth-heading {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+}
+.auth-note {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    color: #3A3936;
+}
+.auth-note b {
+    color: #000000;
+}
+.auth-dev-note {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(28, 59, 46, 0.08);
+    font-size: 13px;
+}
+/* quiet text links: "Forgot your password?", "Back to sign in" */
+.auth-link {
+    align-self: center;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C3B2E;
+    text-decoration: none;
+    cursor: pointer;
+}
+.auth-link:hover,
+.auth-link:focus-visible {
+    background: rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+.auth-forgot {
+    margin-top: -6px;
+}
+/* a Link that looks like the big green button */
+.auth-submit-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.auth-rules {
+    display: flex;
+    flex-direction: column;
+}
+.auth-error {
+    font-size: 14px;
+}

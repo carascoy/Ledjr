@@ -8,6 +8,8 @@ import BudgetPage from './pages/BudgetPage'
 import SetupPage from './pages/SetupPage'
 import SettingsPage from './pages/SettingsPage'
 import NotFound from './pages/NotFound'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 import TransactionsPage from './pages/TransactionsPage'
 import AppLayout from './components/AppLayout'
 import UserProvider from './components/UserProvider'
@@ -17,6 +19,9 @@ function App() {
     <UserProvider>
       <Routes>
         <Route path="/" element={<AuthPage />} />
+        {/* forgot password, no sign in needed */}
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* every signed-in page goes inside AppLayout (padding + nav), page shows up in its <Outlet /> */}
         <Route element={<AppLayout />}>

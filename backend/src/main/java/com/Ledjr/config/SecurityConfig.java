@@ -41,6 +41,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/signin", "/register", "/csrf").permitAll()
+                // forgot password: you're not signed in, that's the whole point
+                .requestMatchers("/password/forgot", "/password/reset", "/password/reset/check").permitAll()
                 .anyRequest().authenticated())
             // not logged in = plain 401, not a redirect to some login page (React handles that)
             .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

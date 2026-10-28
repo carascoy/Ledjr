@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../styles/AuthPage.css'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 import Splash from '../components/Splash'
 import { useUser } from '../context/UserContext'
@@ -161,6 +161,10 @@ function AuthPage(){
                 </div>
 
                 <button type="submit" disabled={!canSubmit} className='auth-submit'>{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+
+                {!isSignUp && (
+                    <Link to="/forgot-password" className="auth-link auth-forgot">Forgot your password?</Link>
+                )}
 
             </form>
         </div>
