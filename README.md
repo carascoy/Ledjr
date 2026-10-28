@@ -4,7 +4,7 @@ A personal finance app for keeping track of where your money goes: spending, mon
 
 [![CI](https://github.com/carascoy/Ledjr/actions/workflows/ci.yml/badge.svg)](https://github.com/carascoy/Ledjr/actions/workflows/ci.yml)
 
-**Live demo:** coming soon at [ledjr.dev](https://ledjr.dev)
+**Live:** [ledjr.dev](https://ledjr.dev). Sign up with any email, it takes a minute.
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -39,6 +39,7 @@ A personal finance app for keeping track of where your money goes: spending, mon
 | **Frontend** | React 19, TypeScript, Vite, React Router, Recharts, plain CSS |
 | **Testing** | JUnit 5 (backend), Vitest (frontend), GitHub Actions on every push |
 | **Dev setup** | Docker Compose (Postgres + backend + frontend) |
+| **Hosting** | Cloudflare Pages (frontend), Heroku + Heroku Postgres (API), Resend (email) |
 
 ## How it fits together
 
@@ -148,7 +149,7 @@ docker-compose.yml
 
 ## What's next
 
-- [ ] Deploy to [ledjr.dev](https://ledjr.dev)
+- [x] Deploy to [ledjr.dev](https://ledjr.dev)
 - [x] Forgot password
 - [ ] Email verification
 
