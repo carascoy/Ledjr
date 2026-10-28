@@ -178,9 +178,9 @@ function CategoriesSection() {
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  // add form
+  // which list you're looking at, and what Add makes
+  const [tab, setTab] = useState<"expense" | "income">("expense");
   const [newName, setNewName] = useState("");
-  const [newKind, setNewKind] = useState<"expense" | "income">("expense");
   const [addError, setAddError] = useState("");
   const location = useLocation();
 
@@ -263,7 +263,7 @@ function CategoriesSection() {
     setBusy(true);
     setAddError("");
     try {
-      const response = await api("/categories", { method: "POST", body: JSON.stringify({ name, kind: newKind }) });
+      const response = await api("/categories", { method: "POST", body: JSON.stringify({ name, kind: tab }) });
       if (!response.ok) {
         setAddError(await response.text());
         return;
@@ -372,8 +372,13 @@ function CategoriesSection() {
     );
   }
 
-  const expense = categories?.filter((c) => c.kind === "expense") ?? [];
-  const income = categories?.filter((c) => c.kind === "income") ?? [];
+  const shown = categories?.filter((c) => c.kind === tab) ?? [];
+
+  function switchTab(next: "expense" | "income") {
+    setTab(next);
+    setEditing(null);
+    setAddError("");
+  }
 
   return (
     <section className="pill set-section" id="categories">
@@ -382,22 +387,36 @@ function CategoriesSection() {
         <p className="pill-empty">Loading…</p>
       ) : (
         <>
+          {/* tabs: pick which list you see. Add puts the new one in that list */}
+          <div className="qa-type set-tabs" role="tablist" aria-label="Kind of category">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === "expense"}
+              className={tab === "expense" ? "qa-type-active" : ""}
+              onClick={() => switchTab("expense")}
+            >
+              Expenses
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === "income"}
+              className={tab === "income" ? "qa-type-active" : ""}
+              onClick={() => switchTab("income")}
+            >
+              Income
+            </button>
+          </div>
+
           <form className="set-cat-add" onSubmit={add}>
-            <div className="qa-type set-kind" role="group" aria-label="Kind">
-              <button type="button" className={newKind === "expense" ? "qa-type-active" : ""} onClick={() => setNewKind("expense")}>
-                Expense
-              </button>
-              <button type="button" className={newKind === "income" ? "qa-type-active" : ""} onClick={() => setNewKind("income")}>
-                Income
-              </button>
-            </div>
             <input
               className="qa-input set-input set-cat-new"
-              placeholder="New category"
+              placeholder={tab === "expense" ? "New expense category" : "New income category"}
               maxLength={40}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              aria-label="New category name"
+              aria-label={tab === "expense" ? "New expense category name" : "New income category name"}
             />
             <button type="submit" className="bud-save" disabled={busy || !newName.trim()}>
               Add
@@ -405,10 +424,11 @@ function CategoriesSection() {
             {addError && <p className="bud-error set-status set-cat-add-error">{addError}</p>}
           </form>
 
-          <h3 className="set-subtitle">Expenses</h3>
-          {expense.length === 0 ? <p className="pill-empty">None yet.</p> : <ul className="set-cats">{expense.map(row)}</ul>}
-          <h3 className="set-subtitle">Income</h3>
-          {income.length === 0 ? <p className="pill-empty">None yet.</p> : <ul className="set-cats">{income.map(row)}</ul>}
+          {shown.length === 0 ? (
+            <p className="pill-empty">No {tab} categories yet. Add one above.</p>
+          ) : (
+            <ul className="set-cats" role="tabpanel">{shown.map(row)}</ul>
+          )}
         </>
       )}
     </section>

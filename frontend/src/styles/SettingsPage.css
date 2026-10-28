@@ -100,8 +100,8 @@
     align-items: center;
     gap: 8px;
 }
-.set-kind {
-    height: 44px;
+.set-tabs {
+    align-self: flex-start;
 }
 .set-cat-new {
     flex: 1;
@@ -114,13 +114,6 @@
     flex-basis: 100%;
 }
 
-.set-subtitle {
-    margin-top: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    font-weight: 700;
-    color: #52514E;
-}
 .set-cats {
     list-style: none;
     display: flex;
@@ -236,7 +229,12 @@
     .set-cat-dot, .set-swatch { transition: none; }
 }
 
-/* room above it when the Budget page's "Manage categories" link scrolls here */
+/* when the Budget page's "Manage categories" link scrolls here, stop below the sticky nav
+   (24px from the top + 68px tall + some room) instead of under it */
 #categories {
-    scroll-margin-top: 24px;
+    scroll-margin-top: 116px;
+}
+@media (max-width: 700px) {
+    /* the nav is 2 rows on phones */
+    #categories { scroll-margin-top: 140px; }
 }
