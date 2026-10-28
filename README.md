@@ -108,16 +108,18 @@ cd frontend && npm install && npm run dev
 | `DB_URL`, `DB_USER`, `DB_PASSWORD` | backend | none | Postgres connection |
 | `FRONTEND_ORIGIN` | backend | `http://localhost:5173` | the one site allowed to call the API (CORS) |
 | `COOKIE_SECURE` | backend | `false` | `true` once the site is on https |
+| `RESEND_API_KEY`, `MAIL_FROM` | backend | none | sends real emails (password reset). Without a key, emails are printed to the backend log |
+| `TRUST_PROXY` | backend | `false` | `true` behind a proxy like Heroku's router, so the login limiter sees real IPs |
 | `VITE_API_URL` | frontend | `http://localhost:8080` | where the backend lives, baked in at build time |
 
 ## Tests
 
 ```bash
-cd backend && mvn test           # 34 JUnit tests
+cd backend && mvn test           # 46 JUnit tests
 cd frontend && npm test          # 22 Vitest tests
 ```
 
-The backend tests cover the parts where a mistake costs someone money or their account: recurring dates, card minimums, budget math, the login limiter, deleting things and the password rules. They use small hand-written fakes instead of a mocking library, so they run in seconds with no database. GitHub Actions runs both suites, plus lint and a production build, on every push.
+The backend tests cover the parts where a mistake costs someone money or their account: recurring dates, card minimums, budget math, the login limiter, password reset links, reading the real IP behind a proxy, deleting things and the password rules. They use small hand-written fakes instead of a mocking library, so they run in seconds with no database. GitHub Actions runs both suites, plus lint and a production build, on every push.
 
 ## Project layout
 
@@ -130,7 +132,7 @@ backend/
     entity/        database tables as Java classes
     dto/           what goes over the wire
     config/        security, CORS, sessions
-  src/main/resources/db/migration/   Flyway migrations (V1 to V18)
+  src/main/resources/db/migration/   Flyway migrations (V1 to V19)
   src/test/        JUnit tests
 frontend/
   src/
@@ -147,7 +149,8 @@ docker-compose.yml
 ## What's next
 
 - [ ] Deploy to [ledjr.dev](https://ledjr.dev)
-- [ ] Forgot password + email verification
+- [x] Forgot password
+- [ ] Email verification
 
 ---
 
