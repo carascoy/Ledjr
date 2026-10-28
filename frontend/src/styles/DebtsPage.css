@@ -327,3 +327,21 @@
 @media (prefers-reduced-motion: reduce) {
     .debt-confirm { animation: none; }
 }
+
+/* ---------- phones ---------- */
+@media (max-width: 700px) {
+    /* "owed across 2 debts" goes under the big number instead of squeezing next to it */
+    .debts-overview-figure {
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+    .debts-overview-figure .debt-pct {
+        font-size: 36px;
+    }
+    .debts-overview-kinds {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .debt-card-balance {
+        font-size: 28px;
+    }
+}

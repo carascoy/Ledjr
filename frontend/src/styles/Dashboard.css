@@ -200,15 +200,24 @@
     align-items: center;
     gap: 16px;
     min-width: 0;                 /* lets text shrink so the tag doesn't shove the amount out */
+    overflow: hidden;
 }
 
-/* tags + "on Discover" keep their size, the description is what gets cut with "…" */
-.txn-desc > .cat-tag,
-.txn-desc > .txn-debt {
+/* when a row runs out of room: the tag keeps its size, "on Discover" gets cut with "…" first
+   (shrinks 3x faster), then the description. nothing spills into the amount */
+.txn-desc > .cat-tag {
     flex-shrink: 0;
+}
+.txn-desc > .txn-debt {
+    flex-shrink: 3;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .txn-desc-text {
+    min-width: 4ch;               /* without this a flex item won't shrink below its full text width */
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 16px;
     white-space: nowrap;
@@ -484,4 +493,111 @@
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 13px;
     color: #52514E;
+}
+
+/* ---------- tablets + small laptops: dashboard goes to 2 columns ---------- */
+/* (comes before the phone block so the phone rules win on phones) */
+@media (max-width: 1100px) {
+    .dash-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: 400px 300px 340px;
+        grid-template-areas:
+            "income   income"
+            "debts    upcoming"
+            "spending recent";
+        gap: 24px;
+    }
+    .io-figures {
+        flex-wrap: wrap;
+        gap: 12px 24px;
+    }
+
+    /* quick-add: type toggle, description and the button each get a whole line,
+       amount / category / date / card share the lines between */
+    .qa-form {
+        flex-wrap: wrap;
+        gap: 10px;
+        border-radius: 24px;
+    }
+    .qa-form > * {
+        flex: 1 1 140px;
+        min-width: 0;
+    }
+    .qa-form > .qa-type,
+    .qa-form > .qa-description,
+    .qa-form > .qa-submit {
+        flex-basis: 100%;
+    }
+    .qa-type button {
+        flex: 1;
+        padding: 0 6px;
+    }
+    .qa-amount {
+        width: auto;
+    }
+
+    /* recent transactions: just date | name | amount. the tag + "on Discover" don't fit next to them,
+       the Transactions page shows all of it */
+    .txn-row {
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+    }
+    .txn-row .cat-tag,
+    .txn-row .txn-debt {
+        display: none;
+    }
+}
+
+/* ---------- phones: month on its own line, the page's main button full width under it ---------- */
+@media (max-width: 700px) {
+    .dash-header {
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 24px 0 20px;
+    }
+    .month-switcher {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .month-label {
+        min-width: 0;
+        font-size: 24px;
+    }
+    .quick-add {
+        width: 100%;
+    }
+    .quick-add:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* cards stack in one column. fixed heights for the ones with a chart or a list inside,
+       the rest just fit what's in them */
+    .dash-grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        grid-auto-rows: auto;
+        grid-template-areas:
+            "income"
+            "debts"
+            "upcoming"
+            "spending"
+            "recent";
+        gap: 20px;
+    }
+    .pill-income   { height: 400px; }
+    .pill-upcoming { height: 300px; }
+    .pill-spending { height: 340px; }
+    .pill-recent   { height: 340px; }
+
+}
+
+/* tiny phones (320-ish): legend goes under the donut, and the card grows to fit it */
+@media (max-width: 380px) {
+    .sd-body {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .pill-spending {
+        height: auto;
+    }
 }

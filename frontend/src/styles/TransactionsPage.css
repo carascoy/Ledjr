@@ -43,32 +43,34 @@
 }
 
 /* little color keys that match the bar (same green + amber as the dashboard chart).
-   debt payments are dark ink, not a 3rd color: every warm color I tried was too close
-   to the green or amber for colorblind people, ink stands out by lightness instead */
+   debt payments are gray, not a 3rd color: every warm color I tried was too close
+   to the green or amber for colorblind people, gray stands out by lightness instead */
 .txns-key {
     width: 10px;
     height: 10px;
     border-radius: 3px;
 }
-.txns-key--income { background: #1F7A4D; }
-.txns-key--spent  { background: #D98F2B; }
-.txns-key--paid   { background: #3A3936; }
+.txns-key--spent { background: #D98F2B; }
+.txns-key--paid  { background: #76736D; }
+.txns-key--left  { background: #1F7A4D; }
 
-/* track = all of the income (light green), segments eat into it from the left */
+/* the whole bar = this month's income, split into spent / debt payments / left over.
+   no track behind it, so the gaps are just empty space */
 .txns-bar {
     display: flex;
-    gap: 2px;
+    gap: 3px;
     height: 12px;
-    border-radius: 6px;
-    overflow: hidden;
-    background: rgba(31, 122, 77, 0.22);
     animation: txns-bar-grow 800ms ease-out backwards;
 }
 .txns-bar-seg {
+    flex-basis: 0;
+    min-width: 4px;   /* a tiny slice still shows up */
     height: 100%;
+    border-radius: 4px;
 }
 .txns-bar-seg--spent { background: #D98F2B; }
-.txns-bar-seg--paid  { background: #3A3936; }
+.txns-bar-seg--paid  { background: #76736D; }
+.txns-bar-seg--left  { background: #1F7A4D; }
 
 /* grows left to right, same timing as the dashboard chart */
 @keyframes txns-bar-grow {
@@ -219,7 +221,52 @@
            padding-top: 0; padding-bottom: 0; border-bottom-width: 0; }
 }
 
+/* phone: 4 numbers don't fit across, so 2 x 2 */
+@media (max-width: 700px) {
+    .txns-summary-figures {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+    .txns-summary-value {
+        font-size: 20px;
+        white-space: nowrap;   /* keeps the − with its number */
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .txns-row, .txns-btn { transition: none; }
     .txns-bar { animation: none; }
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 700px) {
+    /* filter buttons get the full width, search goes under them */
+    .txns-toolbar {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .txns-filter {
+        width: 100%;
+    }
+    .txns-filter button {
+        flex: 1;
+        padding: 0 4px;
+        font-size: 14px;
+    }
+    .txns-search {
+        flex-basis: 100%;
+    }
+    /* each row: description + amount on top, date + Edit/Delete under */
+    .txns-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "desc amount"
+            "date actions";
+        gap: 4px 12px;
+        padding: 10px 8px;
+    }
+    .txns-row .txn-desc    { grid-area: desc; flex-wrap: wrap; gap: 4px 10px; }
+    .txns-row .txn-amount  { grid-area: amount; }
+    .txns-row .txn-date    { grid-area: date; }
+    .txns-row .txns-actions { grid-area: actions; }
 }

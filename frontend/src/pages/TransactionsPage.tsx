@@ -134,14 +134,13 @@ function TransactionsPage() {
 
   const formOpen = addOpen || editing !== null;
 
-  // summary numbers + how much of the income each slice of the bar takes (capped so it fits)
+  // summary numbers. the bar is all of the income split into spent / debt payments / left over
   const list = transactions ?? [];
   const income = sum(list, "income");
   const spent = sum(list, "expense");
   const paid = sum(list, "payment");
   const leftOver = income - spent - paid;
-  const pctSpent = income > 0 ? Math.min(100, (spent / income) * 100) : 0;
-  const pctPaid = income > 0 ? Math.min(100 - pctSpent, (paid / income) * 100) : 0;
+  const pct = (part: number) => Math.round((part / income) * 100);
 
   return (
     <>
@@ -177,12 +176,10 @@ function TransactionsPage() {
         <>
           {transactions && transactions.length > 0 && (
             <section className="pill txns-summary">
+              {/* income has no color key, it's the whole bar. the other 3 are its pieces */}
               <div className="txns-summary-figures">
                 <div>
-                  <span className="txns-summary-label">
-                    <i className="txns-key txns-key--income" />
-                    Income
-                  </span>
+                  <span className="txns-summary-label">Income</span>
                   <span className="txns-summary-value">+{currency.format(income)}</span>
                 </div>
                 <div>
@@ -200,37 +197,40 @@ function TransactionsPage() {
                   <span className="txns-summary-value">−{currency.format(paid)}</span>
                 </div>
                 <div>
-                  <span className="txns-summary-label">Logged</span>
-                  <span className="txns-summary-value">{transactions.length}</span>
+                  <span className="txns-summary-label">
+                    {leftOver >= 0 && <i className="txns-key txns-key--left" />}
+                    {leftOver >= 0 ? "Left over" : "Over by"}
+                  </span>
+                  <span className="txns-summary-value">{currency.format(Math.abs(leftOver))}</span>
                 </div>
               </div>
 
               {income > 0 && (
-                <>
-                  {/* the whole bar = this month's income. filled = where it went, empty = left over.
-                      key={monthParam} replays the grow animation when you switch months */}
-                  <div
-                    key={monthParam}
-                    className="txns-bar"
-                    role="img"
-                    aria-label={`${pctSpent}% of income spent, ${pctPaid}% to debt payments`}
-                  >
-                    <span className="txns-bar-seg txns-bar-seg--spent" style={{ width: `${pctSpent}%` }} />
-                    <span className="txns-bar-seg txns-bar-seg--paid" style={{ width: `${pctPaid}%` }} />
-                  </div>
-                  <p className="txns-bar-caption">
-                    {leftOver >= 0 ? (
-                      <>
-                        <b>{currency.format(leftOver)}</b> of {monthName}'s income left over
-                      </>
-                    ) : (
-                      <>
-                        <b>{currency.format(-leftOver)}</b> more went out than came in this {monthName}
-                      </>
-                    )}
-                  </p>
-                </>
+                // each piece's flex-grow is its dollar amount, so the sizes are right and the gaps
+                // between them don't push anything off the end. key={monthParam} replays the grow animation
+                <div
+                  key={monthParam}
+                  className="txns-bar"
+                  role="img"
+                  aria-label={
+                    leftOver >= 0
+                      ? `Of ${monthName}'s income: ${pct(spent)}% spent, ${pct(paid)}% to debt payments, ${pct(leftOver)}% left over`
+                      : `${currency.format(-leftOver)} more went out than came in`
+                  }
+                >
+                  {spent > 0 && <span className="txns-bar-seg txns-bar-seg--spent" style={{ flexGrow: spent }} />}
+                  {paid > 0 && <span className="txns-bar-seg txns-bar-seg--paid" style={{ flexGrow: paid }} />}
+                  {leftOver > 0 && <span className="txns-bar-seg txns-bar-seg--left" style={{ flexGrow: leftOver }} />}
+                </div>
               )}
+              <p className="txns-bar-caption">
+                {income > 0 && leftOver < 0 && (
+                  <>
+                    <b>{currency.format(-leftOver)}</b> more went out than came in ·{" "}
+                  </>
+                )}
+                {transactions.length} {transactions.length === 1 ? "transaction" : "transactions"} logged in {monthName}
+              </p>
             </section>
           )}
 

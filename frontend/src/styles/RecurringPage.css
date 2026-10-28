@@ -430,3 +430,67 @@
     .cal-day, .rec-btn { transition: none; }
     .rec-item { animation: none; }
 }
+
+/* ---------- phones ---------- */
+@media (max-width: 700px) {
+    .pill.rec-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+    .rec-summary-value {
+        font-size: 20px;
+        white-space: nowrap;   /* keeps the − with its number */
+    }
+
+    /* calendar: too small for names, so each day shows colored dots (one per item, same colors
+       as the chips). tap a day and the panel under the calendar lists what's on it */
+    .cal-weekdays,
+    .cal-grid {
+        gap: 4px;
+    }
+    .cal-weekdays span {
+        padding-left: 0;
+        text-align: center;
+        font-size: 11px;
+    }
+    .cal-grid {
+        grid-auto-rows: 58px;
+    }
+    .cal-day {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: center;
+        gap: 3px;
+        padding: 6px 2px;
+        border-radius: 10px;
+    }
+    .cal-day-num {
+        flex-basis: 100%;
+        align-self: auto;
+        height: 22px;
+        line-height: 22px;
+        font-size: 13px;
+        padding: 0;
+        margin: 0 auto 2px;
+        max-width: 26px;
+    }
+    .cal-chip {
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+    }
+    .cal-chip > * {
+        display: none;
+    }
+    .cal-chip--income  { background: #1F7A4D; }
+    .cal-chip--expense { background: #D98F2B; }
+    .cal-chip--debt    { background: #3A3936; }
+    .cal-chip--late    { box-shadow: 0 0 0 2px #F5F5F5, 0 0 0 3px #8A5A12; }
+    /* "+2 more" doesn't fit, the day panel shows everything anyway */
+    .cal-more {
+        display: none;
+    }
+}
