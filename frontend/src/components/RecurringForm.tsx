@@ -106,14 +106,14 @@ function RecurringForm({ open, editing = null, startDate, onClose, onSaved }: Pr
             </button>
           </div>
 
-          <input
+          <input name="name"
             className="qa-input qa-description"
             placeholder={type === "income" ? "Paycheck" : "Rent, Spotify…"}
             value={name}
             onChange={(e) => setName(e.target.value)}
             aria-label="Name"
           />
-          <input
+          <input name="amount"
             className="qa-input qa-amount"
             type="number"
             inputMode="decimal"

@@ -248,7 +248,7 @@ function BudgetPage() {
             <label className="bud-edit-label" htmlFor={`bud-${line.categoryId}`}>
               {monthName} budget
             </label>
-            <input
+            <input name="budgetAmount"
               id={`bud-${line.categoryId}`}
               className="qa-input bud-edit-input"
               type="number"
@@ -310,7 +310,7 @@ function BudgetPage() {
       <div className={`collapsible ${newOpen ? "expanded" : ""}`}>
         <div className="collapsible-inner">
           <form className="bud-new" onSubmit={createCategory}>
-            <input
+            <input name="newCategory"
               className="qa-input bud-new-input"
               placeholder="Category name, like Pets or Gifts"
               maxLength={40}

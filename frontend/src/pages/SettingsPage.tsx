@@ -70,15 +70,15 @@ function ProfileSection() {
         <div className="set-fields">
           <label className="set-field">
             <span>First name</span>
-            <input className="qa-input set-input" value={first} onChange={(e) => setFirst(e.target.value)} autoComplete="given-name" />
+            <input name="firstName" className="qa-input set-input" value={first} onChange={(e) => setFirst(e.target.value)} autoComplete="given-name" />
           </label>
           <label className="set-field">
             <span>Last name</span>
-            <input className="qa-input set-input" value={last} onChange={(e) => setLast(e.target.value)} autoComplete="family-name" />
+            <input name="lastName" className="qa-input set-input" value={last} onChange={(e) => setLast(e.target.value)} autoComplete="family-name" />
           </label>
           <label className="set-field set-field--wide">
             <span>Email</span>
-            <input className="qa-input set-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+            <input name="email" className="qa-input set-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
           </label>
         </div>
         <div className="set-actions">
@@ -137,15 +137,15 @@ function PasswordSection() {
         <div className="set-fields">
           <label className="set-field set-field--wide">
             <span>Current password</span>
-            <input className="qa-input set-input" type="password" value={current} onChange={(e) => setCurrent(e.target.value)} autoComplete="current-password" />
+            <input name="currentPassword" className="qa-input set-input" type="password" value={current} onChange={(e) => setCurrent(e.target.value)} autoComplete="current-password" />
           </label>
           <label className="set-field">
             <span>New password</span>
-            <input className="qa-input set-input" type="password" value={next} onChange={(e) => setNext(e.target.value)} autoComplete="new-password" />
+            <input name="newPassword" className="qa-input set-input" type="password" value={next} onChange={(e) => setNext(e.target.value)} autoComplete="new-password" />
           </label>
           <label className="set-field">
             <span>New password again</span>
-            <input className="qa-input set-input" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
+            <input name="confirmPassword" className="qa-input set-input" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
           </label>
         </div>
         {next !== "" && (
@@ -303,7 +303,7 @@ function CategoriesSection() {
                 if (e.key === "Escape") setEditing(null);
               }}
             >
-              <input
+              <input name="categoryName"
                 className="qa-input set-input set-cat-input"
                 value={draft}
                 maxLength={40}
@@ -410,7 +410,7 @@ function CategoriesSection() {
           </div>
 
           <form className="set-cat-add" onSubmit={add}>
-            <input
+            <input name="newCategory"
               className="qa-input set-input set-cat-new"
               placeholder={tab === "expense" ? "New expense category" : "New income category"}
               maxLength={40}
@@ -479,7 +479,7 @@ function DeleteAccountSection() {
         <form className="set-form" onSubmit={deleteAccount}>
           <label className="set-field set-field--wide">
             <span>Type your password to confirm</span>
-            <input
+            <input name="password"
               className="qa-input set-input"
               type="password"
               value={password}

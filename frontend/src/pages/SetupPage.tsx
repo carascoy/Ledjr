@@ -282,7 +282,7 @@ function SetupPage() {
             <div className="setup-fields">
               <label className="setup-field">
                 <span>Amount</span>
-                <input
+                <input name="payAmount"
                   className="qa-input setup-input"
                   type="number"
                   inputMode="decimal"
@@ -350,7 +350,7 @@ function SetupPage() {
                 {bills.map((b) => (
                   <li key={b.key} className="setup-bill">
                     {b.custom ? (
-                      <input
+                      <input name="billName"
                         className="qa-input setup-input setup-bill-name"
                         placeholder="Bill name"
                         value={b.name}
@@ -361,7 +361,7 @@ function SetupPage() {
                     ) : (
                       <span className="setup-bill-label">{b.name}</span>
                     )}
-                    <input
+                    <input name="billAmount"
                       className="qa-input setup-input setup-bill-amount"
                       type="number"
                       inputMode="decimal"
@@ -374,7 +374,7 @@ function SetupPage() {
                     />
                     <label className="setup-bill-day">
                       <span>due on the</span>
-                      <input
+                      <input name="billDay"
                         className="qa-input setup-input"
                         type="number"
                         inputMode="numeric"

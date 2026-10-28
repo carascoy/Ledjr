@@ -176,7 +176,7 @@ function CategoryPicker({ categories, kind, value, onChange, onCategoriesChanged
             </div>
 
             <form className="cp-new" onSubmit={createCategory}>
-              <input
+              <input name="newCategory"
                 className="cp-new-input"
                 placeholder={`New ${kind} category`}
                 value={newName}

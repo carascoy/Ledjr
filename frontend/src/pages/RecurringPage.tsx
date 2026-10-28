@@ -371,7 +371,7 @@ function RecurringPage() {
                         </div>
                       ) : (
                         <div className="rec-item-actions">
-                          <input
+                          <input name="paidAmount"
                             className="rec-pay-input"
                             type="number"
                             inputMode="decimal"

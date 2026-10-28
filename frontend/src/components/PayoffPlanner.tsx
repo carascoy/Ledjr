@@ -56,7 +56,7 @@ function PayoffPlanner({ debt, onDone, onCancel }: Props) {
         Pay off in <b>{months} {months === 1 ? "month" : "months"}</b>{" "}
         <span className="payoff-by">· by <b>{formatTarget(target)}</b></span>
       </label>
-      <input
+      <input name="payoffMonths"
         id={`payoff-${debt.id}`}
         className="payoff-slider"
         type="range"

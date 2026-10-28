@@ -16,7 +16,8 @@
 }
 
 .auth-card{
-    width: 420px;
+    /* 420 on a computer, the screen minus 16px on each side on a phone */
+    width: min(420px, calc(100% - 32px));
     background: #D9D9D9;
     border-radius: 16px;
     box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.25);
@@ -111,3 +112,26 @@
     cursor: not-allowed;
 }
 
+
+/* the error + hint sections are always there, just 0px tall when hidden. the card's 16px gap
+   still went around each one, which left a big empty space above the button.
+   so a hidden one pulls itself back up by that gap, and slides it back in when it opens */
+.auth-card > .collapsible {
+    transition: grid-template-rows 300ms ease, margin-top 300ms ease;
+}
+.auth-card > .collapsible:not(.expanded) {
+    margin-top: -16px;
+}
+
+@media (max-width: 700px) {
+    .auth-page {
+        padding-top: 48px;
+    }
+    .auth-title {
+        margin-bottom: 40px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-card > .collapsible { transition: none; }
+}

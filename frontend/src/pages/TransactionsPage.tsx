@@ -248,7 +248,7 @@ function TransactionsPage() {
                   </button>
                 ))}
               </div>
-              <input
+              <input name="search"
                 className="qa-input txns-search"
                 type="search"
                 placeholder="Search description, category, card…"

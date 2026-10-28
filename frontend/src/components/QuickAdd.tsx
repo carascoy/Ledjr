@@ -155,7 +155,7 @@ function QuickAdd({ open, onClose, onAdded, editing = null }: Props) {
             </button>
           </div>
 
-          <input
+          <input name="amount"
             className="qa-input qa-amount"
             type="number"
             inputMode="decimal"
@@ -165,7 +165,7 @@ function QuickAdd({ open, onClose, onAdded, editing = null }: Props) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          <input
+          <input name="description"
             className="qa-input qa-description"
             placeholder={type === "payment" ? "Note (optional)" : "Description"}
             value={description}

@@ -125,13 +125,13 @@ function AuthPage(){
 
                 <div className={`collapsible ${isSignUp ? 'expanded' : ''}`}>
                     <div className="collapsible-inner">
-                        <input className="auth-input" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
-                        <input className="auth-input" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
+                        <input className="auth-input" name="firstName" autoComplete="given-name" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
+                        <input className="auth-input" name="lastName" autoComplete="family-name" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
                     </div>
                 </div>
 
-                <input className="auth-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                <input className="auth-input" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <input className="auth-input" name="email" inputMode="email" autoComplete="email" autoCapitalize="none" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <input className="auth-input" type="password" name="password" autoComplete={isSignUp ? "new-password" : "current-password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
 
                 <div className={`collapsible ${accountNotFound ? 'expanded' : ''}`}>
                     <div className="collapsible-inner error-text">

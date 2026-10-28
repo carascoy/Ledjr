@@ -49,7 +49,7 @@ function DebtAction({ debt, action, onDone, onCancel }: Props) {
 
   return (
     <form className="debt-action" onSubmit={submit}>
-      <input
+      <input name="amount"
         className="debt-action-input"
         type="number"
         inputMode="decimal"

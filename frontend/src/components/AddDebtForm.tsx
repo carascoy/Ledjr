@@ -87,7 +87,7 @@ function AddDebtForm({ layout, onSaved, autoFocus = false }: Props) {
       <form className={`debt-form debt-form--${layout}`} onSubmit={submit}>
         <label className="debt-field debt-field-name">
           <span>Name</span>
-          <input
+          <input name="creditorName"
             value={name}
             maxLength={60}
             placeholder={kind === "card" ? "Discover card" : "Car loan"}
@@ -97,30 +97,30 @@ function AddDebtForm({ layout, onSaved, autoFocus = false }: Props) {
         </label>
         <label className="debt-field">
           <span>Balance now</span>
-          <input type="number" inputMode="decimal" step="0.01" min="0" placeholder={kind === "card" ? "1200" : "9000"} value={balance} onChange={(e) => setBalance(e.target.value)} />
+          <input name="balance" type="number" inputMode="decimal" step="0.01" min="0" placeholder={kind === "card" ? "1200" : "9000"} value={balance} onChange={(e) => setBalance(e.target.value)} />
         </label>
         {kind === "loan" ? (
           <label className="debt-field">
             <span>Started at <em>optional</em></span>
-            <input type="number" inputMode="decimal" step="0.01" min="0" placeholder="15000" value={original} onChange={(e) => setOriginal(e.target.value)} />
+            <input name="originalBalance" type="number" inputMode="decimal" step="0.01" min="0" placeholder="15000" value={original} onChange={(e) => setOriginal(e.target.value)} />
           </label>
         ) : (
           <label className="debt-field">
             <span>Credit limit</span>
-            <input type="number" inputMode="decimal" step="0.01" min="0" placeholder="5000" value={limit} onChange={(e) => setLimit(e.target.value)} />
+            <input name="creditLimit" type="number" inputMode="decimal" step="0.01" min="0" placeholder="5000" value={limit} onChange={(e) => setLimit(e.target.value)} />
           </label>
         )}
         <label className="debt-field">
           <span>APR % <em>optional</em></span>
-          <input type="number" inputMode="decimal" step="0.01" min="0" max="100" placeholder="22.99" value={apr} onChange={(e) => setApr(e.target.value)} />
+          <input name="apr" type="number" inputMode="decimal" step="0.01" min="0" max="100" placeholder="22.99" value={apr} onChange={(e) => setApr(e.target.value)} />
         </label>
         <label className="debt-field">
           <span>Min payment <em>optional</em></span>
-          <input type="number" inputMode="decimal" step="0.01" min="0" placeholder="150" value={minPayment} onChange={(e) => setMinPayment(e.target.value)} />
+          <input name="minPayment" type="number" inputMode="decimal" step="0.01" min="0" placeholder="150" value={minPayment} onChange={(e) => setMinPayment(e.target.value)} />
         </label>
         <label className="debt-field">
           <span>Due day <em>optional</em></span>
-          <input type="number" inputMode="numeric" step="1" min="1" max="31" placeholder="15" value={dueDay} onChange={(e) => setDueDay(e.target.value)} />
+          <input name="dueDay" type="number" inputMode="numeric" step="1" min="1" max="31" placeholder="15" value={dueDay} onChange={(e) => setDueDay(e.target.value)} />
         </label>
         <button type="submit" className="debt-submit" disabled={saving || missingRequired}>
           {saving ? "Saving…" : kind === "card" ? "Add card" : "Add loan"}
