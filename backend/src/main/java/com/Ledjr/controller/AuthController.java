@@ -27,6 +27,7 @@ import com.Ledjr.dto.SigninResponse;
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.service.AppUserService;
 import com.Ledjr.service.CategoryService;
+import com.Ledjr.service.LoginAttemptLimiter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +39,7 @@ public class AuthController {
     private final AppUserService appUserService;
     private final PasswordEncoder passwordEncoder;
     private final CategoryService categoryService;
+    private final LoginAttemptLimiter limiter;
     // where the "you're logged in" info gets saved: the session (which Spring Session keeps in Postgres)
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -45,10 +47,12 @@ public class AuthController {
     private static final Pattern DIGIT = Pattern.compile("[0-9]");
     private static final Pattern SPECIAL = Pattern.compile("[^A-Za-z0-9]");
 
-    public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder, CategoryService categoryService){
+    public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder, CategoryService categoryService,
+                          LoginAttemptLimiter limiter){
         this.appUserService = appUserService;
         this.passwordEncoder = passwordEncoder;
         this.categoryService = categoryService;
+        this.limiter = limiter;
     }
 
     @PostMapping("/register")
@@ -82,15 +86,26 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody SigninRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse){
 
+        // too many wrong passwords lately (for this email or from this IP) -> don't even check
+        String ip = httpRequest.getRemoteAddr();
+        long wait = limiter.retryAfterSeconds(request.email(), ip);
+        if (wait > 0) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header("Retry-After", String.valueOf(wait))
+                .body(LoginAttemptLimiter.tooManyMessage(wait));
+        }
+
         // same error for wrong email AND wrong password, otherwise you could
         // figure out which emails have accounts
         Optional<AppUser> userInfo = appUserService.findByEmail(request.email());
 
         if(userInfo.isEmpty() || !passwordEncoder.matches(request.password(), userInfo.get().getPasswordHash())){
+            limiter.recordFailure(request.email(), ip);
             log.info("Failed sign-in attempt.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect email or password.");
         }
 
+        limiter.recordSuccess(request.email());
         AppUser user = userInfo.get();
         startSession(user, httpRequest, httpResponse);
 
@@ -149,8 +164,8 @@ public class AuthController {
         securityContextRepository.saveContext(context, request, response);
     }
 
-    /** what's wrong with this password, or null if it's fine */
-    private static String passwordProblem(String password){
+    /** what's wrong with this password, or null if it's fine. AccountController uses it too for changing it */
+    static String passwordProblem(String password){
         if (password == null || password.length() < 8) {
             return "Password must be at least 8 characters.";
         }
@@ -163,7 +178,7 @@ public class AuthController {
         return null;
     }
 
-    private static SigninResponse toResponse(AppUser user){
+    static SigninResponse toResponse(AppUser user){
         return new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt(), user.isSetupDone());
     }
 }

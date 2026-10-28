@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../styles/AuthPage.css'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
@@ -7,7 +7,7 @@ import { useUser } from '../context/UserContext'
 
 type Mode = "signin" | "signup";
 
-type Error = "account-not-found" | "email-registered" | "none";
+type Error = "account-not-found" | "email-registered" | "too-many" | "none";
 
 function AuthPage(){
     const navigate = useNavigate()
@@ -15,6 +15,8 @@ function AuthPage(){
 
     const [mode, setMode] = useState<Mode>('signin')
     const [error, setError] = useState<Error>('none');
+    // the server's "Try again in 12 minutes." after too many wrong passwords
+    const [tooManyMessage, setTooManyMessage] = useState('')
     // brand new account -> the optional setup instead of the dashboard
     const [justRegistered, setJustRegistered] = useState(false)
 
@@ -24,8 +26,13 @@ function AuthPage(){
     const [lastName, setLastName] = useState('')
 
     const isSignUp = mode === 'signup'
+
+    useEffect(() => {
+        document.title = `${isSignUp ? 'Sign up' : 'Sign in'} · Ledjr`
+    }, [isSignUp])
     const accountNotFound = error === 'account-not-found';
     const emailRegistered = error === "email-registered";
+    const tooMany = error === "too-many";
 
     const hasEightChars = password.length >= 8 
     const hasNumber = /[0-9]/.test(password)
@@ -57,7 +64,12 @@ function AuthPage(){
                 console.log("User successfully logged in.")
             }else{
                 const message = await response.text()
-                setError("account-not-found")
+                if (response.status === 429) {
+                    setTooManyMessage(message)
+                    setError("too-many")
+                } else {
+                    setError("account-not-found")
+                }
                 console.log('Signin failed:', message)
 
             }
@@ -124,6 +136,12 @@ function AuthPage(){
                 <div className={`collapsible ${accountNotFound ? 'expanded' : ''}`}>
                     <div className="collapsible-inner error-text">
                         <p>Incorrect email or password.</p>
+                    </div>
+                </div>
+
+                <div className={`collapsible ${tooMany ? 'expanded' : ''}`}>
+                    <div className="collapsible-inner error-text">
+                        <p>{tooManyMessage}</p>
                     </div>
                 </div>
 
