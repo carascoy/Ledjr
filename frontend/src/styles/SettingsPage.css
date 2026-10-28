@@ -1,0 +1,242 @@
+/* ---------- Settings ---------- */
+.set-page {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto 48px;
+}
+.set-section {
+    width: 100%;
+    margin-bottom: 24px;
+    gap: 12px;
+}
+.set-section .pill-title {
+    margin-bottom: 0;
+}
+.set-text {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: #3A3936;
+}
+.set-list {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: #3A3936;
+}
+
+.set-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.set-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+.set-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+.set-field--wide {
+    grid-column: 1 / -1;
+}
+.set-field > span {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}
+.set-input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    font-size: 16px;
+}
+.set-input:focus-visible {
+    outline: 2px solid #1C3B2E;
+    outline-offset: 1px;
+}
+
+.set-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+}
+.set-status {
+    margin-top: 0;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+}
+.set-status--ok {
+    color: #175F3B;
+    font-weight: 700;
+}
+
+/* new password checklist, ticks green as you go */
+.set-rules {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #52514E;
+}
+.set-rule--ok {
+    color: #175F3B;
+    font-weight: 700;
+}
+
+/* ---------- categories ---------- */
+.set-cat-add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+.set-kind {
+    height: 44px;
+}
+.set-cat-new {
+    flex: 1;
+    min-width: 160px;
+}
+.set-cat-add .bud-save {
+    height: 44px;
+}
+.set-cat-add-error {
+    flex-basis: 100%;
+}
+
+.set-subtitle {
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #52514E;
+}
+.set-cats {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+.set-cat {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.set-cat:first-child {
+    border-top: none;
+}
+.set-cat-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 36px;
+}
+/* the color dot is the button for changing the color */
+.set-cat-dot {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: transform 150ms ease;
+}
+.set-cat-dot:hover,
+.set-cat-dot:focus-visible {
+    transform: scale(1.15);
+    outline: none;
+}
+.set-cat-name {
+    flex: 1;
+    min-width: 0;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.set-cat-actions {
+    display: flex;
+    gap: 4px;
+}
+.set-cat-rename {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+.set-cat-input {
+    flex: 1;
+    min-width: 140px;
+    height: 36px;
+    background: #ffffff;
+}
+
+/* the 8 colors, pops in under the row */
+.set-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #F5F5F5;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.set-swatch {
+    width: 28px;
+    height: 28px;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 150ms ease;
+}
+.set-swatch:hover:not(:disabled),
+.set-swatch:focus-visible {
+    transform: scale(1.15);
+    outline: none;
+}
+.set-swatch--on {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px #1C3B2E;
+}
+
+.set-confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #F5F5F5;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #3A3936;
+    animation: pill-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (max-width: 560px) {
+    .set-fields { grid-template-columns: minmax(0, 1fr); }
+    .set-cat-actions .bud-btn { padding: 0 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .set-swatches, .set-confirm { animation: none; }
+    .set-cat-dot, .set-swatch { transition: none; }
+}
+
+/* room above it when the Budget page's "Manage categories" link scrolls here */
+#categories {
+    scroll-margin-top: 24px;
+}

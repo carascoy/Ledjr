@@ -45,6 +45,20 @@ public class AppUserService {
         return userRepository.findById(id);
     }
 
+    public AppUser updateProfile(AppUser user, String firstName, String lastName, String email) {
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        return userRepository.save(user);
+    }
+
+    /** takes the already hashed password, hashing stays in the controller with the encoder */
+    public void changePassword(AppUser user, String passwordHash) {
+        user.setPasswordHash(passwordHash);
+        userRepository.save(user);
+        log.info("User id# {} changed their password", user.getId());
+    }
+
     /** they finished or skipped the setup after sign-up */
     public void markSetupDone(AppUser user) {
         user.setSetupDone(true);

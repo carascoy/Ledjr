@@ -24,6 +24,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     boolean existsByUserIdAndNameIgnoreCase(Long userId, String name);
 
+    /** same check but skipping one category, for renaming it (renaming Rent to rent is fine) */
+    boolean existsByUserIdAndNameIgnoreCaseAndIdNot(Long userId, String name, Long id);
+
     /** used to pick the next color slot */
     long countByUserId(Long userId);
 
