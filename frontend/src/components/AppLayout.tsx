@@ -6,6 +6,17 @@ import MonthProvider from "./MonthProvider";
 import Splash from "./Splash";
 import "../styles/Layout.css";
 
+// what the browser tab says on each page
+const TITLES: Record<string, string> = {
+  "/dashboard": "Dashboard",
+  "/transactions": "Transactions",
+  "/budget": "Budget",
+  "/debts": "Debts",
+  "/recurring": "Recurring",
+  "/settings": "Settings",
+  "/setup": "Set up",
+};
+
 // wrapper for every signed-in page: padding + nav on top
 function AppLayout() {
   const { pathname } = useLocation();
@@ -14,6 +25,7 @@ function AppLayout() {
   // router keeps your scroll position between pages, reset to the top instead
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = TITLES[pathname] ? `${TITLES[pathname]} · Ledjr` : "Ledjr";
   }, [pathname]);
 
   // still asking the backend if the session is good, logo until we know

@@ -6,10 +6,11 @@ import DebtsPage from './pages/DebtsPage'
 import RecurringPage from './pages/RecurringPage'
 import BudgetPage from './pages/BudgetPage'
 import SetupPage from './pages/SetupPage'
+import SettingsPage from './pages/SettingsPage'
+import NotFound from './pages/NotFound'
 import TransactionsPage from './pages/TransactionsPage'
-import ComingSoon from './pages/ComingSoon'
 import AppLayout from './components/AppLayout'
-import { UserProvider } from './context/UserContext'
+import UserProvider from './components/UserProvider'
 
 function App() {
   return (
@@ -25,11 +26,11 @@ function App() {
           <Route path="/budget" element={<BudgetPage />} />
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/recurring" element={<RecurringPage />} />
-          <Route
-            path="/settings"
-            element={<ComingSoon title="Settings" description="Your name, email, password and preferences will live here." />}
-          />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
+
+        {/* anything else */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </UserProvider>
   )
