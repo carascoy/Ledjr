@@ -54,8 +54,9 @@ public class CalendarService {
         List<CalendarItem> items = new ArrayList<>();
         for (RecurringTemplate r : recurringTemplateService.findByUserId(userId)) {
             Category c = r.getCategory();
-            // due dates before the month you added it only show if you paid them
-            LocalDate tracked = r.getCreatedAt().toLocalDate().withDayOfMonth(1);
+            // due dates from before you added it only show if you paid them. otherwise signing up
+            // on the 27th would fill the calendar with "missed" bills from the 1st to the 26th
+            LocalDate tracked = r.getCreatedAt().toLocalDate();
             for (LocalDate date : RecurringTemplateService.occurrences(r, from, to)) {
                 Transaction p = paid.get(key(r.getId(), date));
                 if (p == null && date.isBefore(tracked)) {

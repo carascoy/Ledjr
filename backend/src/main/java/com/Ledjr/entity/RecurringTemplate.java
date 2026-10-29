@@ -59,7 +59,7 @@ public class RecurringTemplate {
     @Column(nullable = false)
     private Type type = Type.expense;
 
-    /** when it was added (V16). due dates before that month don't count as missed */
+    /** when it was added (V16). due dates before that day don't show on the calendar unless they were paid */
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
