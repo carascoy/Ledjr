@@ -66,6 +66,7 @@ Some of the problems that were more interesting than they look:
 - **Nothing is stored that can be worked out.** The calendar, what's been spent, savings and budget suggestions are all calculated from transactions when you ask, so they can't get out of sync with the real data.
 - **Money is never a float on the backend.** Amounts are `NUMERIC` in Postgres and `BigDecimal` in Java. The tests even caught a floating point bug in the frontend payoff math (an exact 12 month plan rounding up to 13).
 - **Every demo is its own account.** Sharing one demo account would let visitors see and break each other's changes. Instead each click builds a fresh account from data dated around today (so this month's calendar and budget are never empty), capped at 5 per IP per hour, and a scheduled job deletes them after 24 hours. Demo accounts can't change their email or password or trigger emails. [`DemoService`](backend/src/main/java/com/Ledjr/service/DemoService.java), [`DemoData`](backend/src/main/java/com/Ledjr/service/DemoData.java)
+- **A private admin page.** `/admin` shows sign-ups, demos per day, who's active and what's in the database, all from a few SQL aggregates (`count(*) FILTER (...)`, `generate_series` so empty days still show). Access is by account id, not email, since emails aren't verified, and everyone else gets a plain 404 so the page doesn't look like it exists. [`AdminStatsService`](backend/src/main/java/com/Ledjr/service/AdminStatsService.java), [`AdminAccess`](backend/src/main/java/com/Ledjr/service/AdminAccess.java)
 - **Deleting is careful.** Deleting a category keeps its transactions (they become uncategorized). Deleting an account wipes everything in foreign key order inside one transaction, so it either all goes or none of it does.
 - **Accessible by default.** Chart colors were checked for contrast and colorblind separation, text meets contrast on the gray cards, and every animation respects `prefers-reduced-motion`.
 
@@ -113,12 +114,13 @@ cd frontend && npm install && npm run dev
 | `COOKIE_SECURE` | backend | `false` | `true` once the site is on https |
 | `RESEND_API_KEY`, `MAIL_FROM` | backend | none | sends real emails (password reset). Without a key, emails are printed to the backend log |
 | `TRUST_PROXY` | backend | `false` | `true` behind a proxy like Heroku's router, so the login limiter sees real IPs |
+| `ADMIN_USER_IDS` | backend | none | account ids that can open `/admin` (comma separated). Empty = nobody |
 | `VITE_API_URL` | frontend | `http://localhost:8080` | where the backend lives, baked in at build time |
 
 ## Tests
 
 ```bash
-cd backend && mvn test           # 61 JUnit tests
+cd backend && mvn test           # 65 JUnit tests
 cd frontend && npm test          # 22 Vitest tests
 ```
 
@@ -135,7 +137,7 @@ backend/
     entity/        database tables as Java classes
     dto/           what goes over the wire
     config/        security, CORS, sessions
-  src/main/resources/db/migration/   Flyway migrations (V1 to V20)
+  src/main/resources/db/migration/   Flyway migrations (V1 to V21)
   src/test/        JUnit tests
 frontend/
   src/
