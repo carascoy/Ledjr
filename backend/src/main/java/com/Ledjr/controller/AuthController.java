@@ -142,6 +142,7 @@ public class AuthController {
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        appUserService.markSeen(user.get());
         return ResponseEntity.ok(toResponse(user.get()));
     }
 
@@ -184,6 +185,7 @@ public class AuthController {
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, request, response);
+        appUserService.markSeen(user);
     }
 
     /** what's wrong with this password, or null if it's fine. AccountController uses it too for changing it */

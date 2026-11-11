@@ -41,6 +41,17 @@ public class AppUser {
     @Column(nullable = false)
     private boolean demo = false;
 
+    @Column
+    private LocalDateTime lastSeenAt;
+
+    public LocalDateTime getLastSeenAt() {
+        return lastSeenAt;
+    }
+
+    public void setLastSeenAt(LocalDateTime lastSeenAt) {
+        this.lastSeenAt = lastSeenAt;
+    }
+
     public boolean isDemo() {
         return demo;
     }

@@ -18,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.entity.Category;
+import com.Ledjr.entity.DemoStart;
 import com.Ledjr.repository.AppUserRepository;
 import com.Ledjr.repository.BudgetRepository;
 import com.Ledjr.repository.CategoryRepository;
 import com.Ledjr.repository.DebtRepository;
+import com.Ledjr.repository.DemoStartRepository;
 import com.Ledjr.repository.RecurringTemplateRepository;
 import com.Ledjr.repository.TransactionRepository;
 
@@ -44,11 +46,12 @@ public class DemoService {
     private final PasswordEncoder passwordEncoder;
     private final AccountService accountService;
     private final SessionKiller sessionKiller;
+    private final DemoStartRepository demoStarts;
 
     public DemoService(AppUserRepository users, CategoryService categoryService, CategoryRepository categories,
                        RecurringTemplateRepository recurring, DebtRepository debts, TransactionRepository transactions,
                        BudgetRepository budgets, PasswordEncoder passwordEncoder, AccountService accountService,
-                       SessionKiller sessionKiller){
+                       SessionKiller sessionKiller, DemoStartRepository demoStarts){
         this.users = users;
         this.categoryService = categoryService;
         this.categories = categories;
@@ -59,6 +62,7 @@ public class DemoService {
         this.passwordEncoder = passwordEncoder;
         this.accountService = accountService;
         this.sessionKiller = sessionKiller;
+        this.demoStarts = demoStarts;
     }
 
     @Transactional
@@ -84,6 +88,7 @@ public class DemoService {
         debts.saveAll(plan.debts());
         transactions.saveAll(plan.transactions());
         budgets.saveAll(plan.budgets());
+        demoStarts.save(new DemoStart());
 
         log.info("Demo account id# {} created", user.getId());
         return user;

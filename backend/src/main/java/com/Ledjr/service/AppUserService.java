@@ -1,5 +1,6 @@
 package com.Ledjr.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -57,6 +58,15 @@ public class AppUserService {
         user.setPasswordHash(passwordHash);
         userRepository.save(user);
         log.info("User id# {} changed their password", user.getId());
+    }
+
+    /** at most one write an hour, since /me runs on every page load */
+    public void markSeen(AppUser user) {
+        LocalDateTime now = LocalDateTime.now();
+        if (user.getLastSeenAt() == null || user.getLastSeenAt().isBefore(now.minusHours(1))) {
+            user.setLastSeenAt(now);
+            userRepository.save(user);
+        }
     }
 
     /** they finished or skipped the setup after sign-up */
