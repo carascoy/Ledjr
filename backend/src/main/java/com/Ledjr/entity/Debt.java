@@ -65,6 +65,10 @@ public class Debt {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     /** cards only. utilization = balance / creditLimit */
     @Column(precision = 10, scale = 2)
     private BigDecimal creditLimit;
