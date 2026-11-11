@@ -40,7 +40,7 @@ public class SecurityConfig {
             .csrf(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/signin", "/register", "/csrf").permitAll()
+                .requestMatchers("/signin", "/register", "/csrf", "/demo").permitAll()
                 // forgot password: you're not signed in, that's the whole point
                 .requestMatchers("/password/forgot", "/password/reset", "/password/reset/check").permitAll()
                 .anyRequest().authenticated())

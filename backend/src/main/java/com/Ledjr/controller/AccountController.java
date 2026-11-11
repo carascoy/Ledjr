@@ -72,6 +72,7 @@ public class AccountController {
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        if (user.get().isDemo()) return demoLocked();
 
         String first = request.firstName() == null ? "" : request.firstName().trim();
         String last = request.lastName() == null ? "" : request.lastName().trim();
@@ -106,6 +107,7 @@ public class AccountController {
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        if (user.get().isDemo()) return demoLocked();
         ResponseEntity<?> wrong = checkPassword(user.get(), request.currentPassword(), httpRequest, "Current password is wrong.");
         if (wrong != null) return wrong;
 
@@ -128,6 +130,7 @@ public class AccountController {
         if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        if (user.get().isDemo()) return demoLocked();
         ResponseEntity<?> wrong = checkPassword(user.get(), request.password(), httpRequest, "Password is wrong.");
         if (wrong != null) return wrong;
 
@@ -141,5 +144,9 @@ public class AccountController {
         }
         SecurityContextHolder.clearContext();
         return ResponseEntity.noContent().build();
+    }
+
+    private static ResponseEntity<String> demoLocked(){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("That's turned off in the demo. Make your own account to use it.");
     }
 }

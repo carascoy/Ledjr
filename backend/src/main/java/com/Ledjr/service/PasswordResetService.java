@@ -72,6 +72,7 @@ public class PasswordResetService {
         Optional<AppUser> found = users.findByEmail(email.trim());
         if (found.isEmpty()) return;
         AppUser user = found.get();
+        if (user.isDemo()) return;
 
         // only the newest link works
         expireOpenLinks(user.getId());

@@ -1,5 +1,6 @@
 package com.Ledjr.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -27,6 +28,8 @@ import com.Ledjr.dto.SigninResponse;
 import com.Ledjr.entity.AppUser;
 import com.Ledjr.service.AppUserService;
 import com.Ledjr.service.CategoryService;
+import com.Ledjr.service.DemoLimiter;
+import com.Ledjr.service.DemoService;
 import com.Ledjr.service.LoginAttemptLimiter;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +43,8 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final CategoryService categoryService;
     private final LoginAttemptLimiter limiter;
+    private final DemoService demoService;
+    private final DemoLimiter demoLimiter;
     // where the "you're logged in" info gets saved: the session (which Spring Session keeps in Postgres)
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -48,11 +53,13 @@ public class AuthController {
     private static final Pattern SPECIAL = Pattern.compile("[^A-Za-z0-9]");
 
     public AuthController(AppUserService appUserService, PasswordEncoder passwordEncoder, CategoryService categoryService,
-                          LoginAttemptLimiter limiter){
+                          LoginAttemptLimiter limiter, DemoService demoService, DemoLimiter demoLimiter){
         this.appUserService = appUserService;
         this.passwordEncoder = passwordEncoder;
         this.categoryService = categoryService;
         this.limiter = limiter;
+        this.demoService = demoService;
+        this.demoLimiter = demoLimiter;
     }
 
     @PostMapping("/register")
@@ -111,6 +118,21 @@ public class AuthController {
 
         log.info("User {} {} has logged into their account", user.getFirstName(), user.getLastName());
         return ResponseEntity.status(HttpStatus.OK).body(toResponse(user));
+    }
+
+    /** POST /demo - a fresh demo account full of fake data, signed straight in */
+    @PostMapping("/demo")
+    public ResponseEntity<?> demo(HttpServletRequest httpRequest, HttpServletResponse httpResponse){
+        long wait = demoLimiter.tryStart(httpRequest.getRemoteAddr());
+        if (wait > 0) {
+            long minutes = Math.max(1, (wait + 59) / 60);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header("Retry-After", String.valueOf(wait))
+                .body("You've started a lot of demos. Try again in " + minutes + (minutes == 1 ? " minute." : " minutes."));
+        }
+        AppUser user = demoService.create(LocalDate.now());
+        startSession(user, httpRequest, httpResponse);
+        return ResponseEntity.ok(toResponse(user));
     }
 
     /** GET /me - who's logged in. the frontend calls this on page load so a refresh doesn't log you out */
