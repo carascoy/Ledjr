@@ -7,7 +7,7 @@ import { useUser } from '../context/UserContext'
 
 type Mode = "signin" | "signup";
 
-type Error = "account-not-found" | "email-registered" | "too-many" | "none";
+type Error = "account-not-found" | "missing" | "email-registered" | "too-many" | "none";
 
 function AuthPage(){
     const navigate = useNavigate()
@@ -34,6 +34,7 @@ function AuthPage(){
         document.title = `${isSignUp ? 'Sign up' : 'Sign in'} · Ledjr`
     }, [isSignUp])
     const accountNotFound = error === 'account-not-found';
+    const missing = error === 'missing';
     const emailRegistered = error === "email-registered";
     const tooMany = error === "too-many";
 
@@ -42,9 +43,9 @@ function AuthPage(){
     const hasSpecialChar = /[^A-Za-z0-9]/.test(password)
     const isPasswordValid = hasEightChars && hasNumber && hasSpecialChar
 
-    // sign up has to meet the password rules, sign in just needs both boxes filled
-    // (older accounts might not meet newer rules, and the server checks the password anyway)
-    const canSubmit = isSignUp ? isPasswordValid : email.trim() !== '' && password !== ''
+    // sign in is never disabled: browsers hide autofilled values from the page until you click something,
+    // so the boxes can look filled while email/password are still ''. handleSubmit reads the form instead
+    const canSubmit = isSignUp ? isPasswordValid : true
 
     const isCharValid = hasEightChars;
     const isNumValid = hasNumber;
@@ -55,9 +56,19 @@ function AuthPage(){
         e.preventDefault()
 
         if(!isSignUp){
+            const form = new FormData(e.currentTarget as HTMLFormElement)
+            const signinEmail = String(form.get('email') ?? '').trim()
+            const signinPassword = String(form.get('password') ?? '')
+            setEmail(signinEmail)
+            setPassword(signinPassword)
+            if (!signinEmail || !signinPassword) {
+                setError("missing")
+                return
+            }
+
             const response = await api('/signin', {
                 method: 'POST',
-                body: JSON.stringify({email, password}),
+                body: JSON.stringify({email: signinEmail, password: signinPassword}),
             })
 
             if(response.ok){
@@ -156,6 +167,12 @@ function AuthPage(){
                 <div className={`collapsible ${accountNotFound ? 'expanded' : ''}`}>
                     <div className="collapsible-inner error-text">
                         <p>Incorrect email or password.</p>
+                    </div>
+                </div>
+
+                <div className={`collapsible ${missing ? 'expanded' : ''}`}>
+                    <div className="collapsible-inner error-text">
+                        <p>Enter your email and password.</p>
                     </div>
                 </div>
 
