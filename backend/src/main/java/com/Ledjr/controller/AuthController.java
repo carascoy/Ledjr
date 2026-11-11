@@ -179,6 +179,6 @@ public class AuthController {
     }
 
     static SigninResponse toResponse(AppUser user){
-        return new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt(), user.isSetupDone());
+        return new SigninResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt(), user.isSetupDone(), user.isDemo());
     }
 }

@@ -37,6 +37,18 @@ public class AppUser {
     @Column(nullable = false)
     private boolean setupDone = false;
 
+    /** made by "Try the demo" (V20): fake data, can't change email/password, deleted after 24 hours */
+    @Column(nullable = false)
+    private boolean demo = false;
+
+    public boolean isDemo() {
+        return demo;
+    }
+
+    public void setDemo(boolean demo) {
+        this.demo = demo;
+    }
+
     public boolean isSetupDone() {
         return setupDone;
     }

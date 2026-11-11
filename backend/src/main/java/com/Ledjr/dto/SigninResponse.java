@@ -8,5 +8,6 @@ public record SigninResponse(
     String firstName,
     String lastName,
     LocalDateTime createdAt,
-    boolean setupDone       // false = show the optional setup
+    boolean setupDone,      // false = show the optional setup
+    boolean demo            // true = a "Try the demo" account, the frontend shows the demo bar
 ) {}
