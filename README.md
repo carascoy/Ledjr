@@ -4,7 +4,7 @@ A personal finance app for keeping track of where your money goes: spending, mon
 
 [![CI](https://github.com/carascoy/Ledjr/actions/workflows/ci.yml/badge.svg)](https://github.com/carascoy/Ledjr/actions/workflows/ci.yml)
 
-**Live:** [ledjr.dev](https://ledjr.dev). Sign up with any email, it takes a minute.
+**Live:** [ledjr.dev](https://ledjr.dev). Click **Try the demo** to look around a sample account, no sign up needed.
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -15,6 +15,7 @@ A personal finance app for keeping track of where your money goes: spending, mon
 - **Budgets** per category per month. Ledjr works out how much you *can* budget from your paychecks minus debt minimums, suggests an amount for each category from your recurring bills or your 3 month average, and counts whatever you didn't spend as saved.
 - **Recurring bills and paychecks** on a calendar. Mark something paid and it logs the transaction. Credit card and loan minimums show up on their due dates too, and disappear once that month's payments cover them.
 - **Debts** with a payoff planner: pick how many months, see the monthly payment and the total interest, compared to just paying the minimum.
+- **Try the demo**: one click makes a throwaway account with 3 months of realistic sample data. No email, deleted after 24 hours.
 - **Optional setup** after sign up (paycheck, bills, debts) that builds your first budget in about a minute.
 - **Works on phones.** Every page has a phone and tablet layout.
 
@@ -64,6 +65,7 @@ Some of the problems that were more interesting than they look:
 - **Card minimums know when they're paid.** Payments are matched to the due date they belong to (oldest first, never counted twice), so two small payments can cover one minimum, a late payment still counts, and paying next month early goes to next month. [`CalendarService`](backend/src/main/java/com/Ledjr/service/CalendarService.java)
 - **Nothing is stored that can be worked out.** The calendar, what's been spent, savings and budget suggestions are all calculated from transactions when you ask, so they can't get out of sync with the real data.
 - **Money is never a float on the backend.** Amounts are `NUMERIC` in Postgres and `BigDecimal` in Java. The tests even caught a floating point bug in the frontend payoff math (an exact 12 month plan rounding up to 13).
+- **Every demo is its own account.** Sharing one demo account would let visitors see and break each other's changes. Instead each click builds a fresh account from data dated around today (so this month's calendar and budget are never empty), capped at 5 per IP per hour, and a scheduled job deletes them after 24 hours. Demo accounts can't change their email or password or trigger emails. [`DemoService`](backend/src/main/java/com/Ledjr/service/DemoService.java), [`DemoData`](backend/src/main/java/com/Ledjr/service/DemoData.java)
 - **Deleting is careful.** Deleting a category keeps its transactions (they become uncategorized). Deleting an account wipes everything in foreign key order inside one transaction, so it either all goes or none of it does.
 - **Accessible by default.** Chart colors were checked for contrast and colorblind separation, text meets contrast on the gray cards, and every animation respects `prefers-reduced-motion`.
 
@@ -116,7 +118,7 @@ cd frontend && npm install && npm run dev
 ## Tests
 
 ```bash
-cd backend && mvn test           # 46 JUnit tests
+cd backend && mvn test           # 61 JUnit tests
 cd frontend && npm test          # 22 Vitest tests
 ```
 
@@ -133,7 +135,7 @@ backend/
     entity/        database tables as Java classes
     dto/           what goes over the wire
     config/        security, CORS, sessions
-  src/main/resources/db/migration/   Flyway migrations (V1 to V19)
+  src/main/resources/db/migration/   Flyway migrations (V1 to V20)
   src/test/        JUnit tests
 frontend/
   src/
