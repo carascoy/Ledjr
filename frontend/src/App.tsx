@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import TransactionsPage from './pages/TransactionsPage'
+import AdminPage from './pages/AdminPage'
 import AppLayout from './components/AppLayout'
 import UserProvider from './components/UserProvider'
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/recurring" element={<RecurringPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Route>
 
         {/* anything else */}

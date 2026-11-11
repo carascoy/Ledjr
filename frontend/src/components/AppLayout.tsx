@@ -16,6 +16,7 @@ const TITLES: Record<string, string> = {
   "/recurring": "Recurring",
   "/settings": "Settings",
   "/setup": "Set up",
+  "/admin": "Admin",
 };
 
 // wrapper for every signed-in page: padding + nav on top
