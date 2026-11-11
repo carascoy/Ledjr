@@ -331,3 +331,46 @@
         font-size: 26px;
     }
 }
+
+.demo-bar {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 12px 20px;
+    border-radius: 16px;
+    background: #E3ECE6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+.demo-bar-text {
+    margin: 0;
+    font-size: 15px;
+    color: #1C3B2E;
+}
+.demo-bar-btn {
+    flex-shrink: 0;
+    height: 40px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 20px;
+    background: #1C3B2E;
+    color: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.demo-bar-btn:hover,
+.demo-bar-btn:focus-visible {
+    background: #142B21;
+    outline: none;
+}
+@media (max-width: 700px) {
+    .demo-bar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}

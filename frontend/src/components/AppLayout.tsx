@@ -4,6 +4,7 @@ import { useUser } from "../context/UserContext";
 import NavBar from "./NavBar";
 import MonthProvider from "./MonthProvider";
 import Splash from "./Splash";
+import DemoBar from "./DemoBar";
 import "../styles/Layout.css";
 
 // what the browser tab says on each page
@@ -36,6 +37,7 @@ function AppLayout() {
   return (
     <MonthProvider>
       <div className="app-page">
+        <DemoBar />
         <NavBar />
         <Outlet />
       </div>

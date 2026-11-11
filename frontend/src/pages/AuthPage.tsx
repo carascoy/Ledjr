@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../styles/AuthPage.css'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '../api/client'
 import Splash from '../components/Splash'
 import { useUser } from '../context/UserContext'
@@ -13,12 +13,15 @@ function AuthPage(){
     const navigate = useNavigate()
     const { user, setUser, checking } = useUser()
 
-    const [mode, setMode] = useState<Mode>('signin')
+    const [searchParams] = useSearchParams()
+    const [mode, setMode] = useState<Mode>(searchParams.get('mode') === 'signup' ? 'signup' : 'signin')
     const [error, setError] = useState<Error>('none');
     // the server's "Try again in 12 minutes." after too many wrong passwords
     const [tooManyMessage, setTooManyMessage] = useState('')
     // brand new account -> the optional setup instead of the dashboard
     const [justRegistered, setJustRegistered] = useState(false)
+    const [startingDemo, setStartingDemo] = useState(false)
+    const [demoError, setDemoError] = useState('')
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -99,6 +102,23 @@ function AuthPage(){
 
    
 
+    async function startDemo() {
+        setStartingDemo(true)
+        setDemoError('')
+        try {
+            const response = await api('/demo', { method: 'POST' })
+            if (response.ok) {
+                setUser(await response.json())
+                navigate('/dashboard')
+                return
+            }
+            setDemoError(response.status === 429 ? await response.text() : "Couldn't start the demo. Try again in a minute.")
+        } catch {
+            setDemoError("Couldn't reach the server. Try again in a minute.")
+        }
+        setStartingDemo(false)
+    }
+
     // still asking the backend if the session is good. logo instead of the form,
     // otherwise the sign in form flashes for a split second before the redirect
     if (checking) {
@@ -167,6 +187,15 @@ function AuthPage(){
                 )}
 
             </form>
+
+            <div className="auth-demo">
+                <p className="auth-demo-text">Just looking around?</p>
+                <button type="button" className="auth-demo-btn" onClick={startDemo} disabled={startingDemo}>
+                    {startingDemo ? 'Setting up the demo…' : 'Try the demo'}
+                </button>
+                <p className="auth-demo-note">No sign up. Made-up data, gone after 24 hours.</p>
+                {demoError && <p className="error-text auth-demo-error">{demoError}</p>}
+            </div>
         </div>
     )
 }

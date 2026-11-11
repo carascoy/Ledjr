@@ -514,14 +514,28 @@ function DeleteAccountSection() {
 // the whole page. each section saves on its own
 function SettingsPage() {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const demo = user?.demo === true;
   return (
     <div className="set-page">
       <header className="page-header">
         <h1 className="page-title">Settings</h1>
       </header>
 
-      <ProfileSection />
-      <PasswordSection />
+      {demo ? (
+        <section className="pill set-section">
+          <h2 className="pill-title">Demo account</h2>
+          <p className="set-text">
+            This is a demo with made-up data, so changing the name, email or password is turned off. It gets deleted
+            24 hours after it was made. Everything else works, so change whatever you like.
+          </p>
+        </section>
+      ) : (
+        <>
+          <ProfileSection />
+          <PasswordSection />
+        </>
+      )}
       <CategoriesSection />
 
       <section className="pill set-section">
@@ -545,7 +559,7 @@ function SettingsPage() {
         <p className="set-text">Deleting your account removes all of it.</p>
       </section>
 
-      <DeleteAccountSection />
+      {!demo && <DeleteAccountSection />}
     </div>
   );
 }
