@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { api } from "../api/client";
 import { CATEGORY_COLORS, categoryColor } from "../utils/categoryColors";
@@ -557,6 +557,9 @@ function SettingsPage() {
           <li>Nothing from your bank. Ledjr doesn't connect to any bank accounts.</li>
         </ul>
         <p className="set-text">Deleting your account removes all of it.</p>
+        <p className="set-text">
+          The details are in the <Link to="/privacy">Privacy Policy</Link> and <Link to="/terms">Terms of Service</Link>.
+        </p>
       </section>
 
       {!demo && <DeleteAccountSection />}

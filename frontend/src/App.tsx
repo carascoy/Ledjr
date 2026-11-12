@@ -12,6 +12,8 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import TransactionsPage from './pages/TransactionsPage'
 import AdminPage from './pages/AdminPage'
+import PrivacyPage from './pages/PrivacyPage'
+import TermsPage from './pages/TermsPage'
 import AppLayout from './components/AppLayout'
 import UserProvider from './components/UserProvider'
 
@@ -23,6 +25,8 @@ function App() {
         {/* forgot password, no sign in needed */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
 
         {/* every signed-in page goes inside AppLayout (padding + nav), page shows up in its <Outlet /> */}
         <Route element={<AppLayout />}>

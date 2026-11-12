@@ -1,0 +1,101 @@
+.legal {
+    min-height: 100vh;
+    padding: 32px 16px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+}
+.legal-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #000000;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+}
+.legal-home:hover,
+.legal-home:focus-visible {
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    outline: none;
+}
+.legal-logo {
+    width: 32px;
+    height: 32px;
+}
+.legal-body {
+    width: min(720px, 100%);
+    margin-top: 32px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #1F1F1E;
+}
+.legal-title {
+    margin: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 36px;
+    color: #000000;
+}
+.legal-updated {
+    margin: 4px 0 24px;
+    font-size: 14px;
+    color: #52514E;
+}
+.legal-lead {
+    font-size: 17px;
+}
+.legal-body h2 {
+    margin: 36px 0 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    color: #000000;
+}
+.legal-body h3 {
+    margin: 20px 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+}
+.legal-body p {
+    margin: 8px 0;
+}
+.legal-body ul {
+    margin: 8px 0;
+    padding-left: 22px;
+}
+.legal-body li {
+    margin: 6px 0;
+}
+.legal-body a,
+.legal-footer a {
+    color: #175F3B;
+    font-weight: 500;
+}
+.legal-summary {
+    margin: 24px 0 8px;
+    padding: 4px 24px 12px;
+    border-radius: 16px;
+    background: #D9D9D9;
+}
+.legal-summary h2 {
+    margin-top: 16px;
+}
+.legal-footer {
+    width: min(720px, 100%);
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
+@media (max-width: 700px) {
+    .legal-title { font-size: 28px; }
+    .legal-summary { padding: 4px 16px 12px; }
+}

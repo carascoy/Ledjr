@@ -202,6 +202,11 @@ function AuthPage(){
                 {!isSignUp && (
                     <Link to="/forgot-password" className="auth-link auth-forgot">Forgot your password?</Link>
                 )}
+                {isSignUp && (
+                    <p className="auth-consent">
+                        By creating an account you agree to the <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
+                    </p>
+                )}
 
             </form>
 
@@ -213,6 +218,12 @@ function AuthPage(){
                 <p className="auth-demo-note">No sign up. Made-up data, gone after 24 hours.</p>
                 {demoError && <p className="error-text auth-demo-error">{demoError}</p>}
             </div>
+
+            <nav className="auth-legal" aria-label="Legal">
+                <Link to="/privacy">Privacy</Link>
+                <span aria-hidden="true">·</span>
+                <Link to="/terms">Terms</Link>
+            </nav>
         </div>
     )
 }

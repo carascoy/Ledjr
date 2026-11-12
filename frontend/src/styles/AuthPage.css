@@ -240,3 +240,24 @@
     margin: 0;
     text-align: center;
 }
+
+.auth-consent {
+    margin: 4px 0 0;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    text-align: center;
+    color: #52514E;
+}
+.auth-consent a,
+.auth-legal a {
+    color: #175F3B;
+    font-weight: 500;
+}
+.auth-legal {
+    margin: 32px 0 24px;
+    display: flex;
+    gap: 8px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: #52514E;
+}
