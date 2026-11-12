@@ -253,6 +253,9 @@
     color: #175F3B;
     font-weight: 500;
 }
+.auth-consent a {
+    white-space: nowrap;
+}
 .auth-legal {
     margin: 32px 0 24px;
     display: flex;
